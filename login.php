@@ -1,11 +1,13 @@
 <?php
-require_once 'cn/cn.php';
+
 $messege=""; //Variable de mensaje inicializa a vacio
 if (!empty($_POST)) {//compara si el formulario viene vacio
+    require_once 'cn/cn.php';
     $user=$_POST['user'];
     $pass=$_POST['pass'];
-    $queryResult = $pdo->query("SELECT *  from sibware.usuarios WHERE Usuario='$user' and passw=PASSWORD('$pass')");
-    // echo $messege='entro!';
+    $queryResult = $pdo->query("SELECT *  from sibware.usuarios WHERE Usuario=:user and passw=PASSWORD(:passw)");
+    $queryResult->prepare();
+
 } 
 
 ?>
