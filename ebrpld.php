@@ -1,7 +1,14 @@
 <?php
 if (!empty($_POST)) {
     $inicio='2018-01-01';
+    $tc=0;
     require_once 'cn/cn.php';
+    $queryResult=$pdo->query("SELECT A.Paridad from sibware.indicador_tipocambio A where Fecha='$_POST[ffin]'");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $tc=$row['Paridad'];
+    }
+    
+
     $queryResult=$pdo->query("SELECT * from Intranet.PLD_Tipo_persona");
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $arraytpto[]=$row['Pto'];
@@ -150,9 +157,17 @@ GROUP BY
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Intr@net Credicor</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
-<div class="container">
+<header>
+        <div class="user">BIENVENIDO <strong>EFREN ALMANZA LAMAS</strong>   <a href="#"><img src="img/icons/user.png" alt="" height='12px' width='12px'></a> <a href="#"><img src="img/icons/notification.png" alt="" height='10px' width='10px'></a> <a href="#">CERRAR SESION </a> </div>
+        
+    </header>
+    <div class="logo"><img src="img/logos/Imagotipo.png" alt="" height='45px' width="235px"  width="100" ></div>
+    <nav>navegacion</nav>
+<div class="contenido">
 <h1>EBR/PLD Credicor 2018</h1>
 <form action="ebrpld.php" method="post">
 <label for="fini">Desde</label><input type='date' id='fini' name='fini' required='true' ><label for="ffin">Hasta</label><input type='date' id='ffin' name='ffin' required='true' >
@@ -478,6 +493,7 @@ GROUP BY
             $queryResult = $pdo->query("SELECT
             C.tipo,
             B.IDTipoCredito,
+            B.IDMoneda,
             sum(A.SaldoCap) AS Cap,
             sum(A.SaldoInt) AS Inte,
             sum(A.SaldoCap)+SUM(A.SaldoInt)as Total
@@ -488,27 +504,38 @@ GROUP BY
         WHERE
             A.FImage = '$_POST[ffin]'
         GROUP BY
-            C.ID");
+        B.IDMoneda,C.ID");
         
         $tipocr1=0;
         $tipocr2=0;
         $tipocr3=0;
         
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-            if ($row['IDTipoCredito']==1) {
+            if ($row['IDTipoCredito']==1 && $row['IDMoneda']==1) {
                 $tipocr1=$tipocr1+$row['Total'];
-            }elseif($row['IDTipoCredito']==2){
+            }elseif($row['IDTipoCredito']==2 && $row['IDMoneda']==1){
                 $tipocr1=$tipocr1+$row['Total'];
-            }elseif($row['IDTipoCredito']==5){
+            }elseif($row['IDTipoCredito']==5 && $row['IDMoneda']==1){
                 $tipocr1=$tipocr1+$row['Total'];
-            }elseif($row['IDTipoCredito']==6){
+            }elseif($row['IDTipoCredito']==6 && $row['IDMoneda']==1){
                 $tipocr1=$tipocr1+$row['Total'];
-            }elseif($row['IDTipoCredito']==3){
+            }elseif($row['IDTipoCredito']==3 && $row['IDMoneda']==1){
                 $tipocr2=$tipocr2+$row['Total'];
-            }elseif($row['IDTipoCredito']==4){
+            }elseif($row['IDTipoCredito']==4 && $row['IDMoneda']==1){
                 $tipocr3=$tipocr3+$row['Total'];
+            }elseif($row['IDTipoCredito']==1 && $row['IDMoneda']==2){
+                $tipocr1=$tipocr1+($tc*$row['Total']);
+            }elseif($row['IDTipoCredito']==2 && $row['IDMoneda']==2){
+                $tipocr1=$tipocr1+($tc*$row['Total']);
+            }elseif($row['IDTipoCredito']==5 && $row['IDMoneda']==2){
+                $tipocr1=$tipocr1+($tc*$row['Total']);
+            }elseif($row['IDTipoCredito']==6 && $row['IDMoneda']==2){
+                $tipocr1=$tipocr1+($tc*$row['Total']);
+            }elseif($row['IDTipoCredito']==3 && $row['IDMoneda']==2){
+                $tipocr2=$tipocr2+($tc*$row['Total']);
+            }elseif($row['IDTipoCredito']==4 && $row['IDMoneda']==2){
+                $tipocr3=$tipocr3+($tc*$row['Total']);
             }
-            
             
             $canttc=$tipocr1+$tipocr2+$tipocr3;
             $arraycanttc=array($tipocr1,$tipocr2,$tipocr3);
@@ -539,30 +566,40 @@ GROUP BY
     $queryResult = $pdo->query("SELECT
 	C.Nombre,
 	B.IDOrigenRecursos,
+    D.IDMoneda,
 	sum(A.SaldoCap) AS Cap,
 	sum(A.SaldoInt) AS Inte,
 	sum(A.SaldoCap)+SUM(A.SaldoInt)as Total
 FROM
 	2_dw_images_contratos A
-INNER JOIN 2_contratos B ON A.IDContrato = B.ID
+INNER JOIN 2_contratos_disposicion B ON A.IDDisposicion = B.ID
 INNER JOIN 2_entorno_origenrecursos C ON B.IDOrigenRecursos = C.ID
+INNER JOIN 2_contratos D ON A.IDContrato=D.ID
 WHERE
 	A.FImage = '$_POST[ffin]'
 GROUP BY
-	C.ID");
+    D.IDMoneda,C.ID");
     $orec1=0;
     $orec2=0;
     $orec3=0;
     $orec4=0;    
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-        if ($row['IDOrigenRecursos']==1) {
+        if ($row['IDOrigenRecursos']==1 && $row['IDMoneda']==1) {
             $orec4=$orec4+$row['Total'];
-        }elseif($row['IDOrigenRecursos']==2) {
+        }elseif($row['IDOrigenRecursos']==2 && $row['IDMoneda']==1) {
             $orec2=$orec2+$row['Total'];
-        }elseif($row['IDOrigenRecursos']==3) {
+        }elseif($row['IDOrigenRecursos']==3 && $row['IDMoneda']==1) {
             $orec2=$orec2+$row['Total'];
-        }elseif($row['IDOrigenRecursos']==4) {
+        }elseif($row['IDOrigenRecursos']==4 && $row['IDMoneda']==1) {
             $orec2=$orec2+$row['Total'];
+        }elseif($row['IDOrigenRecursos']==1 && $row['IDMoneda']==2) {
+            $orec4=$orec4+($tc*$row['Total']);
+        }elseif($row['IDOrigenRecursos']==2 && $row['IDMoneda']==2) {
+            $orec2=$orec2+($tc*$row['Total']);
+        }elseif($row['IDOrigenRecursos']==3 && $row['IDMoneda']==2) {
+            $orec2=$orec2+($tc*$row['Total']);
+        }elseif($row['IDOrigenRecursos']==4 && $row['IDMoneda']==2) {
+            $orec2=$orec2+($tc*$row['Total']);
         }else {
             $orec1=$orec1+$row['Total'];
         }
@@ -729,6 +766,7 @@ GROUP BY
     <table class='table'>
     <tr><th>Indicadores</th><th>Riesgo</th><th>Total</th><th>%</th><th>Ponderacion</th></tr>
         <?php
+        if(!empty($_POST)){
             $cont=0;
             foreach($arraymd as $value){
                 $porc=($arraycantmd[$cont]/$totMD)*100;
@@ -740,7 +778,7 @@ GROUP BY
                 $cont++;
         }
         echo "<tr><th>Totales</th><th>".$totalptomd."</th><th>".number_format($totMD,2)."</th><th>".$totalporcmd."</th><th>".number_format($totalpondmd,2)."</th></tr>";
-       
+        }
         ?>
     </table>
     <h3>Volumen de las Operaciones</h3>
