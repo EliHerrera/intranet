@@ -1,0 +1,61 @@
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	text-decoration: none;
+	border: none;
+	outline: none;
+}
+body{
+    background-color: rgb(255, 255, 255);
+    font-family: 'Montserrat', sans-serif;
+}
+header{    
+    height: 18px;
+    width: 100%;
+    background-color: rgb(140, 0, 31);
+    color: white;
+    font-size: 10px; 
+    padding: 2px;
+    position: inherit;
+    text-decoration: none;
+    
+}
+header a{
+    color: white;
+}
+header a:hover{
+    color: rgb(81, 81, 81);
+}
+.user{
+    height: 18px;
+    float: right;
+    padding: 2px;
+    margin-right: 15%;
+    
+}
+
+.logo{
+    background-color: rgb(255, 255, 255);
+    height: 50px;
+    width: 100%;  
+   
+}
+.logo img{
+    margin-top: 5px;
+    margin-left: 38%;
+}
+nav{
+    background-color:rgb(201, 0, 44);
+    width: 100%;
+    height: 60px;
+    color: white;
+}
+.conteiner{
+    background-color: rgb(255, 255, 255);
+    color: rgb(81, 81, 81);
+    width: 70%;
+    margin-left: 15%;
+    margin-top: 10px;
+}
+
