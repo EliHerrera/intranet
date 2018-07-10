@@ -1,5 +1,6 @@
 <?php
 if (!empty($_POST)) {
+    $inicio='2018-01-01';
     require_once 'cn/cn.php';
     $queryResult=$pdo->query("SELECT * from Intranet.PLD_Tipo_persona");
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
@@ -94,17 +95,17 @@ AND (
 	(
 		(
 			(
-				H.FInicio <= '$_POST[fini]'
-				AND H.FTermino >= '$_POST[fini]'
+				H.FInicio <= '$inicio'
+				AND H.FTermino >= '$inicio'
 				AND H.FTermino <= '$_POST[ffin]'
 			)
 			OR (
-				H.FInicio >= '$_POST[fini]'
+				H.FInicio >= '$inicio'
 				AND H.FInicio <= '$_POST[ffin]'
 				AND H.FTermino >= '$_POST[ffin]'
 			)
 			OR (
-				H.FInicio <= '$_POST[fini]'
+				H.FInicio <= '$inicio'
 				AND H.FTermino >= '$_POST[ffin]'
 			)
 		)
@@ -113,17 +114,17 @@ AND (
 	OR (
 		(
 			(
-				I.FInicio <= '$_POST[fini]'
-				AND I.FTermino >= '$_POST[fini]'
+				I.FInicio <= '$inicio'
+				AND I.FTermino >= '$inicio'
 				AND I.FTermino <= '$_POST[ffin]'
 			)
 			OR (
-				I.FInicio >= '$_POST[fini]'
+				I.FInicio >= '$inicio'
 				AND I.FInicio <= '$_POST[ffin]'
 				AND I.FTermino >= '$_POST[ffin]'
 			)
 			OR (
-				I.FInicio <= '$_POST[fini]'
+				I.FInicio <= '$inicio'
 				AND I.FTermino >= '$_POST[ffin]'
 			)
 		)
@@ -141,7 +142,6 @@ GROUP BY
 
 
 ?>
-</form>
 <!DOCTYPE html>
 <html lang="es-MX">
 <head>
