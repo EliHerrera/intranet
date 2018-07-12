@@ -10,6 +10,11 @@ body{
     background-color: rgb(255, 255, 255);
     font-family: 'Montserrat', sans-serif;
 }
+a:link {
+    text-decoration:none; 
+    
+    
+  }
 header{    
     height: 18px;
     width: 100%;
@@ -28,6 +33,11 @@ header a{
 }
 header a:hover{
     color: rgb(81, 81, 81);
+    text-decoration: none;
+}
+header a:active{
+    color: rgb(81, 81, 81);
+    text-decoration: none;
 }
 .user{
     height: 18px;
@@ -50,13 +60,76 @@ header a:hover{
     margin-left: 38%;
 }
 nav{
+    float: left; /* Desplazamos el nav hacia la izquierda */
     background-color:rgb(201, 0, 44);
     width: 100%;
     height: 60px;
     color: white;
     position: fixed;
     top: 68px;
+    font-size: 10px; 
+    margin: auto;
 }
+
+  nav ul {
+    list-style: none;
+    overflow: hidden; /* Limpiamos errores de float */
+  }
+   
+  nav ul li {
+    float: left;
+    border-left: solid 1px; 
+    border-right: solid 1px;
+    margin:auto;
+    width: 156px;
+    text-align: center;
+  }
+   
+  nav ul li a {
+    display: block; /* Convertimos los elementos a en elementos bloque para manipular el padding */
+    padding: 6px;
+    color: #fff;
+    text-decoration: none;    
+  }
+  nav ul li img {
+    display: block; /* Convertimos los elementos a en elementos bloque para manipular el padding */
+    
+    margin:auto;
+    
+  }  
+  nav ul li a:hover {
+     text-decoration: none; 
+     color: white;
+  } 
+  nav ul li a:link {
+    text-decoration:none; 
+    color: gray;
+  }
+  nav ul li:hover {
+    background: rgb(140, 0, 31);
+    
+  }
+  nav li ul{
+    display: none;
+    background-color: rgb(201, 0, 44);
+    
+  }
+nav li:hover > ul {
+    display:block;
+}
+
+/* nav li ul li {
+    position:relative;
+}
+
+nav li ul li ul {
+    right:-140px;
+    top:0px;
+} */
+.menu{
+    width: 70%;
+    margin-left: 15%;
+}  
 .contenido{
     background-color: rgb(255, 255, 255);
     color: rgb(81, 81, 81);
@@ -66,5 +139,29 @@ nav{
     font-size: 12px;
     margin-top: 128px;
     padding: 2px;
+}
+.button {
+	-moz-box-shadow:inset 0px 39px 0px -24px rgb(201, 0, 44);
+	-webkit-box-shadow:inset 0px 39px 0px -24px rgb(201, 0, 44);
+	box-shadow:inset 0px 39px 0px -24px rgb(201, 0, 44);
+	background-color:rgb(201, 0, 44);
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family: 'Montserrat', sans-serif;
+	font-size:12px;
+	padding:6px 15px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #f71808;
+}
+.button:hover {
+    -moz-box-shadow:inset 0px 39px 0px -24px #fa1105;
+	-webkit-box-shadow:inset 0px 39px 0px -24px #fa1105;
+	box-shadow:inset 0px 39px 0px -24px #fa1105;
+	background-color:#fa1105;
+}
+.button:active {
+	position:relative;
+	top:1px;
 }
 

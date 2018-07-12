@@ -1,4 +1,5 @@
 <?php
+set_time_limit(0);
 if (!empty($_POST)) {
     $inicio='2018-01-01';
     $tc=0;
@@ -13,6 +14,12 @@ if (!empty($_POST)) {
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $arraytpto[]=$row['Pto'];
         $arraytp[]=$row['TipoPersona'];
+
+    }
+    $queryResult=$pdo->query("SELECT * from Intranet.PLD_Actividades");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $arrayActPto[]=$row['Pto'];
+        $arrayAct[]=$row['Indicador'];
 
     }
     $queryResult=$pdo->query("SELECT * from Intranet.PLD_Nacionalidad");
@@ -47,6 +54,18 @@ if (!empty($_POST)) {
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $arraytcpto[]=$row['Pto'];
         $arraytc[]=$row['Indicador'];
+
+    }
+    $queryResult=$pdo->query("SELECT A.Pto, A.Indicador from Intranet.PLD_Cobertura A ");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $arraycobpto[]=$row['Pto'];
+        $arraycob[]=$row['Indicador'];
+
+    }
+    $queryResult=$pdo->query("SELECT A.Pto, A.Indicador from Intranet.PLD_Zonas_R A ");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $arrayzrpto[]=$row['Pto'];
+        $arrayzr[]=$row['Indicador'];
 
     }
     $queryResult=$pdo->query("SELECT A.Pto, A.Indicador from Intranet.PLD_InsMont A ");
@@ -85,7 +104,8 @@ if (!empty($_POST)) {
 	B.IDLocalidadCNBV,
 	F.lPeps,
 	B.FSHCP,
-	DATEDIFF('$_POST[ffin]', B.FSHCP) AS diasC
+    E.Indicador,
+    DATEDIFF('$_POST[ffin]', B.FSHCP) AS diasC
 FROM
 	sibware.2_cliente B
 LEFT JOIN sibware.2_entorno_paises D ON B.IDPais = D.ID
@@ -166,12 +186,58 @@ GROUP BY
         
     </header>
     <div class="logo"><img src="img/logos/Imagotipo.png" alt="" height='45px' width="235px"  width="100" ></div>
-    <nav>navegacion</nav>
+    <nav>
+    <div class="menu">
+		<ul>
+            <li><a href="#"><img src="img/icons/icon_tramites.png" alt="" height='20px' width='20px'></br>TRAMITES INTERNOS</a>
+                <ul>
+							<li><a href="#">VACACIONES</a></li>
+                            <li><a href="#">PRESTAMOS</a></li>
+                            <li><a href="#">...</a></li>    
+                            
+                </ul>    
+            </li>            
+			<li><a href="#"><img src="img/icons/icon_digital.png" alt="" height='20px' width='20px'></br>REVISTA DIGITAL</a></li>
+            <li><a href="#"><img src="img/icons/icon_seguimientos.png" alt="" height='20px' width='20px'></br>SEGUIMIENTOS</a>
+                <ul>
+							<li><a href="#">VACACIONES</a></li>
+                            <li><a href="#">PRESTAMOS</a></li>
+                            <li><a href="#">...</a></li>    
+                            
+                </ul>
+            </li>
+            <li><a href="#"><img src="img/icons/icon_documentacion.png" alt="" height='20px' width='20px'></br>DOCUMENTACION</a>
+                <ul>
+							<li><a href="#">VACACIONES</a></li>
+                            <li><a href="#">PRESTAMOS</a></li>
+                            <li><a href="#">...</a></li>    
+                            
+                </ul>
+            </li>    
+            <li><a href="#"><img src="img/icons/icon_bussines.png" alt="" height='20px' width='20px'></br>BUSSINES INTELIGENCE</a>
+                <ul>
+							<li><a href="#">VACACIONES</a></li>
+                            <li><a href="#">PRESTAMOS</a></li>
+                            <li><a href="#">...</a></li>    
+                            
+                </ul>
+            </li>  
+            <li><a href="#"><img src="img/icons/icon_soporte.png" alt="" height='20px' width='20px'></br>SOPORTE</a>
+                <ul>
+							<li><a href="#">VACACIONES</a></li>
+                            <li><a href="#">PRESTAMOS</a></li>
+                            <li><a href="#">...</a></li>    
+                            
+                </ul>
+            </li>
+        </ul>
+    </div>
+	</nav>
 <div class="contenido">
 <h1>EBR/PLD Credicor 2018</h1>
-<form action="ebrpld.php" method="post">
+<form action="ebrpld.php" method="post" class="form-inline" role="form">
 <label for="fini">Desde</label><input type='date' id='fini' name='fini' required='true' ><label for="ffin">Hasta</label><input type='date' id='ffin' name='ffin' required='true' >
-<input type=submit value='Buscar'> 
+<input type=submit value='Buscar' class="button"> 
 <h3>Rango de Clasificacion:
 <?php 
     if (!empty($_POST)) {
@@ -200,6 +266,12 @@ GROUP BY
                 $const1=0;
                 $const2=0;
                 $const3=0;
+                $actv1=0;
+                $actv2=0;
+                $actv3=0;
+                $actv4=0;
+                $actv5=0;
+                
                 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                     if ($row['Tipo']=='F') {
                         $tipof++;
@@ -236,6 +308,22 @@ GROUP BY
                     }else{
                         $constO++;
                     }
+                    if ($row['Indicador']==1) {
+                        $actv1++;
+                    }elseif($row['Indicador']==2){
+                        $actv2++;    
+                    }elseif($row['Indicador']==3){
+                        $actv3++;    
+                    }elseif($row['Indicador']==4){
+                        $actv4++;    
+                    }elseif($row['Indicador']==5){
+                        $actv5++;    
+                    }elseif($row['Indicador']==6){
+                        $actv6++;    
+                    }elseif($row['Indicador']==7){
+                        $actv7++;    
+                    }
+                    
                     
                     
                     
@@ -257,6 +345,13 @@ GROUP BY
                 $pondConst2=$const2/$totalcte;
                 $pondConst3=$const3/$totalcte;
                 $pondConst4=$constO/$totalcte;
+                $pondactv1=$actv1/$totalcte;
+                $pondactv2=$actv2/$totalcte;
+                $pondactv3=$actv3/$totalcte;
+                $pondactv4=$actv4/$totalcte;
+                $pondactv5=$actv5/$totalcte;
+                $pondactv6=$actv6/$totalcte;
+                $pondactv7=$actv7/$totalcte;
                 $arraypontp = array($pondf, $pondm, $pondo);
                 $arraycanttp = array($tipof, $tipom, $tipoo);
                 $arraypondNac=array($pondNacM,$pondNacExAR,$pondNacExt,$pondNacO);
@@ -265,6 +360,8 @@ GROUP BY
                 $arraycantPeps=array($pepsN,$pepsEx,$nPeps,$oPeps);
                 $arraypondConst=array($pondConst1,$pondConst2,$pondConst3,$pondConst4);
                 $arraycantConst=array($const1,$const2,$const3,$constO);
+                $arraypondactv=array($pondactv1,$pondactv2,$pondactv3,$pondactv4,$pondactv5,$pondactv6,$pondactv7);
+                $arraycantactv=array($actv1,$actv2,$actv3,$actv4,$actv5,$actv6,$actv7);
                 $cont = 0;
                 $totalptotp=0;
                 $totalpondtp=0;
@@ -301,6 +398,26 @@ GROUP BY
             $cont++;
             }
             echo "<tr><th>Totales</th><th>".$totalptoNac."</th><th>".$totalcte."</th><th>".$totalporcNac."</th><th>".number_format($totalpondNac,2)."</th></tr>";
+        }
+    ?>
+    </table>
+    <h3>Actividad Economica</h3>
+    <table class='table'>
+    <tr><th>Indicadores</th><th>Riesgo</th><th>Num. Ctes</th><th>%</th><th>Ponderacion</th></tr>
+    <?php
+        if(!empty($_POST)){
+        $cont=0;
+         foreach($arrayAct as $value){
+            $porc=$arraypondactv[$cont]*100;
+            $pond=$arrayActPto[$cont]*$arraypondactv[$cont];
+
+            echo "<tr><td>".$arrayAct[$cont]."</td><td>".$arrayActPto[$cont]."</td><td>".$arraycantactv[$cont]."</td><td>".number_format($porc,2)."</td><td>".number_format($pond,2)."</td></tr>";
+            $totalptoAct=$totalptoAct+$arrayActPto[$cont];
+            $totalporcAct=$totalporcAct+$porc;
+            $totalpondAct=$totalpondAct+$pond;
+            $cont++;
+            }
+            echo "<tr><th>Totales</th><th>".$totalptoAct."</th><th>".$totalcte."</th><th>".number_format($totalporcAct,2)."</th><th>".number_format($totalpondAct,2)."</th></tr>";
         }
     ?>
     </table>
@@ -370,7 +487,7 @@ GROUP BY
              $arrayelemento[1]="Nacionalidad";
               
         }
-        $queryResult=$pdo->query("SELECT * from Intranet.grado_riesgo_pld WHERE ERiesgo='CU' and tipo='A1' and (19 BETWEEN liminf and limsup)");
+        $queryResult=$pdo->query("SELECT * from Intranet.grado_riesgo_pld WHERE ERiesgo='CU' and tipo='A1' and (ROUND($totalpondAct) BETWEEN liminf and limsup)");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             if (!empty($row['grado'])) {
                 $arraygrado[2]=$row['grado'];
@@ -381,7 +498,7 @@ GROUP BY
              $arrayelemento[2]="Actividad Economica";
                           
         }
-        #$totalpondPeps=10;
+        
         $queryResult=$pdo->query("SELECT * from Intranet.grado_riesgo_pld WHERE ERiesgo='CU' and tipo='PE1' and (ROUND($totalpondPeps) BETWEEN liminf and limsup)");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             if (!empty($row['grado'])) {
@@ -428,59 +545,59 @@ GROUP BY
                 $rCUsclass++;
             }
             if ($arraygrado[$i]=='B') {
-                $grado='Bajo';
-                $colorrisk='success';
+                $gradoCU='Bajo';
+                $colorriskCU='success';
             }elseif($arraygrado[$i]=='M'){
-                $grado='Medio';
+                $gradoCU='Medio';
                 
-                $colorrisk='warning';
+                $colorriskCU='warning';
             }elseif($arraygrado[$i]=='A'){
-                $grado='Alto';
-                $colorrisk='danger';
+                $gradoCU='Alto';
+                $colorriskCU='danger';
             }
-            echo "<tr><td>".$arrayelemento[$i]."</td><td class='".$colorrisk."'>".$grado."</td></tr>";
+            echo "<tr><td>".$arrayelemento[$i]."</td><td class='".$colorriskCU."'>".$gradoCU."</td></tr>";
           
             
         }
         if ($rCUbajo==5) {
             $nivelCUr='Bajo';
-            $colorrisk='success';
+            $colorriskCU='success';
         }elseif($rCUmedio==5){
             $nivelCUr='Medio';
-            $colorrisk='warning';
+            $colorriskCU='warning';
         }elseif($rCUalto==5){
             $nivelCUr='Alto';
-            $colorrisk='danger';
+            $colorriskCU='danger';
         }elseif($rCUbajo==4){
             $nivelCUr='Bajo';
-            $colorrisk='success';
+            $colorriskCU='success';
         }elseif($rCUmedio==4){
             $nivelCUr='Medio';
-            $colorrisk='warning';
+            $colorriskCU='warning';
         }elseif($rCUalto==4){
             $nivelCUr='Bajo';
-            $colorrisk='success';
+            $colorriskCU='success';
         }elseif($rCUbajo==3){
             $nivelCUr='Bajo';
             $colorrisk='success';
         }elseif($rCUmedio==3){
             $nivelCUr='Medio';
-            $colorrisk='warning';
+            $colorriskCU='warning';
         }elseif($rCUalto==3){
             $nivelCUr='Alto';
-            $colorrisk='danger';
+            $colorriskCU='danger';
         }elseif($rCUalto==2 and $rCUmedio==2){
             $nivelCUr='Alto';
-            $colorrisk='danger';
+            $colorriskCU='danger';
         }elseif($rCUmedio==2 and $rCUbajo==2){
             $nivelCUr='Medio';
-            $colorrisk='warning';
+            $colorriskCU='warning';
         }else{
             $nivelCUr='NA';
         }
 
         
-        echo "<tr><th>Nivel de Riesgo</th><th class='".$colorrisk."'>".$nivelCUr."</th></tr>";
+        echo "<tr><th>Nivel de Riesgo</th><th class='".$colorriskCU."'>".$nivelCUr."</th></tr>";
         
        echo "</table>";
     }    
@@ -648,7 +765,7 @@ GROUP BY
                 $arrayelemento[1]="Fondeo";  
               
             }
-            echo "<table class='table'>";
+            echo "<table class='table table-bordered'>";
             echo "<tr><th colspan='2'>Productos y Servicios</th></tr>";
             echo "<tr><th>Elemento de Riesgo</th><th>Nivel Riesgo</th></tr>";
             $rPSbajo=0;
@@ -684,18 +801,170 @@ GROUP BY
             } 
             if ($rPSbajo==2) {
                 $nivelPSr='Bajo';
-                $colorrisk='success';
+                $colorriskPS='success';
             }elseif($rPSmedio>=1){
                 $nivelPSr='Medio';
-                $colorrisk='warning';
+                $colorriskPS='warning';
             }elseif($rPSalto>=1){
                 $nivelPSr='Alto';
-                $colorrisk='danger';
+                $colorriskPS='danger';
             }
-            echo "<tr><th>Nivel de Riesgo</th><th class='".$colorrisk."'>".$nivelPSr."</th></tr>";
+            echo "<tr><th>Nivel de Riesgo</th><th class='".$colorriskPS."'>".$nivelPSr."</th></tr>";
             echo "</table>";
         }
     ?>  
+    <h3>Cobertura</h3>
+    <table class='table'>
+    <tr><th>Indicadores</th><th>Riesgo</th><th>Total de Cartera</th><th>%</th><th>Ponderacion</th></tr>
+        <?php
+            if (!empty($_POST)) {
+                $queryResult=$pdo->query("SELECT
+                A.SaldoCap,
+                A.SaldoInt,
+                B.IDLocalidadCNBV,
+                C.Indicador
+            FROM
+                sibware.2_dw_images_contratos A
+            INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+            INNER JOIN sibware.2_entorno_localidadcnbv C ON B.IDLocalidadCNBV = C.ID
+            WHERE
+                A.Fimage = '$_POST[ffin]'");
+                $cob1=0;
+                $cob2=0;
+                $znr1=0;
+                $znr2=0;
+                $znr3=0;
+                $znr4=0;
+                while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                    if ($row['IDLocalidadCNBV']>=433 && $row['IDLocalidadCNBV']<=489) {
+                        $cob1=$cob1+$row['SaldoCap']+$row['SaldoInt'];
+                    }else{
+                        $cob2=$cob2+$row['SaldoCap']+$row['SaldoInt'];
+                    }if ($row['Indicador']==1) {
+                        $znr1=$znr1+$row['SaldoCap']+$row['SaldoInt'];
+                    }elseif ($row['Indicador']==2) {
+                        $znr2=$znr2+$row['SaldoCap']+$row['SaldoInt'];
+                    }elseif ($row['Indicador']==3) {
+                        $znr3=$znr3+$row['SaldoCap']+$row['SaldoInt'];
+                    }elseif ($row['Indicador']==4) {
+                        $znr4=$znr4+$row['SaldoCap']+$row['SaldoInt'];
+                    }
+                }
+                $arraycantcob=array($cob1,$cob2);
+                $cantcob=$cob1+$cob2;
+                $arraycantznr=array($znr1,$znr2,$znr3,$znr4);
+                $cantznr=$znr1+$znr2+$znr3+$znr4;
+                $cont=0;
+                foreach($arraycob as $value){
+                    $porc=($arraycantcob[$cont]/$cantcob)*100;
+                    $pond=($porc/100)*$arraycobpto[$cont];
+
+                    echo "<tr><td>".$arraycob[$cont]."</td><td>".$arraycobpto[$cont]."</td><td>".number_format($arraycantcob[$cont],2)."</td><td>".number_format($porc,2)."</td><td>".number_format($pond,2)."</td></tr>";
+                    $totalptocob=$totalptocob+$arraycobpto[$cont];
+                    $totalporccob=$totalporccob+$porc;
+                    $totalpondcob=$totalpondcob+$pond;
+                    $cont++;
+                }
+                echo "<tr><th>Totales</th><th>".$totalptocob."</th><th>".number_format($cantcob,2)."</th><th>".$totalporccob."</th><th>".number_format($totalpondcob,2)."</th></tr>";
+        }    
+            
+        ?>
+    </table>
+    <h3>Zonas de Riesgo</h3>
+    <table class='table'>
+    <tr><th>Indicadores</th><th>Riesgo</th><th>Total de Cartera</th><th>%</th><th>Ponderacion</th></tr>
+        <?php
+            if (!empty($_POST)) {
+                $cont=0;
+                foreach($arrayzr as $value){
+                    $porc=($arraycantznr[$cont]/$cantznr)*100;
+                    $pond=($porc/100)*$arrayzrpto[$cont];
+
+                    echo "<tr><td>".$arrayzr[$cont]."</td><td>".$arrayzrpto[$cont]."</td><td>".number_format($arraycantznr[$cont],2)."</td><td>".number_format($porc,2)."</td><td>".number_format($pond,2)."</td></tr>";
+                    $totalptoznr=$totalptoznr+$arrayzrpto[$cont];
+                    $totalporcznr=$totalporcznr+$porc;
+                    $totalpondznr=$totalpondznr+$pond;
+                    $cont++;
+                }
+                echo "<tr><th>Totales</th><th>".$totalptoznr."</th><th>".number_format($cantznr,2)."</th><th>".$totalporcznr."</th><th>".number_format($totalpondznr,2)."</th></tr>";
+                
+                
+            }
+        ?>
+    </table>
+    <?php
+        if(!empty($_POST)){
+            $queryResult=$pdo->query("SELECT * from Intranet.grado_riesgo_pld WHERE ERiesgo='PA' and tipo='CO1' and (ROUND($totalpondcob) BETWEEN liminf and limsup)");
+            while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                if (!empty($row['grado'])) {
+                    $arraygrado[0]=$row['grado'];
+            
+                }else {
+                    $arraygrado[0]='NA';
+                }
+                $arrayelemento[0]="Cobertura";  
+              
+            }
+            
+            $queryResult=$pdo->query("SELECT * from Intranet.grado_riesgo_pld WHERE ERiesgo='PA' and tipo='ZR' and (ROUND($totalpondznr) BETWEEN liminf and limsup)");
+            while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                if (!empty($row['grado'])) {
+                    $arraygrado[1]=$row['grado'];
+            
+                }else {
+                    $arraygrado[1]='NA';
+                }
+                $arrayelemento[1]="Zonas de Riesgo";  
+              
+            }
+            echo "<table class='table table-bordered'>";
+            echo "<tr><th colspan='2'>Paises y areas Geograficas</th></tr>";
+            echo "<tr><th>Elemento de Riesgo</th><th>Nivel Riesgo</th></tr>";
+            $rPAbajo=0;
+            $rPAmedio=0;
+            $rPAalto=0;
+            $rPAsclass=0;
+            for ($i=0; $i < 2; $i++) { 
+            
+        
+                if ($arraygrado[$i]=='B') {
+                    $rPAbajo++;
+                }elseif($arraygrado[$i]=='M') {
+                    $rPAmedio++;
+                }elseif($arraygrado[$i]=='A') {
+                    $rPAalto++;
+                }else{
+                    $rPAsclass++;
+                }
+                if ($arraygrado[$i]=='B') {
+                    $grado='Bajo';
+                    $colorrisk='success';
+                }elseif($arraygrado[$i]=='M'){
+                    $grado='Medio';
+                    
+                    $colorrisk='warning';
+                }elseif($arraygrado[$i]=='A'){
+                    $grado='Alto';
+                    $colorrisk='danger';
+                }
+                echo "<tr><td>".$arrayelemento[$i]."</td><td class='".$colorrisk."'>".$grado."</td></tr>";
+              
+                
+            } 
+            if ($rPAbajo==2) {
+                $nivelPAr='Bajo';
+                $colorriskPA='success';
+            }elseif($rPAmedio>=1){
+                $nivelPAr='Medio';
+                $colorriskPA='warning';
+            }elseif($rPAalto>=1){
+                $nivelPAr='Alto';
+                $colorriskPA='danger';
+            }
+            echo "<tr><th>Nivel de Riesgo</th><th class='".$colorriskPA."'>".$nivelPAr."</th></tr>";
+            echo "</table>";
+        }
+    ?>
     <h3>Instrumentos Monetarios</h3>
     <table class='table'>
     <tr><th>Indicadores</th><th>Riesgo</th><th>Total</th><th>%</th><th>Ponderacion</th></tr>
@@ -713,6 +982,7 @@ GROUP BY
                     AND '$_POST[ffin]'
                 )
             AND A.TipoConcepto = 'A'
+            AND A.IDDiario<>56 AND A.IDDiario<>6
             GROUP BY A.FormaPago, B.IDMoneda");
                 $totEF=0;
                 $totCH=0;
@@ -797,7 +1067,8 @@ GROUP BY
                 A.FRegistro BETWEEN '$_POST[fini]'
                 AND '$_POST[ffin]'
             )
-        AND A.TipoConcepto = 'A'");
+        AND A.TipoConcepto = 'A'
+        AND A.IDDiario<>56 AND A.IDDiario<>6");
             $niv1=0;  
             $niv2=0;  
             $niv3=0;
@@ -868,7 +1139,7 @@ GROUP BY
               
             }
        
-             echo "<table class='table'>";
+             echo "<table class='table table-bordered'>";
              echo "<tr><th colspan='2'>Transaciones y Canales de Envio</th></tr>";
              echo "<tr><th>Elemento de Riesgo</th><th>Nivel Riesgo</th></tr>";
              $rCEbajo=0;
@@ -904,22 +1175,83 @@ GROUP BY
              } 
              if ($rCEbajo>=2) {
                  $nivelCEr='Bajo';
-                 $colorrisk='success';
+                 $colorriskCE='success';
              }elseif($rCEmedio>=2){
                  $nivelCEr='Medio';
-                 $colorrisk='warning';
+                 $colorriskCE='warning';
              }elseif($rCEalto==1 ){
                  $nivelCEr='Alto';
-                 $colorrisk='danger';
+                 $colorriskCE='danger';
              }else {
                  # code...
              }
-             echo "<tr><th>Nivel de Riesgo</th><th class='".$colorrisk."'>".$nivelCEr."</th></tr>";
+             echo "<tr><th>Nivel de Riesgo</th><th class='".$colorriskCE."'>".$nivelCEr."</th></tr>";
              echo "</table>"; 
         }
     ?>
-    </table> 
+    <?php
+        if (!empty($_POST)) {
+           $connivelFIB=0;
+           $connivelFIM=0;
+           $connivelFIA=0;
+           $arraynivelFI=array($nivelCUr,$nivelPSr,$nivelPAr,$nivelCEr);
+           
+           $cont=0;
+           foreach($arraynivelFI as $value){
+              
+           
+               if ($arraynivelFI[$cont]=='Bajo') {
+                   $connivelFIB++;
+               }elseif($arraynivelFI[$cont]=='Medio'){
+                   $connivelFIM++;
+               }elseif($arraynivelFI[$cont]=='Alto'){
+                   $connivelFIA++;
+               }
+            $cont++;   
+           }
+           if ($connivelFIB>=3) {
+               $colorriskFI="success";
+               $nivelFI="Bajo";
+           }elseif ($connivelFIM>=3) {
+            $colorriskFI="warning";
+            $nivelFI="Medio";
+           }elseif ($connivelFIA>=3) {
+            $colorriskFI="danger";
+            $nivelFI="Alto";
+           }elseif ($connivelFIB>=2 && $connivelFIM>=2) {
+            $colorriskFI="success";
+            $nivelFI="Bajo";
+           }elseif ($connivelFIB>=2 && $connivelFIM>=1 && $connivelFIA>=1 ) {
+            $colorriskFI="warning";
+            $nivelFI="Medio";
+           }elseif ($connivelFIB>=1 && $connivelFIM>=2 && $connivelFIA>=1 ) {
+            $colorriskFI="warning";
+            $nivelFI="Medio";
+           }elseif ($connivelFIB>=1 && $connivelFIM>=1 && $connivelFIA>=2 ) {
+            $colorriskFI="warning";
+            $nivelFI="Medio";
+           }elseif ($connivelFIA>=2 && $connivelFIM>=2) {
+            $colorriskFI="danger";
+            $nivelFI="Alto";
+           }else {
+            $colorriskFI="danger";
+            $nivelFI="No Existe!";
+           }
 
+           
+            echo "</table>"; 
+            echo "<h2>Resumen de Resultados</h2>";
+            echo "<table class='table table-bordered'>";
+            echo "<tr><th rowspan='5'>Elementos de Riesgo</th><td>Clientes y Usuarios</td><td class='".$colorriskCU."'>".$nivelCUr."</td></tr>";
+            echo "<tr><td>Productos o Servicios</td><td class='".$colorriskPS."'>".$nivelPSr."</td></tr>";
+            echo "<tr><td>Zona Geografica</td ><td class='".$colorriskPA."'>".$nivelPAr."</td></tr>";
+            echo "<tr><td>Transaciones</td><td class='".$colorriskCE."'>".$nivelCEr."</td ></tr>";
+            
+
+            echo "<tr><th>Riesgo Inherente</th><th class='".$colorriskFI."'>".$nivelFI."</th></tr>";
+            echo "</table>";
+        }       
+    ?>    
 </div>
 
 </div>
