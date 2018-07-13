@@ -182,7 +182,7 @@ GROUP BY
      
 ?>
 </h3>
-<div>
+
     <h3>Tipo Persona</h3>
     <table class='table'>
     <tr><th>Indicadores</th><th>Riesgo</th><th>Num. Ctes</th><th>%</th><th>Ponderacion</th></tr>
@@ -1188,9 +1188,8 @@ GROUP BY
             echo "</table>";
         }       
     ?>    
-</div>
 
-</div>
-    
-</body>
-</html>
+
+<?php
+    require_once 'footer.php';
+?>

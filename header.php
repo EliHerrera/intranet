@@ -1,4 +1,5 @@
 <?php
+    session_start();
     set_time_limit(0);
     $idnivel=3;
     $iddepto=6;
@@ -23,7 +24,7 @@
 <body>
 <header>
 
-<?php        echo "<div class='user'>BIENVENIDO <strong>".$nombre."</strong>   <a href='#'><img src='img/icons/user.png' alt='' height='12px' width='12px'></a> <a href='#'><img src='img/icons/notification.png' alt='' height='10px' width='10px'></a> <a href='#'>CERRAR SESION </a> </div>"; ?>
+<?php        echo "<div class='user'>BIENVENIDO <strong>".$nombre."</strong>   <a href='#'><img src='img/icons/user.png' alt='' height='12px' width='12px'></a> <a href='#'><img src='img/icons/notification.png' alt='' height='10px' width='10px'></a> <a href='logoff.php'>CERRAR SESION </a> </div>"; ?>
         
 </header>
     <div class="logo"><a href="index.php"><img src="img/logos/Imagotipo.png" alt="" height='45px' width="235px"  width="100" ></a></div>

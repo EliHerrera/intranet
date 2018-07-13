@@ -166,3 +166,16 @@ nav li ul li ul {
 	top:1px;
 }
 
+footer{
+  
+  position: fixed;
+  bottom: 0; 
+  right: 0%;
+  
+}
+footer img{
+    bottom: 0;
+    right: 0%;
+    width: 150px;
+    
+}
