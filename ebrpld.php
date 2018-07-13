@@ -1,9 +1,10 @@
 <?php
-set_time_limit(0);
+require_once 'header.php';
+
 if (!empty($_POST)) {
     $inicio='2018-01-01';
     $tc=0;
-    require_once 'cn/cn.php';
+    
     $queryResult=$pdo->query("SELECT A.Paridad from sibware.indicador_tipocambio A where Fecha='$_POST[ffin]'");
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $tc=$row['Paridad'];
@@ -169,71 +170,6 @@ GROUP BY
 
 
 ?>
-<!DOCTYPE html>
-<html lang="es-MX">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Intr@net Credicor</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-</head>
-<body>
-<header>
-        <div class="user">BIENVENIDO <strong>EFREN ALMANZA LAMAS</strong>   <a href="#"><img src="img/icons/user.png" alt="" height='12px' width='12px'></a> <a href="#"><img src="img/icons/notification.png" alt="" height='10px' width='10px'></a> <a href="#">CERRAR SESION </a> </div>
-        
-    </header>
-    <div class="logo"><img src="img/logos/Imagotipo.png" alt="" height='45px' width="235px"  width="100" ></div>
-    <nav>
-    <div class="menu">
-		<ul>
-            <li><a href="#"><img src="img/icons/icon_tramites.png" alt="" height='20px' width='20px'></br>TRAMITES INTERNOS</a>
-                <ul>
-							<li><a href="#">VACACIONES</a></li>
-                            <li><a href="#">PRESTAMOS</a></li>
-                            <li><a href="#">...</a></li>    
-                            
-                </ul>    
-            </li>            
-			<li><a href="#"><img src="img/icons/icon_digital.png" alt="" height='20px' width='20px'></br>REVISTA DIGITAL</a></li>
-            <li><a href="#"><img src="img/icons/icon_seguimientos.png" alt="" height='20px' width='20px'></br>SEGUIMIENTOS</a>
-                <ul>
-							<li><a href="#">VACACIONES</a></li>
-                            <li><a href="#">PRESTAMOS</a></li>
-                            <li><a href="#">...</a></li>    
-                            
-                </ul>
-            </li>
-            <li><a href="#"><img src="img/icons/icon_documentacion.png" alt="" height='20px' width='20px'></br>DOCUMENTACION</a>
-                <ul>
-							<li><a href="#">VACACIONES</a></li>
-                            <li><a href="#">PRESTAMOS</a></li>
-                            <li><a href="#">...</a></li>    
-                            
-                </ul>
-            </li>    
-            <li><a href="#"><img src="img/icons/icon_bussines.png" alt="" height='20px' width='20px'></br>BUSSINES INTELIGENCE</a>
-                <ul>
-							<li><a href="#">VACACIONES</a></li>
-                            <li><a href="#">PRESTAMOS</a></li>
-                            <li><a href="#">...</a></li>    
-                            
-                </ul>
-            </li>  
-            <li><a href="#"><img src="img/icons/icon_soporte.png" alt="" height='20px' width='20px'></br>SOPORTE</a>
-                <ul>
-							<li><a href="#">VACACIONES</a></li>
-                            <li><a href="#">PRESTAMOS</a></li>
-                            <li><a href="#">...</a></li>    
-                            
-                </ul>
-            </li>
-        </ul>
-    </div>
-	</nav>
-<div class="contenido">
 <h1>EBR/PLD Credicor 2018</h1>
 <form action="ebrpld.php" method="post" class="form-inline" role="form">
 <label for="fini">Desde</label><input type='date' id='fini' name='fini' required='true' ><label for="ffin">Hasta</label><input type='date' id='ffin' name='ffin' required='true' >
