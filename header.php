@@ -1,9 +1,34 @@
 <?php
     session_start();
     set_time_limit(0);
-    $idnivel=3;
-    $iddepto=6;
-    $idpersonal=31;
+    if(isset($_SESSION["IDPersonal"])){
+        $inactivo = 1000;
+           
+          if(isset($_SESSION['tiempo']) ) {
+          $vida_session = time() - $_SESSION['tiempo'];
+              if($vida_session > $inactivo)
+              {
+                    unset($_SESSION["IDPersonal"]); 
+                    unset($_SESSION["IDDepartamento"]);
+                      session_destroy();
+                  echo '
+                      <script language="JavaScript" type="text/javascript">
+                          alert("Se termino el tiempo de la sesion");
+                           window.location="index.php";
+                      </script> ';
+              }
+          }
+          $_SESSION['tiempo'] = time();  
+       }
+       if (empty($_SESSION['IDPersonal'])) {
+        header("Location: logoff.php");
+        }
+    $idnivel=$_SESSION['Nivel'];
+    $iddepto=$_SESSION['IDDepartamento'];
+    $idpersonal=$_SESSION['IDPersonal'];
+    echo $idnivel;
+    echo $iddepto;
+    echo $idpersonal;
     require_once 'cn/cn.php';
     $queryResult=$pdo->query("SELECT CONCAT(Nombre,' ',Apellido1,' ',Apellido2) as nombre from personal where ID=$idpersonal");
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
