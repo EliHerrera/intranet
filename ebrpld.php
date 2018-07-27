@@ -1169,6 +1169,9 @@ GROUP BY
            }elseif ($connivelFIA>=2 && $connivelFIM>=2) {
             $colorriskFI="danger";
             $nivelFI="Alto";
+           }elseif ($connivelFIA>=2 && $connivelFIB>=2) {
+            $colorriskFI="danger";
+            $nivelFI="Alto";
            }else {
             $colorriskFI="danger";
             $nivelFI="No Existe!";

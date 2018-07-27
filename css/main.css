@@ -164,7 +164,14 @@ nav li ul li ul {
     -moz-box-shadow:inset 0px 39px 0px -24px #fa1105;
 	-webkit-box-shadow:inset 0px 39px 0px -24px #fa1105;
 	box-shadow:inset 0px 39px 0px -24px #fa1105;
-	background-color:#fa1105;
+    background-color:#fa1105;
+    color:#ffffff;
+}
+.button a {
+    color:#ffffff;
+}
+.button a:hover {
+    color:#ffffff;
 }
 .button:active {
 	position:relative;

@@ -1,6 +1,8 @@
 <?php
     session_start();
     set_time_limit(0);
+    $hoy=date('Y-m-d');
+    $id_personal=$_SESSION['IDPersonal'];
     if(isset($_SESSION["IDPersonal"])){
         $inactivo = 1000;
            
@@ -26,9 +28,7 @@
     $idnivel=$_SESSION['Nivel'];
     $iddepto=$_SESSION['IDDepartamento'];
     $idpersonal=$_SESSION['IDPersonal'];
-    echo $idnivel;
-    echo $iddepto;
-    echo $idpersonal;
+    
     require_once 'cn/cn.php';
     $queryResult=$pdo->query("SELECT CONCAT(Nombre,' ',Apellido1,' ',Apellido2) as nombre from personal where ID=$idpersonal");
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
