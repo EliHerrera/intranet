@@ -37,11 +37,17 @@
     }        
 ?>    
 
-<h3>Articulos Pendientes por Autorizar</h3> 
+
 <form action="apppapeleria.php" method="POST">
-<input type="submit" name="aprobar" class="button" value="Aprobar"><input type="submit" name="rechazar" class="button" value="Rechazar"><a href="surtirpapeleria.php" class="button">Entregar</a><label for="emp">Buscar por : </label><input type="text" name="emp" id="emp" placeholder="Nombre a buscar"><input type="submit" name="buscar" class="button" value="buscar"><p>NOTA : Solo seran procesadas las casillas seleccionadas</p>
-
-
+<div class="row">    
+  <div class="col-xs-4">  
+    <label for="emp">Buscar por : </label><input type="text" name="emp" id="emp" placeholder="Nombre a buscar" class="form-control">
+  </div>
+  <div clas="col-xs-2">  
+    <br><input type="submit" name="buscar" class="button" value="buscar"><p>NOTA : Solo seran procesadas las casillas seleccionadas</p>
+  </div>  
+</div>
+<h3>Articulos Pendientes por Autorizar</h3> <input type="submit" name="aprobar" class="button" value="Aprobar" ><input type="submit" name="rechazar" class="button" value="Rechazar"><a href="surtirpapeleria.php" class="button">Entregar</a>
 <table class="table">
 <tr><th>Fecha</th><th>Nombre</th><th>Departamento</th><th>Cantidad</th><th>Articulo</th><th>Clave</th><th>Autorizar</th></tr>
 

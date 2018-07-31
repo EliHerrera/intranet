@@ -7,7 +7,7 @@
 ?>    
 
 <table class="table" >
-<tr><td colspan="3"><h4>Relacion de Solicitudes de Papeleria</h4> </td><td><a href='addpapeleria.php'><img alt='alt' src='img/icons/add.png'></a></td></tr>
+<tr><td colspan="3"><h4>Relacion de Solicitudes de Papeleria</h4> </td><td><a href='addpapeleria.php' class="button">Nueva Solicitud</a></td></tr>
 <tr><th>Fecha</th><th>Nombre</th><th>Estatus</th><th>Acciones</th></tr>
 <?php
 
