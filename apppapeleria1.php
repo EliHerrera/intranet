@@ -35,13 +35,13 @@
 <form action="apppapeleria1.php" method="POST">
 <div class="row">
   <div class="col-xs-4">
-    <input type="submit" name="aprobar" class="button" value="Aprobar" ><input type="submit" name="rechazar" class="button" value="Rechazar"><label for="emp">Buscar por : </label><input type="text" name="emp" id="emp" placeholder="Nombre a buscar" class="form-control">
+    <label for="emp">Buscar por : </label><input type="text" name="emp" id="emp" placeholder="Nombre a buscar" class="form-control">
   </div>
   <div clas="col-xs-2">  
-    <input type="submit" name="buscar" class="button" value="buscar"><p>NOTA : Solo seran procesadas las casillas seleccionadas</p>
+    <br><input type="submit" name="buscar" class="button" value="buscar"><p>NOTA : Solo seran procesadas las casillas seleccionadas</p>
   </div>
 </div>    
-<h3>Articulos Pendientes por Autorizar</h3> 
+<h3>Articulos Pendientes por Autorizar</h3><input type="submit" name="aprobar" class="button" value="Aprobar" ><input type="submit" name="rechazar" class="button" value="Rechazar"> 
 <table class="table">
 <tr><th>Fecha</th><th>Nombre</th><th>Departamento</th><th>Cantidad</th><th>Articulo</th><th>Clave</th><th>Autorizar</th></tr>
 

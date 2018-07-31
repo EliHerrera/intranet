@@ -21,11 +21,17 @@
     }        
 ?>    
 
-<h3>Articulos Pendientes por Entregar</h3> 
+
 <form action="surtirpapeleria.php" method="POST">
-<a href='apppapeleria.php'><img alt='alt' src='img/icons/arrow-left.png'></a><input type="submit" name="surtir" class="button" value="Entregar"><label for="emp">Buscar por : </label><input type="text" name="emp" id="emp" placeholder="Nombre a buscar"><input type="submit" name="buscar" class="button" value="buscar">  <p>NOTA : Solo seran procesadas las casillas seleccionadas</p>
-
-
+<div class="row">
+  <div class="col-xs-4">
+    <label for="emp">Buscar por : </label><input type="text" name="emp" id="emp" placeholder="Nombre a buscar" class="form-control">
+  </div>
+  <div class="col-xs-4">
+    <br><input type="submit" name="buscar" class="button" value="buscar">  <p>NOTA : Solo seran procesadas las casillas seleccionadas</p>
+  </div>
+</div>    
+<h3>Articulos Pendientes por Entregar</h3><a href='apppapeleria.php' class="button" >Regresar</a><input type="submit" name="surtir" class="button" value="Entregar"> 
 <table class="table">
 <tr><th>Fecha</th><th>Nombre</th><th>Departamento</th><th>Cantidad</th><th>Articulo</th><th>Clave</th><th>Autorizar</th></tr>
 

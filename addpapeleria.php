@@ -91,7 +91,9 @@
 ?>    
     <?php echo "<h3>Responsable : ".$responsable." Area : ".$depto."</h3>"; ?>
     <form action="addpapeleria.php" method="post">
-    <select name="emp" onchange="this.form.submit();return false;" required>
+    <div class="row">
+    <div class="col-xs-5">
+    <select name="emp" onchange="this.form.submit();return false;" required class="form-control">
     <?php
         $queryResult = $pdo->query("SELECT A.ID,CONCAT(A.Nombre,' ',A.Apellido1,' ',A.Apellido2) as empleado FROM sibware.personal A WHERE A.`status`='S'");
     ?>
@@ -106,12 +108,26 @@
             }
         ?>
     </select>
-    
-    <table class="table">
-    <tr><th><label for="cant">Cantidad</label> </th><th><label for="articulo">Articulo</label> </th><th><label for="clave">Clave</label> </th><th><input type="text" name="keyw" value="<?php echo $_SESSION['llave'] ?> " id="keyw" hidden="true" ></th><td><a href='papeleria.php'><img alt='alt' src='img/icons/arrow-left.png'></a></td></tr>
-    <tr><td><input type="number" name="cant" value="" required id="cant" min="1" ></td><td><input type="text" name="articulo" value="" required="true" placeholder="Escriba aqui Descripcion" id="articulo"></td><td><input type="text" name="clave" value="" id="clave" required="true" placeholder="Escriba aqui Clave SKU"></td><td><input type="submit" name="agregar" value="Agregar" class="button"></td></tr>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col-xs-2">
+        <label for="cant">Cantidad</label><input type="number" name="cant" value="" required id="cant" min="1" class="form-control" > 
+    </div>
+    <div class="col-xs-4">
+        <label for="articulo">Articulo</label><input type="text" name="articulo" value="" required="true" placeholder="Escriba aqui Descripcion" id="articulo" class="form-control"> 
+    </div>
+    <div class="col-xs-4">
+        <label for="clave">Clave</label><input type="text" name="clave" value="" id="clave" required="true" placeholder="Escriba aqui Clave SKU" class="form-control"><input type="text" name="keyw" value="<?php echo $_SESSION['llave'] ?> " id="keyw" hidden="true" >
+    </div>
+    <div class="col-xs-2">
+        <br><input type="submit" name="agregar" value="Agregar" class="button">
+    </div>
+    </div>
     </form>
-    <tr><th colspan="4">Relacion de Articulos</th></tr>
+    <h3>Relacion de Articulos</h3><a href='papeleria.php' class="button">Regresar</a>
+    <table class="table">
+    
     <tr><th>Reg.</th><th>Cant</th><th>Articulo</th><th>Clave</th><th>Eliminar</th></tr>
     <?php
     if(!empty($id_emp)){

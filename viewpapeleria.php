@@ -3,9 +3,8 @@
     //////inicio de contenido
     $idsol=$_GET['id'];
 ?> 
-
+<h3> Relacion de Articulos de Papeleria</h3><a href='papeleria.php' class="button" >Regresar</a>
 <table class="table" >
-<tr><th colspan="3">Relacion de Articulos de Papeleria</th><td><a href='papeleria.php'><img alt='alt' src='img/icons/arrow-left.png'></a></td></tr>
 <tr><th>Fecha</th><th>Nombre</th><th>Departamento</th><th>Cantidad</th><th>Articulo</th><th>Clave</th><th>Estatus</th></tr>
 <?php
 $queryResult = $pdo->query("SELECT

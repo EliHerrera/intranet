@@ -47,7 +47,7 @@
     <br><input type="submit" name="buscar" class="button" value="buscar"><p>NOTA : Solo seran procesadas las casillas seleccionadas</p>
   </div>  
 </div>
-<h3>Articulos Pendientes por Autorizar</h3> <input type="submit" name="aprobar" class="button" value="Aprobar" ><input type="submit" name="rechazar" class="button" value="Rechazar"><a href="surtirpapeleria.php" class="button">Entregar</a>
+<h3>Articulos Pendientes por Autorizar</h3><input type="submit" name="aprobar" class="button" value="Aprobar" ><input type="submit" name="rechazar" class="button" value="Rechazar"><a href="surtirpapeleria.php" class="button">Entregar</a>
 <table class="table">
 <tr><th>Fecha</th><th>Nombre</th><th>Departamento</th><th>Cantidad</th><th>Articulo</th><th>Clave</th><th>Autorizar</th></tr>
 
