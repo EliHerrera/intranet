@@ -170,10 +170,21 @@ GROUP BY
 
 
 ?>
+
 <h1>EBR/PLD Credicor 2018</h1>
 <form action="ebrpld.php" method="post" class="form-inline" role="form">
-<label for="fini">Desde</label><input type='date' id='fini' name='fini' required='true' ><label for="ffin">Hasta</label><input type='date' id='ffin' name='ffin' required='true' >
-<input type=submit value='Buscar' class="button"> 
+<div class="row">
+<div class="col-xs-3">
+    <label for="fini">Desde</label><input type='date' id='fini' name='fini' required='true' class="form-control" >
+</div>
+<div class="col-xs-3">    
+    <label for="ffin">Hasta</label><input type='date' id='ffin' name='ffin' required='true' class="form-control" >
+</div>
+<div class="col-xs-3">  
+    <input type=submit value='Buscar' class="button"> 
+</div>    
+ 
+</div>
 <h3>Rango de Clasificacion:
 <?php 
     if (!empty($_POST)) {
@@ -183,7 +194,8 @@ GROUP BY
 ?>
 </h3>
 
-    <h3>Tipo Persona</h3>
+
+    <br><br><h3>Tipo Persona</h3>
     <table class='table'>
     <tr><th>Indicadores</th><th>Riesgo</th><th>Num. Ctes</th><th>%</th><th>Ponderacion</th></tr>
         <?php

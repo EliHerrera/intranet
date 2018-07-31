@@ -46,9 +46,12 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+
+
 <header>
 
 <?php        echo "<div class='user'>BIENVENIDO <strong>".$nombre."</strong>   <a href='#'><img src='img/icons/user.png' alt='' height='12px' width='12px'></a> <a href='#'><img src='img/icons/notification.png' alt='' height='10px' width='10px'></a> <a href='logoff.php'>CERRAR SESION </a> </div>"; ?>
