@@ -4,12 +4,15 @@
 ?>
 
 <form action="directorio.php" method="post" >
-
-    <label for="fname" class="col-sm-2 col-form-label">Buscar</label>
-    
-        <input type="text" name="fname" id='fname' placeholder="Nombre a buscar" class="form-control-plaintext"><input type="submit" value="Buscar" class="button"  >  </form>
-    
-
+<div class="row">
+	<div class="col-xs-4">
+    	<label for="fname">Buscar</label>
+    	<input type="text" name="fname" id='fname' placeholder="Nombre a buscar" class="form-control" required="true">
+	</div>
+	<div class="col-xs-2">
+		<br><input type="submit" value="Buscar" class="button"  > 
+   	</div>
+</div>
 </form>    
 <table class="table">
 <td colspan='7'><h3>Directorio Interno Credicor Mexicano</h3></a></td></tr>

@@ -1,13 +1,19 @@
 <?php
     require_once 'header.php';
+    if (!empty($_GET['idtic'])) {
+        $queryResult = $pdo->query("UPDATE Intranet.ticket SET Estatus='C' WHERE ID_Ticket=$_GET[idtic] ");
+        echo "<div class='alert alert-success'>";
+        echo "    <strong>Exito!</strong>La Incidencia ".$_GET['folio']." ha sido Cerrado con Exito!";
+        echo "</div>";
+    }
     if (!empty($_POST['tic'])) {
-        $queryResult = $pdo->query("SELECT A.ID_Ticket, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Empleado, A.folio,A.fecha_alta,A.Estatus,A.Titulo FROM Intranet.ticket A INNER JOIN sibware.personal B ON A.ID_Usuario=B.ID  WHERE A.folio=$_POST[tic] ");
+        $queryResult = $pdo->query("SELECT A.ID_Ticket, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Empleado, A.folio,A.fecha_alta,A.Estatus,A.Titulo FROM Intranet.ticket A INNER JOIN sibware.personal B ON A.ID_Usuario=B.ID  WHERE A.folio=$_POST[tic] ORDER BY A.ID_Ticket DESC");
     }elseif (!empty($_GET['idtic'])) {
-        $queryResult = $pdo->query("SELECT A.ID_Ticket, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Empleado, A.folio,A.fecha_alta,A.Estatus,A.Titulo FROM Intranet.ticket A INNER JOIN sibware.personal B ON A.ID_Usuario=B.ID  WHERE A.ID_Ticket=$_GET[idtic] ");
+        $queryResult = $pdo->query("SELECT A.ID_Ticket, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Empleado, A.folio,A.fecha_alta,A.Estatus,A.Titulo FROM Intranet.ticket A INNER JOIN sibware.personal B ON A.ID_Usuario=B.ID  WHERE A.ID_Ticket=$_GET[idtic] ORDER BY A.ID_Ticket DESC");
     }elseif(!empty($_GET['band'])) {
-        $queryResult = $pdo->query("SELECT A.ID_Ticket, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Empleado, A.folio,A.fecha_alta,A.Estatus,A.Titulo FROM Intranet.ticket A INNER JOIN sibware.personal B ON A.ID_Usuario=B.ID  WHERE (A.Estatus='A' OR A.Estatus='P') ");
+        $queryResult = $pdo->query("SELECT A.ID_Ticket, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Empleado, A.folio,A.fecha_alta,A.Estatus,A.Titulo FROM Intranet.ticket A INNER JOIN sibware.personal B ON A.ID_Usuario=B.ID  WHERE (A.Estatus='A' OR A.Estatus='P') ORDER BY A.ID_Ticket DESC");
     }else{
-        $queryResult = $pdo->query("SELECT A.ID_Ticket, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Empleado, A.folio,A.fecha_alta,A.Estatus,A.Titulo FROM Intranet.ticket A INNER JOIN sibware.personal B ON A.ID_Usuario=B.ID  WHERE A.ID_Usuario=$id_personal ");
+        $queryResult = $pdo->query("SELECT A.ID_Ticket, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Empleado, A.folio,A.fecha_alta,A.Estatus,A.Titulo FROM Intranet.ticket A INNER JOIN sibware.personal B ON A.ID_Usuario=B.ID  WHERE A.ID_Usuario=$id_personal ORDER BY A.ID_Ticket DESC");
     } 
     
     
@@ -45,9 +51,9 @@
             $status="Proceso";
         }
             
-            echo "<tr><td><a href='tickets.php?idtic=".$row['ID_Ticket']."'>".$row['folio']."</a></td><td>".$row['Empleado']."</td><td>".$row['fecha_alta']."</td><td>".$row['Titulo']."</td><td>".$status."</td><td><a href='tickets.php?idtic=".$row['ID_Ticket']."'><img src='img/icons/review.png'></a>";
+            echo "<tr><td><a href='ticketadmin2.php?idtic=".$row['ID_Ticket']."'>".$row['folio']."</a></td><td>".$row['Empleado']."</td><td>".$row['fecha_alta']."</td><td>".$row['Titulo']."</td><td>".$status."</td><td><a href='tickets.php?idtic=".$row['ID_Ticket']."'><img src='img/icons/review.png'></a>";
            if ($_SESSION['IDDepartamento']==6||$_SESSION['IDDepartamento']==10) {
-               echo "<a href='tickets.php?idtic=".$row['ID_Ticket']."'><img src='img/icons/support.png'></a>";
+               echo "<a href='ticketadmin2.php?idtic=".$row['ID_Ticket']."'><img src='img/icons/support.png'></a>";
            }
             echo "</td></tr>";
         }
