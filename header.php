@@ -1,6 +1,7 @@
 <?php
     session_start();
     set_time_limit(0);
+    date_default_timezone_set("America/Mexico_City");
     $hoy=date('Y-m-d');
     $id_personal=$_SESSION['IDPersonal'];
     if(isset($_SESSION["IDPersonal"])){
