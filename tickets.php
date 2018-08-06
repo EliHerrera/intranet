@@ -51,7 +51,7 @@
             $status="Proceso";
         }
             
-            echo "<tr><td><a href='ticketadmin2.php?idtic=".$row['ID_Ticket']."'>".$row['folio']."</a></td><td>".$row['Empleado']."</td><td>".$row['fecha_alta']."</td><td>".$row['Titulo']."</td><td>".$status."</td><td><a href='tickets.php?idtic=".$row['ID_Ticket']."'><img src='img/icons/review.png'></a>";
+            echo "<tr><td><a href='ticketadmin2.php?idtic=".$row['ID_Ticket']."'>".$row['folio']."</a></td><td>".$row['Empleado']."</td><td>".$row['fecha_alta']."</td><td>".$row['Titulo']."</td><td>".$status."</td><td><a href='ticketadmin2.php?idtic=".$row['ID_Ticket']."'><img src='img/icons/review.png'></a>";
            if ($_SESSION['IDDepartamento']==6||$_SESSION['IDDepartamento']==10) {
                echo "<a href='ticketadmin2.php?idtic=".$row['ID_Ticket']."'><img src='img/icons/support.png'></a>";
            }
