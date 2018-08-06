@@ -44,7 +44,7 @@
 <?PHP
     $queryResult = $pdo->query("SELECT A.ID,B.Tipo, A.usuario, A.`Password`   from Intranet.admin_contrasenas A INNER JOIN Intranet.tipo_contrasenas B on A.IDTipo=B.ID where A.IDUsuario=$idemp");
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-        echo "<tr><td>".$row['Tipo']."</td><td>".$row['usuario']."</td><td>".$row['Password']."</td><td><a href='admincontrase.php?idcon=".$row['ID']."&&idemp=".$idemp."'><img src='img/icons/delete.png'></a></td></tr>";
+        echo "<tr><td>".$row['Tipo']."</td><td>".$row['usuario']."</td><td>".$row['Password']."</td><td><a href='updatecontrase.php?idcon=".$row['ID']."'><img src='img/icons/review.png'></a><a href='admincontrase.php?idcon=".$row['ID']."&&idemp=".$idemp."'><img src='img/icons/delete.png'></a></td></tr>";
     }
 ?>    
 </table>
