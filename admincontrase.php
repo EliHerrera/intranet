@@ -23,7 +23,7 @@
     <select name="user" id="user" class="form-control" onchange="this.form.submit();return false;" required>
         <option value="">Selecione Usuario...</option>
         <?PHP
-            $queryResult = $pdo->query("SELECT A.ID,CONCAT(A.Nombre,' ',A.Apellido1,' ',A.Apellido2) as empleado FROM sibware.personal A WHERE A.`status`='S'");
+            $queryResult = $pdo->query("SELECT A.ID,CONCAT(A.Nombre,' ',A.Apellido1,' ',A.Apellido2) as empleado FROM sibware.personal A WHERE A.`status`='S' ORDER BY empleado ASC");
             while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                 $id_emp=$row['ID'];
 		        $nombre=$row['empleado'];
