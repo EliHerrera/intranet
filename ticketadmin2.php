@@ -40,7 +40,7 @@
     INNER JOIN Intranet.ticket C ON A.IDTicket = C.ID_Ticket
     WHERE
         IDTicket=$idtic ");
-    
+      
 ?>  
 <h3>Registro de Acciones</h3>  
 <table class="table">
