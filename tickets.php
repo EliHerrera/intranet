@@ -1,7 +1,9 @@
 <?php
     require_once 'header.php';
+    $hoy = date("Y-m-d H:i:s");
     if (!empty($_GET['idtic'])) {
         $queryResult = $pdo->query("UPDATE Intranet.ticket SET Estatus='C' WHERE ID_Ticket=$_GET[idtic] ");
+        $queryResult = $pdo->query("INSERT INTO Intranet.msj_ticket (IDTicket,mensaje,IDUsuario,fecha,ligafile) VALUES ($_GET[idtic],'Para su comodidad el ticket ha sido cerrado',$id_personal,'$hoy','$file')");
         echo "<div class='alert alert-success'>";
         echo "    <strong>Exito!</strong>La Incidencia ".$_GET['folio']." ha sido Cerrado con Exito!";
         echo "</div>";

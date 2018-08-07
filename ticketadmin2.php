@@ -3,6 +3,7 @@
     $hoy = date("Y-m-d H:i:s"); 
     if (!empty($_GET['idtic'])) {
         $idtic=$_GET['idtic'];
+        $queryResult = $pdo->query("INSERT INTO Intranet.msj_ticket (IDTicket,mensaje,IDUsuario,fecha,ligafile) VALUES ($_GET[idtic],'Esta revisando este ticket!',$id_personal,'$hoy','$file')");
     }
     if (!empty($_POST)) {          
            if ($_FILES['att']["error"] > 0)
