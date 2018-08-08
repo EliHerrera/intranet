@@ -21,7 +21,7 @@
 // require('phpmailer/class.phpmailer.php');
 $mail = new PHPMailer();
 $mail->From = "intranet@credicor.com.mx"; // Mail de origen
-$mail->FromName = "Intranet Credicor Mexicano"; // Nombre del que envia
+$mail->FromName = $name; // Nombre del que envia
 $mail->AddAddress("$to"); // Mail destino, podemos agregar muchas direcciones
 $mail->AddReplyTo("intranet@credicor.com.mx"); // Mail de respuesta
 $mail->WordWrap = 50; // Largo de las lineas

@@ -29,8 +29,10 @@
 		        move_uploaded_file($_FILES['archivo']['tmp_name'],'attachmet/' . $_FILES['archivo']['name']);               
                 $queryResult = $pdo->query("INSERT INTO Intranet.msj_ticket (IDTicket,mensaje,IDUsuario,fecha,ligafile) VALUES ($lastId,'$_POST[rep]',$_POST[emp],'$hoy','$file')");
                 $to="sistemas@credicor.com.mx";
+                $name="Intranet Credicor Mexicano";
                 $subject="NUEVO REPORTE CON FOLIO ".$folio;
                 $message=$_POST[rep]." ATTE : ".$nombre;
+                $from="intranet@credicor.com.mx";
                 require('correo.php');
                 $queryResult = $pdo->query("SELECT B.email from sibware.personal A INNER JOIN sibware.usuarios B on A.IDUsuario=B.ID where A.ID=$id_personal");
                 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {

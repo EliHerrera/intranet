@@ -8,6 +8,8 @@
                 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                     $to=$row['email'];
                 }
+                $name="Intranet Credicor Mexicano";
+                $from="intranet@credicor.com.mx";
                 $message="Para su comodidad el ticket ha sido cerrado";
                 $subject="Para su comodidad el ticket ha sido cerrado ".$_GET['folio'];
                 require('correo.php');

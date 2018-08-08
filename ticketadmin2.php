@@ -1,7 +1,7 @@
 <?php
     require_once 'header.php';
     $hoy = date("Y-m-d H:i:s"); 
-    if (!empty($_GET['idtic'])) {
+    if (!empty($_GET['idtic'])&&$_SESSION['IDDepartamento']==6) {
         $idtic=$_GET['idtic'];
         $queryResult = $pdo->query("UPDATE Intranet.ticket SET Estatus='P' WHERE ID_Ticket=$_GET[idtic] ");
         $queryResult = $pdo->query("INSERT INTO Intranet.msj_ticket (IDTicket,mensaje,IDUsuario,fecha,ligafile) VALUES ($_GET[idtic],'Esta revisando este ticket!',$id_personal,'$hoy','$file')");
@@ -13,6 +13,8 @@
                 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                     $to=$row['email'];
                 }
+                $from="intranet@credicor.com.mx";
+                $name="Intranet Credicor Mexicano";
                 $message="Estan revisando tu Reporte ATTE : ".$nombre;
                 $subject="Estan revisando tu Reporte ".$folio;
                 require('correo.php');
@@ -27,7 +29,9 @@
 
 	        }else{
                 $idtic=$_POST['idtic'];               
-		        $file=$_FILES['archivo']['name'];
+                $file=$_FILES['archivo']['name'];
+                $name="Intranet Credicor Mexicano";
+                $from="intranet@credicor.com.mx";
                 move_uploaded_file($_FILES['archivo']['tmp_name'],'attachmet/' . $_FILES['archivo']['name']); 
                 $queryResult = $pdo->query("INSERT INTO Intranet.msj_ticket (IDTicket,mensaje,IDUsuario,fecha,ligafile) VALUES ($_POST[idtic],'$_POST[rep]',$id_personal,'$hoy','$file')");
                 $queryResult = $pdo->query("SELECT B.email from sibware.personal A INNER JOIN sibware.usuarios B on A.IDUsuario=B.ID where A.ID=$id_personal");
