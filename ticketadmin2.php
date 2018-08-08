@@ -1,10 +1,13 @@
 <?php
     require_once 'header.php';
     $hoy = date("Y-m-d H:i:s"); 
-    if (!empty($_GET['idtic'])&&$_SESSION['IDDepartamento']==6) {
+    if (!empty($_GET['idtic'])) {
         $idtic=$_GET['idtic'];
-        $queryResult = $pdo->query("UPDATE Intranet.ticket SET Estatus='P' WHERE ID_Ticket=$_GET[idtic] ");
-        $queryResult = $pdo->query("INSERT INTO Intranet.msj_ticket (IDTicket,mensaje,IDUsuario,fecha,ligafile) VALUES ($_GET[idtic],'Esta revisando este ticket!',$id_personal,'$hoy','$file')");
+        if ($_SESSION['IDDepartamento']==6) {
+            $queryResult = $pdo->query("UPDATE Intranet.ticket SET Estatus='P' WHERE ID_Ticket=$_GET[idtic] ");
+            $queryResult = $pdo->query("INSERT INTO Intranet.msj_ticket (IDTicket,mensaje,IDUsuario,fecha,ligafile) VALUES ($_GET[idtic],'Esta revisando este ticket!',$id_personal,'$hoy','$file')");# code...
+        }
+        
         $queryResult = $pdo->query("SELECT folio from Intranet.ticket A  where A.ID_Ticket=$_GET[idtic]");
                 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                     $folio=$row['folio'];
@@ -17,7 +20,10 @@
                 $name="Intranet Credicor Mexicano";
                 $message="Estan revisando tu Reporte ATTE : ".$nombre;
                 $subject="Estan revisando tu Reporte ".$folio;
-                require('correo.php');
+                if ($_SESSION['IDDepartamento']==6) {
+                    require('correo.php');# code...
+                }
+                
     }
     if (!empty($_POST)) {          
            if ($_FILES['att']["error"] > 0)
