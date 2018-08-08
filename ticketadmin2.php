@@ -3,6 +3,7 @@
     $hoy = date("Y-m-d H:i:s"); 
     if (!empty($_GET['idtic'])) {
         $idtic=$_GET['idtic'];
+        $queryResult = $pdo->query("UPDATE Intranet.ticket SET Estatus='P' WHERE ID_Ticket=$_GET[idtic] ");
         $queryResult = $pdo->query("INSERT INTO Intranet.msj_ticket (IDTicket,mensaje,IDUsuario,fecha,ligafile) VALUES ($_GET[idtic],'Esta revisando este ticket!',$id_personal,'$hoy','$file')");
         $queryResult = $pdo->query("SELECT folio from Intranet.ticket A  where A.ID_Ticket=$_GET[idtic]");
                 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
