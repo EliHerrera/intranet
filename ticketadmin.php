@@ -28,9 +28,22 @@
 		        $file=$_FILES['archivo']['name'];
 		        move_uploaded_file($_FILES['archivo']['tmp_name'],'attachmet/' . $_FILES['archivo']['name']);               
                 $queryResult = $pdo->query("INSERT INTO Intranet.msj_ticket (IDTicket,mensaje,IDUsuario,fecha,ligafile) VALUES ($lastId,'$_POST[rep]',$_POST[emp],'$hoy','$file')");
+                $to="sistemas@credicor.com.mx";
+                $subject="NUEVO REPORTE CON FOLIO ".$folio;
+                $message=$_POST[rep]." ATTE : ".$nombre;
+                require('correo.php');
+                $queryResult = $pdo->query("SELECT B.email from sibware.personal A INNER JOIN sibware.usuarios B on A.IDUsuario=B.ID where A.ID=$id_personal");
+                while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                    $to=$row['email'];
+                }
+                
+                $subject="NUEVO REPORTE REGISTRADO CON FOLIO ".$folio;
+                $message="Gracias por registrar la incidencia, se está revisando y será atendido a la brevedad en un lapso no mayor a 24 Hrs dependiendo de su Grado de Prioridad y el trabajo del área de TI…Saludos y Gracias! Buen día 😊";
+                require('correo.php');
                 echo "<div class='alert alert-success'>";
                 echo "    <strong>Exito!</strong>La Incidencia ha sido Registrada con Exito!";
                 echo "</div>";
+                
             }
            
     }

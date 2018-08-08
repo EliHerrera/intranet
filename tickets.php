@@ -4,6 +4,13 @@
     if (!empty($_GET['idtic'])) {
         $queryResult = $pdo->query("UPDATE Intranet.ticket SET Estatus='C' WHERE ID_Ticket=$_GET[idtic] ");
         $queryResult = $pdo->query("INSERT INTO Intranet.msj_ticket (IDTicket,mensaje,IDUsuario,fecha,ligafile) VALUES ($_GET[idtic],'Para su comodidad el ticket ha sido cerrado',$id_personal,'$hoy','$file')");
+        $queryResult = $pdo->query("SELECT C.email from Intranet.ticket A INNER JOIN sibware.personal B on A.ID_Usuario=B.ID INNER JOIN sibware.usuarios C on B.IDUsuario=C.ID where A.ID_Ticket=$_GET[idtic]");
+                while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                    $to=$row['email'];
+                }
+                $message="Para su comodidad el ticket ha sido cerrado";
+                $subject="Para su comodidad el ticket ha sido cerrado ".$_GET['folio'];
+                require('correo.php');
         echo "<div class='alert alert-success'>";
         echo "    <strong>Exito!</strong>La Incidencia ".$_GET['folio']." ha sido Cerrado con Exito!";
         echo "</div>";

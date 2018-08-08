@@ -31,6 +31,7 @@
     $idpersonal=$_SESSION['IDPersonal'];
     
     require_once 'cn/cn.php';
+    require_once 'phpmailer/class.phpmailer.php';
     $queryResult=$pdo->query("SELECT CONCAT(Nombre,' ',Apellido1,' ',Apellido2) as nombre from personal where ID=$idpersonal");
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $nombre=$row['nombre'];

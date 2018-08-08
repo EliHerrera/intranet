@@ -1,51 +1,28 @@
 <?php
-$subject="prueba";
-$message="peruab de inatranet";
-/*Lo primero es añadir al script la clase phpmailer desde la ubicación en que esté*/
-require('phpmailer/class.phpmailer.php');
- 
-//Crear una instancia de PHPMailer
+// $to="efren.almanza@credicor.com.mx";
+// $message="prueba mail";
+// $subject="prueba de mail";
+// require('phpmailer/class.phpmailer.php');
 $mail = new PHPMailer();
-//Definir que vamos a usar SMTP
-$mail->IsSMTP();
-//Esto es para activar el modo depuración. En entorno de pruebas lo mejor es 2, en producción siempre 0
-// 0 = off (producción)
-// 1 = client messages
-// 2 = client and server messages
-$mail->SMTPDebug  = 0;
-//Ahora definimos gmail como servidor que aloja nuestro SMTP
-$mail->Host       = 'mail.credicor.com.mx';
-//El puerto será el 587 ya que usamos encriptación TLS
-$mail->Port       = 465;
-//Definmos la seguridad como TLS
-$mail->SMTPSecure = 'tls';
-//Tenemos que usar gmail autenticados, así que esto a TRUE
-$mail->SMTPAuth   = true;
-//Definimos la cuenta que vamos a usar. Dirección completa de la misma
-$mail->Username   = "intranet@credicor.com.mx";
-//Introducimos nuestra contraseña de gmail
-$mail->Password   = "Intr4n3tCM!2018";
 $mail->From = "intranet@credicor.com.mx"; // Mail de origen
-$mail->FromName = "INTR@NET"; // Nombre del que envia
-//Definimos el remitente (dirección y, opcionalmente, nombre)
-//$mail->SetFrom(' infonavitmascercadeti@correo.infonavit.org.mx ', 'Infonavit');
-//Esta línea es por si queréis enviar copia a alguien (dirección y, opcionalmente, nombre)
-//$mail->AddReplyTo(' infonavitmascercadeti@correo.infonavit.org.mx ','Infonavit');
-//Y, ahora sí, definimos el destinatario (dirección y, opcionalmente, nombre)
-$mail->AddAddress('efren.almanza@credicor.com.mx', 'Efren Almanza Lamas');
-//Definimos el tema del email
+$mail->FromName = "Intranet Credicor Mexicano"; // Nombre del que envia
+$mail->AddAddress("$to"); // Mail destino, podemos agregar muchas direcciones
+$mail->AddReplyTo("intranet@credicor.com.mx"); // Mail de respuesta
+$mail->WordWrap = 50; // Largo de las lineas
+$mail->IsHTML(true); // Podemos incluir tags html
 $mail->Subject = $subject;
-//Para enviar un correo formateado en HTML lo cargamos con la siguiente función. Si no, puedes meterle directamente una cadena de texto.
-//$mail->MsgHTML(file_get_contents('http://www.puntopixel.com.mx/infonavit.html'));
-//Y por si nos bloquean el contenido HTML (algunos correos lo hacen por seguridad) una versión alternativa en texto plano (también será válida para lectores de pantalla)
-$mail->AltBody = 'This is a plain-text message body';
 $mail->Body =$message;
-//Enviamos el correo
-if(!$mail->Send()) {
-  echo "Error: " . $mail->ErrorInfo;
-} else {
-  echo "Enviado correo con exito!";
-}
-
-
+//$mail->AltBody = strip_tags($mail->Body); // Este es el contenido alternativo sin html
+$mail->Mailer = "smtp";
+$mail->Host = "13.66.56.161";
+$mail->Port = 26;
+$mail->SMTPAuth = true;
+$mail->Username = "intranet@credicor.com.mx"; // SMTP username
+$mail->Password = "Intr4n3tCM!2018"; // SMTP password
+$mail->Send();
+if ($mail->Send()){
+$mensaje= "Correo enviado con exito;)";}
+else{
+$mensaje= "! Error en el envio de mail Contacte a su Soporte";}
+$banderamsj=1;
 ?>

@@ -4,6 +4,17 @@
     if (!empty($_GET['idtic'])) {
         $idtic=$_GET['idtic'];
         $queryResult = $pdo->query("INSERT INTO Intranet.msj_ticket (IDTicket,mensaje,IDUsuario,fecha,ligafile) VALUES ($_GET[idtic],'Esta revisando este ticket!',$id_personal,'$hoy','$file')");
+        $queryResult = $pdo->query("SELECT folio from Intranet.ticket A  where A.ID_Ticket=$_GET[idtic]");
+                while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                    $folio=$row['folio'];
+                }
+        $queryResult = $pdo->query("SELECT C.email from Intranet.ticket A INNER JOIN sibware.personal B on A.ID_Usuario=B.ID INNER JOIN sibware.usuarios C on B.IDUsuario=C.ID where A.ID_Ticket=$_GET[idtic]");
+                while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                    $to=$row['email'];
+                }
+                $message="Estan revisando tu Reporte ATTE : ".$nombre;
+                $subject="Estan revisando tu Reporte ".$folio;
+                require('correo.php');
     }
     if (!empty($_POST)) {          
            if ($_FILES['att']["error"] > 0)
@@ -18,6 +29,24 @@
 		        $file=$_FILES['archivo']['name'];
                 move_uploaded_file($_FILES['archivo']['tmp_name'],'attachmet/' . $_FILES['archivo']['name']); 
                 $queryResult = $pdo->query("INSERT INTO Intranet.msj_ticket (IDTicket,mensaje,IDUsuario,fecha,ligafile) VALUES ($_POST[idtic],'$_POST[rep]',$id_personal,'$hoy','$file')");
+                $queryResult = $pdo->query("SELECT B.email from sibware.personal A INNER JOIN sibware.usuarios B on A.IDUsuario=B.ID where A.ID=$id_personal");
+                while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                    $to=$row['email'];
+                }
+                $queryResult = $pdo->query("SELECT folio from Intranet.ticket A  where A.ID_Ticket=$_POST[idtic]");
+                while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                    $folio=$row['folio'];
+                }
+                $subject="Ha respondido a este folio ".$folio;
+                $message=$_POST[rep]." ATTE : ".$nombre;
+                require('correo.php');
+                $queryResult = $pdo->query("SELECT C.email from Intranet.ticket A INNER JOIN sibware.personal B on A.ID_Usuario=B.ID INNER JOIN sibware.usuarios C on B.IDUsuario=C.ID where A.ID_Ticket=$_POST[idtic]");
+                while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                    $to=$row['email'];
+                }
+                $message=$_POST[rep]." ATTE : ".$nombre;
+                $subject="Han respondido tu reporte con folio ".$folio;
+                require('correo.php');                
                 echo "<div class='alert alert-success'>";
                 echo "    <strong>Exito!</strong>La Incidencia ha sido Registrada con Exito!";
                 echo "</div>";
