@@ -23,6 +23,7 @@
         }
     } elseif (!empty($_POST['periodico'])) {
         $subject="Periodico Financiero";
+        $name="Intranet Credicor Mexicano";
         $message = file_get_contents('http://www.credicormexicano.com.mx/flayers/periodico.html');
         $queryResult = $pdo->query("SELECT
         B.email
