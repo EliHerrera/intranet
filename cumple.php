@@ -7,7 +7,7 @@
     if (!empty($_GET)) {
         $to=$_GET['mail'];
         // $to="sistemas@credicor.com.mx";
-        $from="atencioaclientes@credicor.com.mx";
+        $from="intranet@credicor.com.mx";
         $name='Atencion a Clientes Credicor Mexicano';
         $idcte=$_GET['idcte'];
         $emp=$_GET['emp'];
