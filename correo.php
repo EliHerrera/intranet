@@ -57,12 +57,12 @@ $mail->Body =$message;
 //Enviamos el correo
 if(!$mail->Send()) {
     echo "<div class='alert alert-danger'>";
-    echo "Error".$to." : " . $mail->ErrorInfo;
+    echo "Error ".$to." : " . $mail->ErrorInfo;
     echo "</div>";  
   
 } else {
     echo "<div class='alert alert-success'>";
-    echo "    <strong>Exito!</strong>".$to. " Envio de correo con Exito!";
+    echo "    <strong>Exito!</strong> ".$to. " Envio de correo con Exito!";
     echo "</div>";
 }
 

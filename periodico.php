@@ -21,7 +21,21 @@
             echo "    <strong>Exito!</strong>La Archivo ha subido con Exito!";
             echo "</div>";
         }
-    }    
+    } elseif (!empty($_POST['periodico'])) {
+        $subject="Periodico Financiero";
+        $message = file_get_contents('http://www.credicormexicano.com.mx/flayers/periodico.html');
+        $queryResult = $pdo->query("SELECT
+        B.email
+    FROM
+        sibware.personal A
+    INNER JOIN sibware.usuarios B ON A.IDUsuario = B.ID
+    WHERE
+        A. STATUS = 'S'");
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $to=$row['email'];
+    		include 'correo.php';
+        }
+    }   
     //////inicio de contenido
 ?>
 <h3>Periodico Financiero</h3>
