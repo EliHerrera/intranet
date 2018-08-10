@@ -87,12 +87,13 @@ WHERE
         
         }  
     }elseif (!empty($_GET['idcomi'])&&!empty($_GET['baja'])&&$_GET['baja']=='B') {
-        $queryResult2 = $pdo->query("SELECT id_comision,id_ejecutivo,mes,yy FROM Intranet.comisiones WHERE id_comision=$_GET[idcomi]");
+        $queryResult2 = $pdo->query("SELECT A.id_comision,A.id_ejecutivo,A.mes,A.yy,C.email FROM Intranet.comisiones A INNER JOIN sibware.personal B ON A.id_ejecutivo=B.ID INNER JOIN sibware.usuarios C ON B.IDUsuario=C.ID WHERE A.id_comision=$_GET[idcomi]");
         while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
             $idcomi=$row['id_comision'];
             $y=$row['yy'];
             $ideje=$row['id_ejecutivo'];
             $mes=$row['mes'];
+            $to=$row['email'];
         }
         $queryResult3 = $pdo->prepare("UPDATE Intranet.comisiones SET status=0 WHERE id_comision=$idcomi ");
         $queryResult3->execute();  
@@ -104,6 +105,12 @@ WHERE
     }elseif (!empty($_GET['idcomi'])&&!empty($_GET['baja'])&&$_GET['baja']=='N') {
         $queryResult3 = $pdo->prepare("UPDATE Intranet.comisiones SET status=2 WHERE id_comision=$_GET[idcomi] ");
         $queryResult3->execute(); 
+        $name="Intranet Credicor Mexicano";
+        $from="intranet@credicor.com.mx";
+        $subject="COMISION APROBADA";
+        $message="TUS COMISIONES HAN SIDO APROBADAS FAVOR DE REVSIAR EN INTRANET NO OLVIDES IMPRIMIR LA SOLICITUD Y RELACION";
+        //$to="efren.almanza@credicor.com.mx";
+        include("correo.php");
         echo "<div class='alert alert-success'>";
         echo "    <strong>Exito! </strong> Comision Aprobada!";
         echo "</div>";

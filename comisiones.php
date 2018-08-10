@@ -211,6 +211,10 @@
                         } 
                     elseif ($ptoLC==3 AND $ptoAP==0 AND $ptoVP==0) {
                             $porc=.40;
+                        }else{
+                            echo "<div class='alert alert-warning'>";
+                            echo "    <strong>Aviso! </strong> El escenario de % de comision de este ejecutivo no esta configurado o no existe!";
+                            echo "</div>";
                         }	 
                     if ($ptoIN==3) {
                             $porcIN=.80;
