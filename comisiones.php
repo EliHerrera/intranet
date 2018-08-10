@@ -340,6 +340,8 @@
     </div>
     <div class="col-xs-2>">    
         <br><a href="relcomisiones.php" class="button">Regresar</a>
+        <a href="solicitudch.php?idcomi=<?PHP echo $_GET['idcomi'] ?>" target="_blank" class="button">Solicitud</a>
+        <input type="button" name="imprimir" value="Relacion"  onClick="window.print();" class="button" />
     </div>
 </div>
 
