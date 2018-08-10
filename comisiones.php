@@ -1,6 +1,7 @@
 <?php
     require_once 'header.php';
     //////inicio de contenido
+    $id_ejecutivo=null;
     $periodo=date("n", mktime(0, 0, 0, date('m')-1, date('d'), date('Y'))); //periodo a calcular
     
     //$periodo=10;
@@ -9,7 +10,19 @@
     // $yy="2017";
     $hoy=date('Y-m-d h:m');
     if (!empty($_POST['usc'])) {
-                $id_ejecutivo=$_POST['usc'];
+        $id_ejecutivo=$_POST['usc'];# code...
+    }elseif (!empty($_GET['idcomi'])) {
+        
+        $queryResult = $pdo->query("SELECT * from Intranet.comisiones WHERE id_comision=$_GET[idcomi]");
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $id_ejecutivo=$row['id_ejecutivo'];
+            $yy=$row['yy'];
+            $periodo=$row['mes'];
+        }
+        
+    }
+    if (!empty($id_ejecutivo)) {
+                
                 $queryResult = $pdo->query("select * from sibware.personal_comisionesne A where A.IDPersonal='$id_ejecutivo'");
                 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                     $meta_lc=$row['MetaLC'];
@@ -233,9 +246,7 @@
             #### fin de calculos y dias
         
     }
-    if (!empty($_GET['usc'])) {
-        $id_ejecutivo=$_GET['usc'];
-    }
+    
     if (!empty($_POST['aprobar'])) {
         $_POST['bon']= str_replace(',','',$_POST['bon']);
         $_POST['ap']= str_replace(',','',$_POST['ap']); 
@@ -278,18 +289,34 @@
     <select name="usc" id="usc" class="form-control" onchange="this.form.submit();return false;">
         <option value="">Seleciones ejecutivo...</option>
         <?PHP
-            $queryResult = $pdo->query("SELECT 
-            A.ID,
-            CONCAT(A.Nombre,' ',A.Apellido1,' ',A.Apellido2) as usc,
-            A.IDSucursal,
-            A.IDPuesto,
-            A.lPatrimonial
-        FROM
-            sibware.personal A INNER JOIN sibware.comisiones B on A.ID=B.IDEjecutivo 
-               
-        WHERE
-            A.IDDepartamento = 1 AND A.status = 'S' AND B.Periodo=$periodo AND B.YY=$yy AND B.lAprobado<>'S'
-            GROUP BY A.ID");
+            if (!empty($_GET['idcomi'])) {
+                $queryResult = $pdo->query("SELECT 
+                A.ID,
+                CONCAT(A.Nombre,' ',A.Apellido1,' ',A.Apellido2) as usc,
+                A.IDSucursal,
+                A.IDPuesto,
+                A.lPatrimonial
+            FROM
+                sibware.personal A INNER JOIN sibware.comisiones B on A.ID=B.IDEjecutivo 
+                
+            WHERE
+                A.IDDepartamento = 1 AND A.status = 'S' AND B.Periodo=$periodo AND B.YY=$yy AND B.lAprobado<>'S' AND A.ID=$id_ejecutivo
+                GROUP BY A.ID");
+                
+
+            }else{        
+                    $queryResult = $pdo->query("SELECT 
+                    A.ID,
+                    CONCAT(A.Nombre,' ',A.Apellido1,' ',A.Apellido2) as usc,
+                    A.IDSucursal,
+                    A.IDPuesto,
+                    A.lPatrimonial
+                FROM
+                    sibware.personal A INNER JOIN sibware.comisiones B on A.ID=B.IDEjecutivo 
+                    
+                WHERE
+                    A.IDDepartamento = 1 AND A.status = 'S' AND B.Periodo=$periodo AND B.YY=$yy AND B.lAprobado<>'S'
+                    GROUP BY A.ID");}
             while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                 if ($id_ejecutivo==$row['ID']) {
                     echo"<option selected='selected' value='".$row['ID']."'>".$row['usc']."</option>";
@@ -303,7 +330,12 @@
     <div class="col-xs-2">
             <input type="text" name="p" id="p" readonly="true" value="<?PHP echo $periodo ?>" required="true" hidden="true">
             <input type="text" name="y" id="y" readonly="true" value="<?PHP echo $yy ?>" required="true" hidden="true">
+        <?PHP if (!empty($_GET['idcomi'])) {
+
+        }else{ ?>  
         <br><input type="submit" value="Aprobar" name="aprobar" id="aprobar" class="button">
+       
+        <?PHP }?>   
     </div>
     <div class="col-xs-2>">    
         <br><a href="relcomisiones.php" class="button">Regresar</a>
@@ -578,22 +610,22 @@
 </table>
 <div class="row">
     <div class="col-xs-2">
-    <label for="inv">Comision Inv</label><input type="text" name="inv" id="inv" value="<?PHP echo number_format($comisionIN,2) ?>" class="form-control">
+    <label for="inv">Comision Inv</label><input type="text" name="inv" id="inv" value="<?PHP echo number_format($comisionIN,2) ?>" class="form-control" readonly="true">
     </div>
     <div class="col-xs-2">
-    <label for="ap">Comision AP</label><input type="text" name="ap" id="ap" value="<?PHP echo number_format($comisionAP,2)  ?>" class="form-control">
+    <label for="ap">Comision AP</label><input type="text" name="ap" id="ap" value="<?PHP echo number_format($comisionAP,2)  ?>" class="form-control" readonly="true">
     </div>
     <div class="col-xs-2">
-    <label for="vp">Comision VP</label><input type="text" name="vp" id="vp" value="<?PHP echo number_format($comisionVP,2) ?>" class="form-control">
+    <label for="vp">Comision VP</label><input type="text" name="vp" id="vp" value="<?PHP echo number_format($comisionVP,2) ?>" class="form-control" readonly="true">
     </div>
     <div class="col-xs-2">
-    <label for="cr">Comision CR</label><input type="text" name="cr" id="cr" value="<?PHP echo number_format($comisionLC,2)  ?>" class="form-control">
+    <label for="cr">Comision CR</label><input type="text" name="cr" id="cr" value="<?PHP echo number_format($comisionLC,2)  ?>" class="form-control" readonly="true">
     </div>
     <div class="col-xs-2">
-    <label for="bon">Comision bonos</label><input type="text" name="bon" id="bon" value="<?PHP echo number_format($totalbonos,2)  ?>" class="form-control">
+    <label for="bon">Comision bonos</label><input type="text" name="bon" id="bon" value="<?PHP echo number_format($totalbonos,2)  ?>" class="form-control" readonly="true">
     </div>
     <div class="col-xs-2">
-    <label for="total">Comision total</label><input type="text" name="total" id="total" value="<?PHP echo number_format($grantotal,2) ?>" class="form-control">
+    <label for="total">Comision total</label><input type="text" name="total" id="total" value="<?PHP echo number_format($grantotal,2) ?>" class="form-control" readonly="true">
     </div>
     
 </div>    

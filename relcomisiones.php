@@ -89,9 +89,13 @@ WHERE
     <div class="col-xs-2">
         <br><input type='submit' value='Buscar' class='button'>
     </div>
+    <?PHP if ($_SESSION['Nivel']>=2) {
+        
+     ?>
     <div class="col-xs-2">
         <br><a href="comisiones.php" class="button">Aprobar</a>
     </div>
+<?PHP } ?>
 </div>
 </form> 
 <table class='table'>
