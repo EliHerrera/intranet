@@ -20,6 +20,7 @@
             $periodo=$row['mes'];
         }
         
+        
     }
     if (!empty($id_ejecutivo)) {
                 
@@ -300,7 +301,7 @@
                 sibware.personal A INNER JOIN sibware.comisiones B on A.ID=B.IDEjecutivo 
                 
             WHERE
-                A.IDDepartamento = 1 AND A.status = 'S' AND B.Periodo=$periodo AND B.YY=$yy AND B.lAprobado<>'S' AND A.ID=$id_ejecutivo
+                A.IDDepartamento = 1 AND A.status = 'S' AND A.ID=$id_ejecutivo
                 GROUP BY A.ID");
                 
 

@@ -57,10 +57,7 @@ WHERE
     INNER JOIN sibware.personal B ON A.id_ejecutivo = B.ID
     WHERE
         A.status <= 3 and A.status>=1 AND (A.fecha BETWEEN '$fini' AND '$ffin')");
-        }
-        
-        
-    }elseif ($_SESSION['Nivel']==1) {
+        }elseif ($_SESSION['Nivel']==1) {
         $queryResult = $pdo->query("SELECT
         A.id_comision,
         CONCAT(
@@ -86,6 +83,9 @@ WHERE
     WHERE
         A.id_ejecutivo=$idpersonal and A.status=2 AND (A.fecha BETWEEN '$fini' AND '$ffin')");
         
+        
+        
+        }  
     }elseif (!empty($_GET['idcomi'])&&!empty($_GET['baja'])&&$_GET['baja']=='B') {
         $queryResult2 = $pdo->query("SELECT id_comision,id_ejecutivo,mes,yy FROM Intranet.comisiones WHERE id_comision=$_GET[idcomi]");
         while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
@@ -113,7 +113,7 @@ WHERE
 <form method='POST' action='relcomisiones.php'>
 <div class="row">
     <div class="col-xs-4">
-        <label for='fini'>Desde</label><input type='date' name='fini' id='fini' required='true' class="form-control">
+        <label for='fini'>Desde</label><input type='date' name='fini' id='fini' required='true' class="form-control" min="2018-05-01">
     </div>
     <div class="col-xs-4">
         <label for='ffin'>hasta</label><input type='date' name='ffin' id='ffin' required='true' class="form-control">
