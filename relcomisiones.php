@@ -32,7 +32,7 @@ WHERE
     if (!empty($_POST)) {
         $fini=$_POST['fini'];
         $ffin=$_POST['ffin'];
-        if ($_SESSION['IDDepartamento']==6) {
+        if ($_SESSION['Nivel']>=2) {
             $queryResult = $pdo->query("SELECT
         A.id_comision,
         CONCAT(
@@ -59,6 +59,32 @@ WHERE
         A.status <= 3 and A.status>=1 AND (A.fecha BETWEEN '$fini' AND '$ffin')");
         }
         
+        
+    }elseif ($_SESSION['Nivel']==1) {
+        $queryResult = $pdo->query("SELECT
+        A.id_comision,
+        CONCAT(
+            B.Nombre,
+            ' ',
+            B.Apellido1,
+            ' ',
+            B.Apellido2
+        ) AS Ejecutivo,
+        A.fecha,
+        A.total_comi_inv,
+        A.total_comi_cred,
+        A.total_comi_vp,
+        A.total_comi_apvp,
+        A.total_bono,
+        A.total_apagar,
+        A.mes,
+        A.yy,
+        A.status
+    FROM
+        Intranet.comisiones A
+    INNER JOIN sibware.personal B ON A.id_ejecutivo = B.ID
+    WHERE
+        A.id_ejecutivo=$idpersonal and A.status=2 AND (A.fecha BETWEEN '$fini' AND '$ffin')");
         
     }elseif (!empty($_GET['idcomi'])&&!empty($_GET['baja'])&&$_GET['baja']=='B') {
         $queryResult2 = $pdo->query("SELECT id_comision,id_ejecutivo,mes,yy FROM Intranet.comisiones WHERE id_comision=$_GET[idcomi]");
