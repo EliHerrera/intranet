@@ -75,6 +75,12 @@ WHERE
         echo "<div class='alert alert-danger'>";
         echo "    <strong>Aviso! </strong> Comision Eliminada!";
         echo "</div>";
+    }elseif (!empty($_GET['idcomi'])&&!empty($_GET['baja'])&&$_GET['baja']=='N') {
+        $queryResult3 = $pdo->prepare("UPDATE Intranet.comisiones SET status=2 WHERE id_comision=$_GET[idcomi] ");
+        $queryResult3->execute(); 
+        echo "<div class='alert alert-success'>";
+        echo "    <strong>Exito! </strong> Comision Aprobada!";
+        echo "</div>";
     }
 ?> 
 <h3>Relacion de comisiones</h3>
@@ -115,6 +121,7 @@ while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         <?php
     }elseif ($row['status']==1 ) {
         ?>
+         <a href="relcomisiones.php?idcomi=<?php echo $row[id_comision]; ?>&&baja=N"><img src="img/icons/aprove.png"></a>
         <a href="relcomisiones.php?idcomi=<?php echo $row[id_comision]; ?>&&baja=B"><img src="img/icons/delete.png"></a>
         <?php
         
