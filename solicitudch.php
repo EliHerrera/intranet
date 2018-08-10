@@ -167,12 +167,11 @@
             </table>
             <table width="850" border="1">
   <tr>
-    <th scope="col"><p>FORMULO</p>
+    <th scope="col" width="30%"><p>FORMULO</p>
       <p><?php echo $nombre_ejecutivo ?></p></th>
-    <th scope="col">REVISO
-    <br><img src="img/logos/firma_luis.png" height="80" >
-    <p>LUIS AYALA MUÑOZ</p></th>
-    <th scope="col">AUTORIZO
+    <th scope="col" width="30%">REVISO
+    </th>
+    <th scope="col" width="30%">AUTORIZO
     <br><img src="img/logos/firma_cristhian.jpg" height="80">
     <p>CRISTHIAN MONTELONGO CARDENAS</p></th>
   </tr>
