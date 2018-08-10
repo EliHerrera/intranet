@@ -108,7 +108,7 @@ WHERE
         $name="Intranet Credicor Mexicano";
         $from="intranet@credicor.com.mx";
         $subject="COMISION APROBADA";
-        $message="TUS COMISIONES HAN SIDO APROBADAS FAVOR DE REVSIAR EN INTRANET NO OLVIDES IMPRIMIR LA SOLICITUD Y RELACION";
+        $message=file_get_contents('https://intranet.credicormexicano.com.mx/comisionaprobada.html');
         //$to="efren.almanza@credicor.com.mx";
         include("correo.php");
         echo "<div class='alert alert-success'>";
