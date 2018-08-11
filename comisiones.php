@@ -181,7 +181,8 @@
                             $ptoIN=2;
                         }elseif ($diferenciaIN<=0) {
                             $ptoIN=0;
-                        }        
+                        } 
+                              
                     if (($ptoLC==3 AND $ptoAP==3 AND $ptoVP==3)OR($ptoLC==2 AND $ptoAP==3 AND $ptoVP==3)) {
                             $porc=0.80;
                         } 
