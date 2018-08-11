@@ -191,7 +191,7 @@
                     elseif (($ptoLC==2 AND $ptoAP==2 AND $ptoVP==2)OR($ptoLC==0 AND $ptoAP==3 AND $ptoVP==3)OR($ptoLC==0 AND $ptoAP==3 AND $ptoVP==2)) {
                             $porc=0.60;
                         }
-                    elseif (($ptoLC==0 AND $ptoAP==2 AND $ptoVP==3)OR($ptoLC==3 AND $ptoAP==2 AND $ptoVP==0)OR($ptoLC==3 AND $ptoAP==0 AND $ptoVP==2) OR ($ptoLC==2 AND $ptoAP==3 AND $ptoVP==0)) {
+                    elseif (($ptoLC==0 AND $ptoAP==2 AND $ptoVP==3)OR($ptoLC==3 AND $ptoAP==2 AND $ptoVP==0)OR($ptoLC==3 AND $ptoAP==0 AND $ptoVP==2) OR ($ptoLC==2 AND $ptoAP==3 AND $ptoVP==0) OR ($ptoLC==2 AND $ptoAP==2 AND $ptoVP==0)) {
                             $porc=0.50;
                         }   
                     elseif (($ptoLC==0 AND $ptoAP==0 AND $ptoVP==3)OR($ptoLC==0 AND $ptoAP==2 AND $ptoVP==2)) {
