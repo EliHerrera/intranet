@@ -94,19 +94,22 @@ if (!empty($_POST['asunto'])) {
         case 6:
             echo "Enviaste Mailing A: Empleados";  
             $sql="SELECT
-        A.email
+        A.Email
     FROM
         sibware.usuarios A
     INNER JOIN sibware.personal B ON B.IDUsuario = A.ID
     WHERE
-        B.`status` = 'S' and B.ID=31";    
+        B.`status` = 'S' and B.ID=31"; 
+              
             break;    
     }
     $queryResult = $pdo->query($sql);
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $to=$row['Email'];
+        
         include('correo.php');
-    }
+        } 
+    
 
 }
 ?>    
