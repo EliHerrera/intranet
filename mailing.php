@@ -99,7 +99,7 @@ if (!empty($_POST['asunto'])) {
         sibware.usuarios A
     INNER JOIN sibware.personal B ON B.IDUsuario = A.ID
     WHERE
-        B.`status` = 'S' and B.ID=31"; 
+        B.`status` = 'S'"; 
               
             break;    
     }
