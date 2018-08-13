@@ -4,7 +4,7 @@
         $hoy=$_POST['fechab'];
     }
     if (!empty($_POST['subir'])) {
-        if ($_FILES['att']["error"] > 0)
+        if ($_FILES['archivo']["error"] > 0)
         {
             echo "Error: " . $_FILES['archivo']['error'] . "<br>";
             echo "<div class='alert alert-danger'>";
