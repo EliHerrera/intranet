@@ -30,7 +30,7 @@ if (!empty($_POST['asunto'])) {
         case 1:
             echo "Enviaste Mailing A: Inversionistas";
             $sql="SELECT
-        email
+        B.Email
     FROM
         2_prestamos A
     INNER JOIN 2_cliente B ON A.IDCliente = B.ID
@@ -42,7 +42,7 @@ if (!empty($_POST['asunto'])) {
         case 2:
             echo "Enviaste Mailing A: Acreditados";
             $sql="SELECT
-        email
+        B.Email
     FROM
         2_contratos A
     INNER JOIN 2_cliente B ON A.IDCliente = B.ID
@@ -55,7 +55,7 @@ if (!empty($_POST['asunto'])) {
         case 3:
             echo "Enviaste Mailing A: Arrendamientos Union";
             $sql="SELECT
-        email
+        B.Email
     FROM
         2_ap_contrato A
     INNER JOIN 2_cliente B ON A.IDCliente = B.ID
@@ -68,7 +68,7 @@ if (!empty($_POST['asunto'])) {
         case 4:
             echo "Enviaste Mailing A: Arrendamientos Cma"; 
             $sql="SELECT
-        email
+        B.Email
     FROM
         3_ap_contrato A
     INNER JOIN 3_cliente B ON A.IDCliente = B.ID
@@ -81,7 +81,7 @@ if (!empty($_POST['asunto'])) {
         case 5:
             echo "Enviaste Mailing A: Venta a Plazo";  
             $sql="SELECT
-        email
+        B.Email
     FROM
         3_vp_contrato A
     INNER JOIN 3_cliente B ON A.IDCliente = B.ID
