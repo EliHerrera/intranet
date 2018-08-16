@@ -118,7 +118,7 @@ if (!empty($_POST['asunto'])) {
   <form action="mailing.php" method="post" enctype="multipart/form-data">
   <div class="row">
     <div class="col-xs-4">
-        <label for="asunto">Asunto</label><input type="text" placeholder="Asunto" required="true" name="asunto" id="asunto" class="form-control" />
+        <label for="asunto">Asunto</label><input type="text" placeholder="Asunto" required="true" name="asunto" id="asunto" class="form-control" maxlength="20" />
     </div>
     <div class="col-xs-4">    
         <label for="grupo">Grupo</label>
