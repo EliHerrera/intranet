@@ -57,6 +57,8 @@
                 }
                 $message=$_POST[rep]." ATTE : ".$nombre;
                 $subject="Han respondido tu reporte con folio ".$folio;
+                require('correo.php'); 
+                $to="sistemas@credicor.com.mx";
                 require('correo.php');                
                 echo "<div class='alert alert-success'>";
                 echo "    <strong>Exito!</strong>La Incidencia ha sido Registrada con Exito!";
