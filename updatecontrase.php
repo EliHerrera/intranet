@@ -8,7 +8,10 @@
             $usr=$_POST['usr'];
             $pws=$_POST['pws'];
             $coment=$_POST['coment'];
+            // $sql="UPDATE Intranet.admin_contrasenas  SET IDUsuario=$idemp,IDTipo=$idtipo,Password='$_POST[pws]',usuario='$_POST[usr]',observacion='$_POST[coment]' WHERE ID=$idcon";
+            // echo $sql;
             $queryResult = $pdo->query("UPDATE Intranet.admin_contrasenas  SET IDUsuario=$idemp,IDTipo=$idtipo,Password='$_POST[pws]',usuario='$_POST[usr]',observacion='$_POST[coment]' WHERE ID=$idcon");
+
             echo "<div class='alert alert-success'>";
             echo "    <strong>Exito!</strong>El registro ha sido Guardado con Exito!";
             echo "</div>";
@@ -62,6 +65,7 @@
                 }
             ?>
     </select>
+    <input type="text" name="idcon" id="idcon" value="<?php echo $idcon ?>" hidden="true">
     </div>
 </div>
 <div class="row">
