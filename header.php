@@ -36,6 +36,11 @@
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $nombre=$row['nombre'];
     }
+    $queryResult=$pdo->query("SELECT * FROM Intranet.parametros");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $dialimpape=$row['dialimpape'];
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="es-MX">
