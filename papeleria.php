@@ -14,7 +14,7 @@ if ($dia<=$dialimpape) {
 	echo "<a href='addpapeleria.php' class='button'>Nueva Solicitud</a>";
 }else{
 	echo "<div class='alert alert-warning'>";
-        echo "    <strong>Aviso!</strong>Solo podras registrar solicitudes los primeros ".$dialimpape." dias naturales de c/mes!";
+        echo "    <strong>Aviso!</strong> Solo podras registrar solicitudes los primeros ".$dialimpape." dias naturales de c/mes!";
         echo "</div>";
 }
 	

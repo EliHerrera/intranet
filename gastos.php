@@ -19,10 +19,16 @@
 <tr><td colspan="3"><h4>Relacion de Gastos</h4> </td><td><a href='addgasto.php' class="button">Nueva Solicitud</a></td></tr>
 <tr><th>Folio</th><th>Fecha</th><th>Empleado</th><th>Monto</th><th>Status</th><th>Acciones</th></tr>
 <?php
-    $queryResult = $pdo->query("SELECT A.Folio, A.Fecha, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Personal, A.Total,A.Status FROM Intranet.gastos A INNER JOIN sibware.personal B ON A.IDPersonal=B.ID WHERE A.IDPersonal=$idpersonal and A.Fecha BETWEEN '$fini' AND '$ffin'");
-    while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-        echo "<tr><td>".$row['Folio']."</td><td>".$row['Fecha']."</td><td>".$row['Personal']."</td><td>".$row['Total']."</td><td>".$row['Status']."</td><td></td></tr>";
+    if (!empty($_POST)) {
+        $fini=$_POST['fini'];
+        $ffin=$_POST['ffin'];
+        $queryResult = $pdo->query("SELECT A.Folio, A.Fecha, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Personal, A.Total,A.Status FROM Intranet.gastos A INNER JOIN sibware.personal B ON A.IDPersonal=B.ID WHERE A.IDPersonal=$idpersonal and A.Fecha BETWEEN '$fini' AND '$ffin'");
+        #var_dump($queryResult);
+        while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            echo "<tr><td>".$row['Folio']."</td><td>".$row['Fecha']."</td><td>".$row['Personal']."</td><td>".$row['Total']."</td><td>".$row['Status']."</td><td><img src='img//icons/review.png'></td></tr>";
+        }
     }
+    
 ?>
 
 </table>
