@@ -40,6 +40,7 @@
                 $from="intranet@credicor.com.mx";
                 move_uploaded_file($_FILES['archivo']['tmp_name'],'attachmet/' . $_FILES['archivo']['name']); 
                 $queryResult = $pdo->query("INSERT INTO Intranet.msj_ticket (IDTicket,mensaje,IDUsuario,fecha,ligafile) VALUES ($_POST[idtic],'$_POST[rep]',$id_personal,'$hoy','$file')");
+                $queryResult = $pdo->query("UPDATE Intranet.ticket SET Estatus='P' WHERE ID_Ticket=$_POST[idtic] ");
                 $queryResult = $pdo->query("SELECT B.email from sibware.personal A INNER JOIN sibware.usuarios B on A.IDUsuario=B.ID where A.ID=$id_personal");
                 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                     $to=$row['email'];
