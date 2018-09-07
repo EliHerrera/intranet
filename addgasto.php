@@ -36,7 +36,7 @@
             $gtotal=0;
         }
         $queryResult = $pdo->query("INSERT INTO Intranet.GastosDetalle (Num,concepto,IDCliente,TipoEmp,motivo,subtotal,IVA,total,folio,IDPersonal,fecha) VALUES ('$_POST[folioinv]', $_POST[concepto], $_POST[idcte],$_POST[emp],' $_POST[motivo]',$subtot,$iva,$total,'$_SESSION[folio]',$idpersonal,'$_POST[fecha]')");    
-        var_dump($queryResult);
+        #var_dump($queryResult);
         $gtotal=$gtotal+$total;
         $_SESSION['gtotal']=$gtotal;
         echo "<div class='alert alert-info'>";
@@ -66,6 +66,7 @@
       $personal=$row['Personal'];
   }
  ?>
+ <h3>Relacion de Gastos</h3> 
  <form action="addgasto.php" method="post">
  <div class="row">
      <div class="col-xs-4">
@@ -98,7 +99,7 @@
              <option value="">Seleccione uno...</option>
              <?PHP 
              if ($_POST['emp']==2) {
-                $queryResult = $pdo->query("SELECT A.IDCte,A.Nombre FROM sibware.pipeline_prospec A  WHERE A.IDEjecutivo=21 and A.Emp=2 ORDER BY A.Nombre ASC") ;
+                $queryResult = $pdo->query("SELECT A.IDCte,CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Nombre FROM sibware.pipeline_prospec A INNER JOIN sibware.2_cliente B ON A.IDCte=B.ID  WHERE A.IDEjecutivo=21 and A.Emp=2 GROUP BY A.IDCte ORDER BY A.Nombre ASC ") ;
                 while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                     if ($row['IDCte']==$_POST['idcte']) {
                         echo "<option selected='selected' value='".$row['IDCte']."'>[CMU]".$row['Nombre']."</option>";# code...
@@ -108,7 +109,7 @@
                     
                 }
              }elseif ($_POST['emp']==3) {
-                $queryResult = $pdo->query("SELECT A.IDCte,A.Nombre FROM sibware.pipeline_prospec A  WHERE A.IDEjecutivo=21 and A.Emp=3 ORDER BY A.Nombre ASC") ;
+                $queryResult = $pdo->query("SELECT A.IDCte,CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Nombre FROM sibware.pipeline_prospec A INNER JOIN sibware.3_cliente B ON A.IDCte=B.ID  WHERE A.IDEjecutivo=21 and A.Emp=3 GROUP BY A.IDCte ORDER BY A.Nombre ASC ") ;
                 while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                     if ($row['IDCte']==$_POST['idcte']) {
                         echo "<option selected='selected' value='".$row['IDCte']."'>[CMA]".$row['Nombre']."</option>";
@@ -118,27 +119,7 @@
                     
                     
                 }
-             }else{
-                    $queryResult = $pdo->query("SELECT A.IDCte,A.Nombre FROM sibware.pipeline_prospec A  WHERE A.IDEjecutivo=21 and A.Emp=2 ORDER BY A.Nombre ASC") ;
-                    while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-                        if ($row['IDCte']==$_POST['idcte']) {
-                            echo "<option selected='selected' value='".$row['IDCte']."'>[CMU]".$row['Nombre']."</option>";# code...
-                        }else{
-                            echo "<option value='".$row['IDCte']."'>[CMU]".$row['Nombre']."</option>";
-                        }
-                        
-                    }
-                    $queryResult = $pdo->query("SELECT A.IDCte,A.Nombre FROM sibware.pipeline_prospec A  WHERE A.IDEjecutivo=21 and A.Emp=3 ORDER BY A.Nombre ASC") ;
-                    while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-                        if ($row['IDCte']==$_POST['idcte']) {
-                            echo "<option selected='selected' value='".$row['IDCte']."'>[CMA]".$row['Nombre']."</option>";
-                        } else {
-                            echo "<option value='".$row['IDCte']."'>[CMA]".$row['Nombre']."</option>";
-                        }
-                        
-                        
-                    }
-            }
+             }
              ?>
          </select>
      </div>
@@ -188,7 +169,7 @@
         <?php
              $fila=0;
             $queryResult = $pdo->query("SELECT A.ID, A.Num, C.concepto, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Cte, IF(A.TipoEmp=2,'CMU',IF(A.TipoEmp=3,'CMA','OTRA')) as TipoEmp, A.Motivo, A.Total  FROM Intranet.GastosDetalle A INNER JOIN sibware.2_cliente B ON A.IDCliente=B.ID INNER JOIN Intranet.concepto_gasto C ON A.concepto=C.ID WHERE A.folio=$_SESSION[folio] AND A.IDPersonal=$idpersonal AND A.TipoEmp=2");
-            var_dump($queryResult);
+            #var_dump($queryResult);
             while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                 $fila++;
                 echo "<tr><td>".$fila."</td><td>".$row['Num']."</td><td>".$row['concepto']."</td><td>".$row['Cte']."</td><td>".$row['TipoEmp']."</td><td>".$row['Motivo']."</td><td>".$row['Total']."</td><td><a href='addgasto.php?idconc=".$row['ID']."'><img src='img/icons/delete.png'</a></td></tr>";
@@ -210,6 +191,7 @@
             }
             
             ?>
+            <a href="gastos.php" class="button">Regresar</a>
  </form>
 <?php
     /////fin de contenido
