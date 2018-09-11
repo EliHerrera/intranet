@@ -2,6 +2,7 @@
     require_once 'header.php';
     $folio=null;  
     $hoy=date("Y-m-d H:i:s"); 
+    $gtotal=0;
     if(!empty($_GET['idconc'])){
         $queryResult = $pdo->query("DELETE from Intranet.GastosDetalle WHERE ID=$_GET[idconc]");
         echo "<div class='alert alert-danger'>";
@@ -30,15 +31,15 @@
             $subtot=$total;
             $iva=0;
         }
-        if (!empty($_SESSION['gtotal'])) {
-            $gtotal=$_SESSION['gtotal'];
-        }else{
-            $gtotal=0;
-        }
+        // if (!empty($_SESSION['gtotal'])) {
+        //     $gtotal=$_SESSION['gtotal'];
+        // }else{
+        //     $gtotal=0;
+        // }
         $queryResult = $pdo->query("INSERT INTO Intranet.GastosDetalle (Num,concepto,IDCliente,TipoEmp,motivo,subtotal,IVA,total,folio,IDPersonal,fecha) VALUES ('$_POST[folioinv]', $_POST[concepto], $_POST[idcte],$_POST[emp],' $_POST[motivo]',$subtot,$iva,$total,'$_SESSION[folio]',$idpersonal,'$_POST[fecha]')");    
         #var_dump($queryResult);
-        $gtotal=$gtotal+$total;
-        $_SESSION['gtotal']=$gtotal;
+        // $gtotal=$gtotal+$total;
+        // $_SESSION['gtotal']=$gtotal;
         echo "<div class='alert alert-info'>";
         echo "    <strong>Exito!</strong> Concepto Agregado con Exito!";
         echo "</div>";
@@ -168,23 +169,23 @@
      <tr><th>No.</th><th>Numero</th><th>Concepto</th><th>Cliente</th><th>Empresa</th><th>Motivo</th><th>Total</th><th>Eliminar</th></tr>
         <?php
              $fila=0;
-            $queryResult = $pdo->query("SELECT A.ID, A.Num, C.concepto, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Cte, IF(A.TipoEmp=2,'CMU',IF(A.TipoEmp=3,'CMA','OTRA')) as TipoEmp, A.Motivo, A.Total  FROM Intranet.GastosDetalle A INNER JOIN sibware.2_cliente B ON A.IDCliente=B.ID INNER JOIN Intranet.concepto_gasto C ON A.concepto=C.ID WHERE A.folio=$_SESSION[folio] AND A.IDPersonal=$idpersonal AND A.TipoEmp=2");
+            $queryResult = $pdo->query("SELECT A.ID, A.Num, C.concepto, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Cte, IF(A.TipoEmp=2,'CMU',IF(A.TipoEmp=3,'CMA','OTRA')) as TipoEmp, A.Motivo, A.Total  FROM Intranet.GastosDetalle A INNER JOIN sibware.2_cliente B ON A.IDCliente=B.ID INNER JOIN Intranet.concepto_gasto C ON A.concepto=C.ID WHERE A.folio=$_SESSION[folio] AND A.IDPersonal=$idpersonal AND A.TipoEmp=2 ");
             #var_dump($queryResult);
             while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                 $fila++;
                 echo "<tr><td>".$fila."</td><td>".$row['Num']."</td><td>".$row['concepto']."</td><td>".$row['Cte']."</td><td>".$row['TipoEmp']."</td><td>".$row['Motivo']."</td><td>".$row['Total']."</td><td><a href='addgasto.php?idconc=".$row['ID']."'><img src='img/icons/delete.png'</a></td></tr>";
-                
+                $gtotal=$gtotal+$row['Total'];
             } 
             $queryResult = $pdo->query("SELECT A.ID, A.Num, C.concepto, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Cte, IF(A.TipoEmp=2,'CMU',IF(A.TipoEmp=3,'CMA','OTRA')) as TipoEmp, A.Motivo, A.Total  FROM Intranet.GastosDetalle A INNER JOIN sibware.3_cliente B ON A.IDCliente=B.ID INNER JOIN Intranet.concepto_gasto C ON A.concepto=C.ID WHERE A.folio=$_SESSION[folio] AND A.IDPersonal=$idpersonal AND A.TipoEmp=3");
             while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                 $fila++;
                 echo "<tr><td>".$fila."</td><td>".$row['Num']."</td><td>".$row['concepto']."</td><td>".$row['Cte']."</td><td>".$row['TipoEmp']."</td><td>".$row['Motivo']."</td><td>".$row['Total']."</td><td><a href='addgasto.php?idconc=".$row['ID']."'><img src='img/icons/delete.png'</a></td></tr>";
-                
+                $gtotal=$gtotal+$row['Total'];
             }    
         ?>
  </table>
  <form action="addgasto.php" method="post">
-            <input type="hidden" name="Tot" value="<?PHP echo $_SESSION['gtotal'] ?>">
+            <input type="text" name="Tot" value="<?PHP echo $gtotal ?>">
             <?PHP
             if ($fila>0) {
                 echo "<input type='submit' value='Guardar' class='button' name='guardar' id='guardar'>";

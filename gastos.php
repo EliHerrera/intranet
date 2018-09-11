@@ -24,7 +24,7 @@
         $fini=$_POST['fini'];
         $ffin=$_POST['ffin'];
         $queryResult = $pdo->query("SELECT A.ID, A.Folio, A.Fecha, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Personal, A.Total,A.Status as St,CASE
-        WHEN A.Status=1 THEN 'Pendiente' WHEN A.Status=2 THEN 'Autorizada' WHEN A.Status=3 THEN 'Cobrada' ELSE 'Error' END as Status FROM Intranet.gastos A INNER JOIN sibware.personal B ON A.IDPersonal=B.ID WHERE A.IDPersonal=$idpersonal and A.Fecha BETWEEN '$fini' AND '$ffin'");
+        WHEN A.Status=1 THEN 'Pendiente' WHEN A.Status=2 THEN 'Autorizada' WHEN A.Status=3 THEN 'Compras' ELSE 'Error' END as Status FROM Intranet.gastos A INNER JOIN sibware.personal B ON A.IDPersonal=B.ID WHERE A.IDPersonal=$idpersonal and A.Fecha BETWEEN '$fini' AND '$ffin'");
         #var_dump($queryResult);
         while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             if ($row['St']==1) {
