@@ -31,12 +31,22 @@
             $subtot=$total;
             $iva=0;
         }
-        // if (!empty($_SESSION['gtotal'])) {
-        //     $gtotal=$_SESSION['gtotal'];
-        // }else{
-        //     $gtotal=0;
-        // }
-        $queryResult = $pdo->query("INSERT INTO Intranet.GastosDetalle (Num,concepto,IDCliente,TipoEmp,motivo,subtotal,IVA,total,folio,IDPersonal,fecha) VALUES ('$_POST[folioinv]', $_POST[concepto], $_POST[idcte],$_POST[emp],' $_POST[motivo]',$subtot,$iva,$total,'$_SESSION[folio]',$idpersonal,'$_POST[fecha]')");    
+        if(empty($_POST['comensal'])){
+            $comensales=0;
+        }else {
+            $comensales=$_POST['comensal'];
+        }
+        if (empty($_POST['origen'])) {
+            $origen='NA';
+        }else{
+            $origen=$_POST['origen'];
+        }
+        if (empty($_POST['destino'])) {
+            $destino='NA';
+        }else{
+            $destino=$_POST['destino'];
+        }
+        $queryResult = $pdo->query("INSERT INTO Intranet.GastosDetalle (Num,concepto,IDCliente,TipoEmp,motivo,subtotal,IVA,total,folio,IDPersonal,fecha,comensales,origen,destino) VALUES ('$_POST[folioinv]', $_POST[concepto], $_POST[idcte],$_POST[emp],' $_POST[motivo]',$subtot,$iva,$total,'$_SESSION[folio]',$idpersonal,'$_POST[fecha]',$comensales,'$origen','$destino')");    
         #var_dump($queryResult);
         // $gtotal=$gtotal+$total;
         // $_SESSION['gtotal']=$gtotal;
@@ -85,16 +95,27 @@
          <label for="folioinv">Fact/Nota/Recibo</label><input type="text" name="folioinv" id="folioinv" required="true" class="form-control" placeholder="Escriba numero de Nota">
      </div>
      <div class="col-xs-2">
-         <label for="concepto">Concepto</label><select name="concepto" id="concepto" class="form-control" required="true">
+         <label for="concepto">Concepto</label><select name="concepto" id="concepto" class="form-control" required="true" onchange="this.form.submit();return false;">
              <option value="">Seleccione uno...</option>
              <?php
              $queryResult=$pdo->query("SELECT * FROM Intranet.concepto_gasto");
              while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+             if ($row['ID']==$_POST['concepto']) {
+                echo "<option selected='selected' value='".$row['ID']."'>".$row['concepto']."</option>";
+             }else{    
                 echo "<option value='".$row['ID']."'>".$row['concepto']."</option>";
+                }
              }
              ?>
          </select>
      </div>
+     <?PHP
+        if ($_POST['concepto']==1||$_POST['concepto']==7||$_POST['concepto']==8) {
+            echo "<div class='col-xs-1'>";
+            echo    "<label for='comensal'>No. de Comensales</label><input type='number' name='comensal' id='comensal' class='form-control' required='true'>";
+            echo "</div>";
+        }
+     ?>
      <div class="col-xs-4">
          <label for="idcte">Socio/Prospecto</label><select name="idcte" id="idcte" class="form-control" required="true" onchange="this.form.submit();return false;" >
              <option value="">Seleccione uno...</option>
@@ -125,7 +146,20 @@
          </select>
      </div>
      
+     
  </div> 
+ <?PHP
+        if ($_POST['concepto']==6) {
+            echo "<div class='row'>";
+            echo "<div class='col-xs-3'>";
+            echo    "<label for='origen'>Origen</label><input type='text' name='origen' id='origen' class='form-control' required='true'>";
+            echo "</div>";
+            echo "<div class='col-xs-3'>";
+            echo    "<label for='destino'>Destino</label><input type='text' name='destino' id='destino' class='form-control' required='true'>";
+            echo "</div>";
+            echo "</div>";
+        }
+     ?>
  <div class="row">
      <div class="col-xs-2">
          <label for="total">Total</label><input type="number" name="total" id="total" class="form-control" required="true">
@@ -185,7 +219,7 @@
         ?>
  </table>
  <form action="addgasto.php" method="post">
-            <input type="text" name="Tot" value="<?PHP echo $gtotal ?>">
+            <input type="hidden" name="Tot" value="<?PHP echo $gtotal ?>">
             <?PHP
             if ($fila>0) {
                 echo "<input type='submit' value='Guardar' class='button' name='guardar' id='guardar'>";

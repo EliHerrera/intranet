@@ -36,7 +36,7 @@
 ?> 
 <h3>Relacion de Gastos</h3> 
 <table class="table">
-     <tr><th>No.</th><th>Numero</th><th>Concepto</th><th>Cliente</th><th>Empresa</th><th>Motivo</th><th>Total</th></tr>
+     <tr><th>No.</th><th>Numero</th><th>Concepto</th><th>Comensales</th><th>Origen</th><th>Destino</th><th>Cliente</th><th>Lugar<th>Empresa</th><th>Motivo</th><th>Total</th></tr>
         <?php
         if (!empty($_GET)) {
             
@@ -46,13 +46,20 @@
             while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                 $status=$row['Status'];
             }
-            $queryResult = $pdo->query("SELECT A.ID, A.Num, C.concepto, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Cte, IF(A.TipoEmp=2,'CMU',IF(A.TipoEmp=3,'CMA','OTRA')) as TipoEmp, A.Motivo, A.Total  FROM Intranet.GastosDetalle A INNER JOIN sibware.2_cliente B ON A.IDCliente=B.ID INNER JOIN Intranet.concepto_gasto C ON A.concepto=C.ID WHERE A.IDGastos=$_GET[idg]");
+            $queryResult = $pdo->query("SELECT A.ID, A.Num, C.concepto, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Cte, CONCAT(B.Municipio,',',B.Estado) as lugar, A.comensales, A.origen, A.destino, IF(A.TipoEmp=2,'CMU',IF(A.TipoEmp=3,'CMA','OTRA')) as TipoEmp, A.Motivo, A.Total  FROM Intranet.GastosDetalle A INNER JOIN sibware.2_cliente B ON A.IDCliente=B.ID INNER JOIN Intranet.concepto_gasto C ON A.concepto=C.ID WHERE A.IDGastos=$_GET[idg] AND A.TipoEmp=2");
             #var_dump($queryResult);
             while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                 $fila++;
-                echo "<tr><td>".$fila."</td><td>".$row['Num']."</td><td>".$row['concepto']."</td><td>".$row['Cte']."</td><td>".$row['TipoEmp']."</td><td>".$row['Motivo']."</td><td>".$row['Total']."</td></tr>";
+                echo "<tr><td>".$fila."</td><td>".$row['Num']."</td><td>".$row['concepto']."</td><td>".$row['comensales']."</td><td>".$row['origen']."</td><td>".$row['destino']."</td><td>".$row['Cte']."</td><td>".$row['lugar']."</td><td>".$row['TipoEmp']."</td><td>".$row['Motivo']."</td><td>".$row['Total']."</td></tr>";
                 
             } 
+            $queryResult = $pdo->query("SELECT A.ID, A.Num, C.concepto, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Cte, CONCAT(B.Municipio,',',B.Estado) as lugar, A.comensales, A.origen, A.destino, IF(A.TipoEmp=2,'CMU',IF(A.TipoEmp=3,'CMA','OTRA')) as TipoEmp, A.Motivo, A.Total  FROM Intranet.GastosDetalle A INNER JOIN sibware.3_cliente B ON A.IDCliente=B.ID INNER JOIN Intranet.concepto_gasto C ON A.concepto=C.ID WHERE A.IDGastos=$_GET[idg] AND A.TipoEmp=3");
+            #var_dump($queryResult);
+            while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                $fila++;
+                echo "<tr><td>".$fila."</td><td>".$row['Num']."</td><td>".$row['concepto']."</td><td>".$row['comensales']."</td><td>".$row['origen']."</td><td>".$row['destino']."</td><td>".$row['Cte']."</td><td>".$row['lugar']."</td><td>".$row['TipoEmp']."</td><td>".$row['Motivo']."</td><td>".$row['Total']."</td></tr>";
+                
+            }
         }      
         ?>
  </table>
