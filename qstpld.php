@@ -1,6 +1,7 @@
 <?php
     require_once 'header.php';
     //////inicio de contenido
+    $periodo=date('Y');
 ?> 
 <h3>Cuestionarios PLD</h3>
 <div class="row">
@@ -17,9 +18,9 @@
     $queryResult = $pdo->query("SELECT * FROM Intranet.PLD_Qst");
     while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $fila++;
-        $queryResult2 = $pdo->query("SELECT * FROM Intranet.RelQst WHERE IDQst=$row[ID]");
+        $queryResult2 = $pdo->query("SELECT * FROM Intranet.RelQst WHERE IDQst=$row[ID] AND periodo=$periodo");
         $row_count = $queryResult2->rowCount(); 
-        echo "<tr><td>".$fila."</td><td>".$row['codigo']."</td><td>".$row['no_preguntas']."</td><td>".$row_count."</td></tr>";
+        echo "<tr><td>".$fila."</td><td>".$row['codigo']."</td><td>".$row['no_preguntas']."</td><td><a href='relqstemp.php?idqst=".$row['ID']."'>".$row_count."</a></td></tr>";
     }
 ?>
 </table>
