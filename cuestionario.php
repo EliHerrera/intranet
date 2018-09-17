@@ -1,0 +1,134 @@
+<?php
+    require_once 'header.php';
+    //////inicio de contenido
+   $periodo=date('Y'); 
+   $row_count = 0;
+    if (!empty($_POST['contestar'])) {
+        $queryResult=$pdo->query("SELECT ID,clave,IDQst FROM Intranet.PLD_Cuest WHERE codigo='$_POST[codigo]'");
+        
+        while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $clave2=$row['clave'];
+            $idpregunta=$row['ID'];
+            $idrespuesta=$_POST[$clave2];
+            $idqst2=$row['IDQst'];            
+            $queryResult2=$pdo->query("INSERT INTO Intranet.PLD_Resultados (IDPersonal,IDPregunta,IDRespuesta,codigo,periodo,IDQst) VALUES ($idpersonal,$idpregunta,$idrespuesta,'$_POST[codigo]',$periodo,$idqst2)");
+        }
+        $correctas=0;
+        $queryResult=$pdo->query("SELECT IDRespuesta FROM Intranet.PLD_Resultados WHERE IDpersonal=$idpersonal and periodo=$periodo");
+        while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $queryResult2=$pdo->query("SELECT * FROM Intranet.PLD_Answer WHERE ID=$row[IDRespuesta] ");
+            while($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+                if($row['lAcertivo']=='S'){
+                    $correctas++;
+                }
+            }
+        }
+        $queryResult = $pdo->query("SELECT * FROM Intranet.PLD_Cuest WHERE IDQst=$idqst2");
+        $row_count = $queryResult->rowCount();
+        $calf=($correctas/$row_count)*10;
+        $queryResult = $pdo->query("UPDATE Intranet.RelQst SET Calf=$calf, lActivo='N' WHERE IDPersonal=$idpersonal AND periodo=$periodo");
+        echo "<div class='alert alert-success'>";
+        echo "    <strong>Tuviste </strong>".$correctas."/".$row_count." Respuestas Correctas Tu calificacion es de : ".number_format($calf,2);
+        echo "</div>";
+        $queryResult=$pdo->query("SELECT A.IDQst,B.codigo,B.llave,B.ID FROM Intranet.RelQst A INNER JOIN Intranet.PLD_Qst B ON A.IDQst=B.ID WHERE A.IDPersonal=$idpersonal AND A.periodo=$periodo and A.lActivo='N'");
+        while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $codigo=$row['codigo'];
+            $idqst=$row['ID'];
+            $llave=$row['llave'];
+        }
+        $queryResult=$pdo->query("SELECT ID as IDq, Pregunta, clave FROM Intranet.PLD_Cuest WHERE IDQst=$idqst ");
+        while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $clave=$row['clave'];
+            $qst++;
+            $idpregunta=$row['IDq'];
+            echo "<p>".$qst.") ".$row['Pregunta']."</p>";
+            $queryResult1=$pdo->query("SELECT ID as IDw, Respuesta,lAcertivo  FROM Intranet.PLD_Answer WHERE IDCuest=$row[IDq] ");
+            while($row=$queryResult1->fetch(PDO::FETCH_ASSOC)) {
+                
+                $queryResult2=$pdo->query("SELECT * FROM  Intranet.PLD_Resultados WHERE IDpersonal=$idpersonal AND IDPregunta=$idpregunta AND IDRespuesta=$row[IDw]");
+                $bandera = $queryResult2->rowCount(); 
+                if($bandera==1){
+                    $mensaje='Correcta';
+                }else{
+                    $mensaje='Incorrecta';
+                }
+                
+                if($row['lAcertivo']=='S'){
+                echo "<div class='radio'>";
+                echo "    <label><input type='radio' name='".$clave."' checked>".$row['Respuesta']."</label>";
+                echo "</div>";
+                echo "<div class='alert alert-info'>".$mensaje."</div>";
+                }elseif (['lAcertivo']=='N') {
+                echo "<div class='radio disabled'>";
+                echo "    <label><input type='radio' name='".$clave."' disabled>".$row['Respuesta']."</label>";
+                echo "</div>";
+                echo "<div class='alert alert-info'>".$mensaje."</div>";
+                }    
+            }
+
+        }
+        $row_count='N';
+    }
+$queryResult=$pdo->query("SELECT A.IDQst,B.codigo,B.llave,B.ID FROM Intranet.RelQst A INNER JOIN Intranet.PLD_Qst B ON A.IDQst=B.ID WHERE A.IDPersonal=$idpersonal AND A.periodo=$periodo and A.lActivo='S'"); 
+
+$codigo=null;
+$idqst=0;
+$llave=null;
+while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+    $codigo=$row['codigo'];
+    $idqst=$row['ID'];
+    $llave=$row['llave'];
+}  
+
+if(!empty($_POST['llave'])){
+    $queryResult=$pdo->query("SELECT * FROM Intranet.RelQst WHERE llave='$_POST[llave]' AND Calf IS NULL;");
+    
+    $row_count = $queryResult->rowCount(); 
+    
+}
+
+?>    
+<h3>Cuestionario : <?PHP echo $codigo ?></h3>
+
+  <form action="cuestionario.php" method="post">
+  <div class="row">
+    <div class="col-xs-3">
+        <label for="llave">LLAVE</label><input type="text" name="llave" id="llave" class="form-control"><input type="hidden" name="codigo" id="codigo" value="<?PHP echo $codigo ?>" required="true" readonly="true" class="form-control">
+    </div>
+  </div>
+    <?PHP
+    if($row_count<>0) {  
+        $queryResult=$pdo->query("SELECT ID as IDq, Pregunta, clave FROM Intranet.PLD_Cuest WHERE IDQst=$idqst ");
+        while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $clave=$row['clave'];
+            $qst++;
+            echo "<p>".$qst.") ".$row['Pregunta']."</p>";
+            $queryResult1=$pdo->query("SELECT ID as IDw, Respuesta  FROM Intranet.PLD_Answer WHERE IDCuest=$row[IDq] ");
+            while($row=$queryResult1->fetch(PDO::FETCH_ASSOC)) {
+                echo "<div class='radio'>";
+                echo "    <label><input type='radio' name='".$clave."' value='".$row['IDw']."'>".$row['Respuesta']."</label>";
+                echo "</div>";
+
+            }
+
+        }
+    }    
+    ?>
+    
+    <div class="row">
+        <div class="col-xs-3">
+            <?PHP
+                if ($row_count==0) {
+                    echo "<input type='submit' value='Enviar' id='enviar' name='enviar' class='button'>";
+                }          
+                if($row_count<>0){
+                    echo "<input type='submit' value='Contestar' id='contestar' name='contestar' class='button'>";
+                }    
+            ?>
+        </div>
+    </div>
+  </form>
+<?php
+   /////fin de contenido
+    require_once 'footer.php';
+?>

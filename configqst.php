@@ -1,9 +1,17 @@
 <?php
     require_once 'header.php';
     //////inicio de contenido
+    function generarCodigo($longitud) {
+        $key = '';
+        $pattern = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $max = strlen($pattern)-1;
+        for($i=0;$i < $longitud;$i++) $key .= $pattern{mt_rand(0,$max)};
+        return $key;
+       }
     if (!empty($_POST['pregunta'])) {
-        $queryResult = $pdo->query("INSERT INTO Intranet.PLD_Cuest (IDQst,Pregunta,codigo,llave) VALUES ($_POST[idqst],'$_POST[pregunta]','$_POST[clave]','$_POST[llave]')");
-        $lastId = $pdo->lastInsertId();
+        $clave=generarCodigo(6);
+        $queryResult = $pdo->query("INSERT INTO Intranet.PLD_Cuest (IDQst,Pregunta,codigo,llave,clave) VALUES ($_POST[idqst],'$_POST[pregunta]','$_POST[clave]','$_POST[llave]','$clave')");
+        $lastId = $pdo->lastInsertId();        
         $queryResult = $pdo->query("INSERT INTO Intranet.PLD_Answer (IDCuest,Respuesta,lAcertivo) VALUES ($lastId,'$_POST[r1]','$_POST[acertivo1]')");
         $queryResult = $pdo->query("INSERT INTO Intranet.PLD_Answer (IDCuest,Respuesta,lAcertivo) VALUES ($lastId,'$_POST[r2]','$_POST[acertivo2]')");
         $queryResult = $pdo->query("INSERT INTO Intranet.PLD_Answer (IDCuest,Respuesta,lAcertivo) VALUES ($lastId,'$_POST[r3]','$_POST[acertivo3]')");

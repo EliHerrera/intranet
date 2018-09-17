@@ -4,7 +4,7 @@
     $periodo=date('Y');
     if (!empty($_POST)) {
         
-        $queryResult = $pdo->query("INSERT INTO Intranet.RelQst (IDQst,IDPersonal,periodo) VALUES($_POST[idqst],$_POST[idemp],$periodo)");
+        $queryResult = $pdo->query("INSERT INTO Intranet.RelQst (IDQst,IDPersonal,periodo,lActivo) VALUES($_POST[idqst],$_POST[idemp],$periodo,'N')");
         echo "<div class='alert alert-success'>";
         echo "    <strong>Exito!</strong> Asignacion EXitosa!";
         echo "</div>";
