@@ -68,6 +68,8 @@
 
         }
         $row_count='N';
+        echo "<a href='cuestionario.php' class='button'>Finalizar</a>";
+        die();
     }
 $queryResult=$pdo->query("SELECT A.IDQst,B.codigo,B.llave,B.ID FROM Intranet.RelQst A INNER JOIN Intranet.PLD_Qst B ON A.IDQst=B.ID WHERE A.IDPersonal=$idpersonal AND A.periodo=$periodo and A.lActivo='S'"); 
 
@@ -93,7 +95,12 @@ if(!empty($_POST['llave'])){
   <form action="cuestionario.php" method="post">
   <div class="row">
     <div class="col-xs-3">
-        <label for="llave">LLAVE</label><input type="text" name="llave" id="llave" class="form-control"><input type="hidden" name="codigo" id="codigo" value="<?PHP echo $codigo ?>" required="true" readonly="true" class="form-control">
+        <?PHP 
+        if ($row_count==0) {
+            echo "<label for='llave'>LLAVE</label><input type='text' name='llave' id='llave' class='form-control'>";
+        }
+        ?>
+            <input type="hidden" name="codigo" id="codigo" value="<?PHP echo $codigo ?>" required="true" readonly="true" class="form-control">
     </div>
   </div>
     <?PHP
