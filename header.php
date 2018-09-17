@@ -40,6 +40,7 @@
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $dialimpape=$row['dialimpape'];
         $piva=$row['piva'];
+        $puntopase=$row['calfap'];
     }
 
 ?>

@@ -10,8 +10,13 @@
             $clave2=$row['clave'];
             $idpregunta=$row['ID'];
             $idrespuesta=$_POST[$clave2];
-            $idqst2=$row['IDQst'];            
-            $queryResult2=$pdo->query("INSERT INTO Intranet.PLD_Resultados (IDPersonal,IDPregunta,IDRespuesta,codigo,periodo,IDQst) VALUES ($idpersonal,$idpregunta,$idrespuesta,'$_POST[codigo]',$periodo,$idqst2)");
+            $idqst2=$row['IDQst'];  
+            $queryResult2=$pdo->query("SELECT * FROM Intranet.PLD_Resultados WHERE IDPersonal=$idpersonal AND IDPregunta=$idpregunta AND IDRespuesta=$idrespuesta AND codigo='$_POST[codigo]' AND periodo=$periodo ");   
+            $bandera = $queryResult2->rowCount();
+            if ($bandera==0) {
+                $queryResult2=$pdo->query("INSERT INTO Intranet.PLD_Resultados (IDPersonal,IDPregunta,IDRespuesta,codigo,periodo,IDQst) VALUES ($idpersonal,$idpregunta,$idrespuesta,'$_POST[codigo]',$periodo,$idqst2)");# code...
+            }       
+            
         }
         $correctas=0;
         $queryResult=$pdo->query("SELECT IDRespuesta FROM Intranet.PLD_Resultados WHERE IDpersonal=$idpersonal and periodo=$periodo");
@@ -27,6 +32,7 @@
         $row_count = $queryResult->rowCount();
         $calf=($correctas/$row_count)*10;
         $queryResult = $pdo->query("UPDATE Intranet.RelQst SET Calf=$calf, lActivo='N' WHERE IDPersonal=$idpersonal AND periodo=$periodo");
+        echo "<p>Examen no ".$_POST[codigo]." Fecha : ".$hoy." Empleado : ".$nombre."</p>";
         echo "<div class='alert alert-success'>";
         echo "    <strong>Tuviste </strong>".$correctas."/".$row_count." Respuestas Correctas Tu calificacion es de : ".number_format($calf,2);
         echo "</div>";
@@ -69,6 +75,7 @@
         }
         $row_count='N';
         echo "<a href='cuestionario.php' class='button'>Finalizar</a>";
+        echo "<a href='javascript:window.print(); void 0;' class='button'>Imprimir</a> ";
         die();
     }
 $queryResult=$pdo->query("SELECT A.IDQst,B.codigo,B.llave,B.ID FROM Intranet.RelQst A INNER JOIN Intranet.PLD_Qst B ON A.IDQst=B.ID WHERE A.IDPersonal=$idpersonal AND A.periodo=$periodo and A.lActivo='S'"); 
