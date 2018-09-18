@@ -32,9 +32,9 @@
 ?>    
 <h3>Integrantes de Examen : <?PHP echo $codigo ?></h3><a href="relqst.php" class="button">Asignar</a><a href="qstpld.php" class="button">Regresar</a>
 <table class="table">
-<tr><th>No.</th><th>Examen</th><th>Empleado</th><th>Calificacion</th><th>Status</th><th>Aprobo</th></tr>
+<tr><th>No.</th><th>Examen</th><th>Empleado</th><th>Calificacion</th><th>Llave</th><th>Status</th><th>Aprobo</th></tr>
 <?PHP
-    $queryResult = $pdo->query("SELECT B.codigo,CONCAT(C.Nombre,' ',C.Apellido1,' ',C.Apellido2) as Emp ,A.Calf, A.lActivo,A.ID from Intranet.RelQst A INNER JOIN Intranet.PLD_Qst B on A.IDQst=B.ID INNER JOIN sibware.personal C on A.IDPersonal=C.ID WHERE A.IDQst=$idqst AND A.periodo=$periodo");
+    $queryResult = $pdo->query("SELECT B.codigo,CONCAT(C.Nombre,' ',C.Apellido1,' ',C.Apellido2) as Emp ,A.Calf, A.lActivo,A.ID, A.llave from Intranet.RelQst A INNER JOIN Intranet.PLD_Qst B on A.IDQst=B.ID INNER JOIN sibware.personal C on A.IDPersonal=C.ID WHERE A.IDQst=$idqst AND A.periodo=$periodo");
     while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $fila++;
         $act=$row['lActivo'];
@@ -55,7 +55,7 @@
         }
         
         $idrel=$row['ID'];
-        echo "<tr><td>".$fila."</td><td>".$row['codigo']."</td><td>".$row['Emp']."</td><td>".$row['Calf']."</td><td><a href='relqstemp.php?idrel=".$idrel."&banda=".$bandA."&idqst=".$idqst."'>".$activo."</a></td><td><a href='constancia.php?idcuest=".$idqst."' target='_blank'>".$aprobo."</a></td></tr>";
+        echo "<tr><td>".$fila."</td><td>".$row['codigo']."</td><td>".$row['Emp']."</td><td>".$row['Calf']."</td><td>".$row['llave']."</td><td><a href='relqstemp.php?idrel=".$idrel."&banda=".$bandA."&idqst=".$idqst."'>".$activo."</a></td><td><a href='constancia.php?idcuest=".$idrel."' target='_blank'>".$aprobo."</a></td></tr>";
     }
 ?>
 </table>

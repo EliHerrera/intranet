@@ -1,6 +1,7 @@
 <?php
     require_once 'header.php';
     //////inicio de contenido
+   
    $periodo=date('Y'); 
    $row_count = 0;
     if (!empty($_POST['contestar'])) {
@@ -31,7 +32,9 @@
         $queryResult = $pdo->query("SELECT * FROM Intranet.PLD_Cuest WHERE IDQst=$idqst2");
         $row_count = $queryResult->rowCount();
         $calf=($correctas/$row_count)*10;
-        $queryResult = $pdo->query("UPDATE Intranet.RelQst SET Calf=$calf, lActivo='N' WHERE IDPersonal=$idpersonal AND periodo=$periodo");
+        setlocale(LC_ALL, 'es_ES').': ';
+        $fecha_ap=iconv('ISO-8859-1', 'UTF-8', strftime('%A %d de %B de %Y', time())); 
+        $queryResult = $pdo->query("UPDATE Intranet.RelQst SET Calf=$calf, lActivo='N',fecha_ap='$fecha_ap' WHERE IDPersonal=$idpersonal AND periodo=$periodo");
         echo "<p>Examen no ".$_POST[codigo]." Fecha : ".$hoy." Empleado : ".$nombre."</p>";
         echo "<div class='alert alert-success'>";
         echo "    <strong>Tuviste </strong>".$correctas."/".$row_count." Respuestas Correctas Tu calificacion es de : ".number_format($calf,2);
