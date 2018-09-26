@@ -41,6 +41,7 @@
         $dialimpape=$row['dialimpape'];
         $piva=$row['piva'];
         $puntopase=$row['calfap'];
+        $limpq=$row['limpq'];
     }
 
 ?>
@@ -58,6 +59,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
    
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<style type="text/css">
+${demo.css}
+        </style>
+      
+<?PHP include_once 'js/graficas.php'; ?>   
+ 
+
 </head>
 <body>
 

@@ -191,11 +191,18 @@ footer img{
     width: 150px;
     
 }
+.navbi{
+    margin: auto;
+}
 @media print {
     /* Contenido del fichero print.css */
     header, footer, nav, aside {
         display: none;
       }
+    .navbi{
+        display: none;
+    }  
+   
   }
 
 

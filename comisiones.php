@@ -591,28 +591,7 @@
         }
         
 	?>    
-        <tr><td colspan="7"><h4>Bonos Clientes Nuevo</h4> </td></tr>	
-	    <tr><td colspan="3">Socio</td><td>Importe</td><td>Plazo</td><td>Referencia</td><td>Bono</td></tr> 
-        <?PHP
-        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-            $socio=$row['Socio'];
-            $importe=$row['Importe'];
-            $plazo=$row['Plazo'];
-            if ($importe>=$refinv) {
-                $bonoinv=$bono1;
-            }else{$bonoinv=0;}
-            echo "<tr><td colspan='2'>$socio</td><td>$importe</td><td>$plazo</td><td>$refinv</td><td>".number_format($bonoinv,2)."</td></tr>";
-            $totalbonoinv=$totalbonoinv+$bonoinv;
-        } 
-        ?>
-        <tr><td colspan="7"><h4>Bonos Semestrales</h4> </td></tr>	
-        <tr><td>Saldo Inicial</td><td>Saldo Final</td><td>Diferencia</td><td>Referencia</td><td>Producto</td><td>Bono</td></tr>
-        <?PHP
-            echo "<tr><td>".number_format($saldoiniINBonoSem,2)."</td><td>".number_format($saldoFinINBonoSem,2)."</td><td>".number_format($diferenciaINBonoSem,2)."</td><td>".number_format($metaIN,2)."</td><td>IN</td><td>".number_format($bonosempat,2)."</td></tr>";
-            echo "<tr><td>".number_format($saldoiniLCBonoSem,2)."</td><td>".number_format($saldoFinLCBonoSem,2)."</td><td>".number_format($diferenciaLCBonoSem,2)."</td><td>".number_format($metaLC,2)."</td><td>CR</td><td>".number_format($bonosemnopat,2)."</td></tr>";
-            echo "<tr><td>".number_format($saldoiniVPBonoSem,2)."</td><td>".number_format($saldoFinVPBonoSem,2)."</td><td>".number_format($diferenciaVPBonoSem,2)."</td><td>".number_format($metaVP,2)."</td><td>VP</td><td>".number_format($bonosemnopat,2)."</td></tr>";
-            echo "<tr><td>".number_format($saldoiniAPBonoSem,2)."</td><td>".number_format($saldoFinAPBonoSem,2)."</td><td>".number_format($diferenciaAPBonoSem,2)."</td><td>".number_format($metaAP,2)."</td><td>AP</td><td>".number_format($bonosemnopat,2)."</td></tr>";
-        ?>
+     
 <?PHP $totalbonos=$bonosemnopatfnd+$bonosempat+$totalbonoinv+$bonosemnopat; 
         $grantotal=$totaldecomisiones+$totalbonos;  ?>
 </table>
