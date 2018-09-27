@@ -17,6 +17,7 @@
             $tc=$row['Paridad'];
         }
         //consulta tipo de cambio
+    if($grafica=='h'||$grafica=='c'){      
     //Consultas colocacion    
         $queryResult=$pdo->query("SELECT SUM(A.Disposicion)as tot FROM sibware.2_contratos_disposicion A
         INNER JOIN sibware.2_contratos B on A.IDContrato=B.ID
@@ -111,6 +112,8 @@
             $totPR=$row['tot'];
         }
         //graficas de colocacion
+    }    
+    if($grafica=='h'||$grafica=='cr'){    
         //graficas de cartera
         $queryResult=$pdo->query("SELECT sum(A.SaldoCap)+SUM(A.SaldoInt) as totc from 2_dw_images_contratos A inner join 2_contratos B ON A.IDContrato=B.ID where A.FImage='$hoy' AND IDMoneda=1");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
@@ -252,4 +255,6 @@
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $totCatIN=$row['totc'];
     }//grafcas de cartera
+    
+}    
 ?>

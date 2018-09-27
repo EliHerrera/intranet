@@ -1,10 +1,10 @@
 <script type="text/javascript">  
-<?PHP $hoy=date('Y') ?>
+<?PHP $hoy=date('Y-m-d') ?>
 //inicio grafica colocacion
 $(function () {
     $('#uno').highcharts({
         title: {
-            text: 'Colocacion por Mes Año <?php echo $hoy; ?>',
+            text: 'Colocacion por Mes Año <?php echo date('Y'); ?>',
             x: -20 //center
         },
         subtitle: {
@@ -330,5 +330,77 @@ $(function () {
     });
 });
 //fin grafica cartera total
+//graficas cartera por ejecutivos
+<?PHP
+if ($grafica=='cr') {
+    if ($_POST['col']==2) {
+        $etiqueta='Ejecutivos';
+        $queryResultcateje=$pdo->query("SELECT
+                CONCAT(
+                    C.Nombre,
+                    ' ',
+                    C.Apellido1,
+                    ' ',
+                    C.Apellido2
+                ) AS Ejecutivo,
+                SUM(A.SaldoCap) + SUM(A.SaldoInt) AS Saldo,
+                SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) + SUM(A.SaldoPena) + SUM(A.SaldoIvaPena) AS moras
+            FROM
+                2_dw_images_contratos A
+            INNER JOIN 2_cliente B ON A.IDCliente = B.ID
+            INNER JOIN personal C ON B.IDEjecutivo = C.ID
+            INNER JOIN 2_contratos D ON A.IDContrato = D.ID
+            WHERE
+                A.FImage = '$hoy'
+            AND D.IDMoneda = 1
+            AND D. STATUS <> 'C'
+            AND D. STATUS <> '-'
+            AND D. STATUS <> 'P'
+            GROUP BY
+                C.ID");
+    }         
+}
+?>  
+$(function () {
+    $('#carterafil').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Browser share',
+            data: [
+            <?PHP   
+                while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                }
+            ?>    
+            ]
+        }]
+    });
+});
+
+//graficas cartera por ejecutivos
 
 </script>   		
