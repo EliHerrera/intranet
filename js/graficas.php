@@ -332,8 +332,7 @@ $(function () {
 //fin grafica cartera total
 //graficas cartera por ejecutivos
 <?PHP
-if ($grafica=='cr') {
-    if ($_POST['col']==2) {
+
         $etiqueta='Ejecutivos';
         $queryResultcateje=$pdo->query("SELECT
                 CONCAT(
@@ -346,10 +345,10 @@ if ($grafica=='cr') {
                 SUM(A.SaldoCap) + SUM(A.SaldoInt) AS Saldo,
                 SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) + SUM(A.SaldoPena) + SUM(A.SaldoIvaPena) AS moras
             FROM
-                2_dw_images_contratos A
-            INNER JOIN 2_cliente B ON A.IDCliente = B.ID
-            INNER JOIN personal C ON B.IDEjecutivo = C.ID
-            INNER JOIN 2_contratos D ON A.IDContrato = D.ID
+                sibware.2_dw_images_contratos A
+            INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+            INNER JOIN sibware.personal C ON B.IDEjecutivo = C.ID
+            INNER JOIN sibware.2_contratos D ON A.IDContrato = D.ID
             WHERE
                 A.FImage = '$hoy'
             AND D.IDMoneda = 1
@@ -358,8 +357,8 @@ if ($grafica=='cr') {
             AND D. STATUS <> 'P'
             GROUP BY
                 C.ID");
-    }         
-}
+            
+
 ?>  
 $(function () {
     $('#carterafil').highcharts({
@@ -389,12 +388,14 @@ $(function () {
         },
         series: [{
             type: 'pie',
-            name: 'Browser share',
+            name: 'Cartera',
             data: [
             <?PHP   
                 while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+                
                     echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
                 }
+                   
             ?>    
             ]
         }]
@@ -402,5 +403,139 @@ $(function () {
 });
 
 //graficas cartera por ejecutivos
+//Graficas cartera sucursal
+<?PHP
+
+        $etiqueta='Sucursal';
+        $queryResultcateje=$pdo->query("SELECT
+        C.Nombre, SUM(A.SaldoCap) + SUM(A.SaldoInt) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) + SUM(A.SaldoPena) + SUM(A.SaldoIvaPena) AS moras
+    FROM
+        sibware.2_dw_images_contratos A
+    INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.sucursal C ON B.IDSucursal = C.ID
+    INNER JOIN sibware.2_contratos D ON A.IDContrato = D.ID
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    GROUP BY
+        C.ID");
+            
+
+?>  
+$(function () {
+    $('#carterafilsuc').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cartera',
+            data: [
+            <?PHP   
+                while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+                
+                    echo "['".$row['Nombre']."',   ".$row['Saldo']."],";
+                }
+                   
+            ?>    
+            ]
+        }]
+    });
+});
+
+//Graficas cartera sucursal
+//graficas por producto
+<?PHP
+
+        $etiqueta='Producto';
+        $queryResultcateje=$pdo->query("SELECT
+        C.Tipo,
+        SUM(A.SaldoCap) + SUM(A.SaldoInt) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) + SUM(A.SaldoPena) + SUM(A.SaldoIvaPena) AS moras
+    FROM
+        sibware.2_dw_images_contratos A
+    INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.2_contratos D ON A.IDContrato = D.ID
+    INNER JOIN sibware.2_entorno_tipocredito C ON D.IDTipoCredito = C.ID
+    WHERE
+        A.FImage = '2018-09-27'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    GROUP BY
+        C.ID");
+            
+
+?>  
+$(function () {
+    $('#carterafilpro').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cartera',
+            data: [
+            <?PHP   
+                while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+                
+                    echo "['".$row['Tipo']."',   ".$row['Saldo']."],";
+                }
+                   
+            ?>    
+            ]
+        }]
+    });
+});
+
+
+//Graficas por producto
 
 </script>   		

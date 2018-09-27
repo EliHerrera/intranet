@@ -23,6 +23,12 @@
     if($_POST['col']==2){
         echo "<div id='carterafil'></div>";
     }
+    if($_POST['col']==3){
+        echo "<div id='carterafilsuc'></div>";
+    }
+    if($_POST['col']==4){
+        echo "<div id='carterafilpro'></div>";
+    }
     
 ?>
 <form action="" method="post">
@@ -101,11 +107,16 @@
 </table>
     <?PHP } ?> 
     <?PHP if ($_POST['col']==2) {
+       
     ?> 
     <table class="table">
         <tr><th>Ejecutivo</th><th>Saldos</th><th>Moratorios</th></tr>
   
     <?PHP
+    while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+                
+        echo "<tr><td>".$row['Ejecutivo']."</td><td>".$row['Saldo']."</td><td>".$row['moras']."</td></tr>";
+    }
     
  } ?>
     </table>         
