@@ -2,6 +2,7 @@
     if (empty($_POST)) {
         require_once 'cargarbi.php';
     } 
+    
     require_once 'header.php';
     //////inicio de contenido
     require 'estiloconst.php'; 
@@ -60,6 +61,7 @@
         FImage = '$hoy'
     AND B. STATUS <> 'C'
     AND B. STATUS <> '-'
+    AND B. STATUS <> 'P'
     GROUP BY
         A.IDContrato");
         

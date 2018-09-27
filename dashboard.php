@@ -1,5 +1,7 @@
 <?php
-    require_once 'cargarbi.php'; 
+    $location='S';
+    $grafica='h';
+    require_once 'cargarbi.php';     
     require_once 'header.php';
     //////inicio de contenido
     require 'estiloconst.php'; 
