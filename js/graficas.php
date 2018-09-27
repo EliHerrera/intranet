@@ -1,5 +1,6 @@
 <script type="text/javascript">  
 <?PHP $hoy=date('Y') ?>
+//inicio grafica colocacion
 $(function () {
     $('#uno').highcharts({
         title: {
@@ -205,6 +206,7 @@ $(function () {
 //fin grafica de colocacion barra
 //inicio graficas PQs Home
 <?php 
+    $totPQa=$totCatPQ;
     $limitePQ=$totCartera*($limpq/100);
     $remanente=$limitePQ-$totPQa;
  ?>

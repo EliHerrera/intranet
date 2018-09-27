@@ -4,11 +4,20 @@
     $ffin='2018-12-31';
     require_once 'cn/cn.php';
     
-        $queryResult=$pdo->query("SELECT * FROM Intranet.filtros_bi WHERE valor='$_POST[col]' ");
+        if ($grafica=='c') {//carga filtros de colocacion
+            $queryResult=$pdo->query("SELECT * FROM Intranet.filtros_bi WHERE valor='$_POST[col]' ");
+            while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                $fini=$row['fini'];
+                $ffin=$row['ffin'];
+            }
+        }//carga filtros de colocacion
+        //consulta tipo de cambio
+        $queryResult=$pdo->query("SELECT * FROM sibware.indicador_tipocambio WHERE Fecha='$hoy'");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-            $fini=$row['fini'];
-            $ffin=$row['ffin'];
+            $tc=$row['Paridad'];
         }
+        //consulta tipo de cambio
+    //Consultas colocacion    
         $queryResult=$pdo->query("SELECT SUM(A.Disposicion)as tot FROM sibware.2_contratos_disposicion A
         INNER JOIN sibware.2_contratos B on A.IDContrato=B.ID
         INNER JOIN sibware.2_entorno_tipocredito C on B.IDTipoCredito=C.ID
@@ -101,20 +110,18 @@
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             $totPR=$row['tot'];
         }
-        $queryResult=$pdo->query("SELECT sum(SaldoCap)+SUM(SaldoInt) as totc from 2_dw_images_contratos where FImage='$hoy'");
+        //graficas de colocacion
+        //graficas de cartera
+        $queryResult=$pdo->query("SELECT sum(A.SaldoCap)+SUM(A.SaldoInt) as totc from 2_dw_images_contratos A inner join 2_contratos B ON A.IDContrato=B.ID where A.FImage='$hoy' AND IDMoneda=1");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             $totCartera=$row['totc'];
         }
-        $queryResult=$pdo->query("SELECT SUM(A.Disposicion)as tot FROM sibware.2_contratos_disposicion A
-        INNER JOIN sibware.2_contratos B on A.IDContrato=B.ID
-        INNER JOIN sibware.2_entorno_tipocredito C on B.IDTipoCredito=C.ID
-        AND B.status<>'C'
-        AND B.status<>'-'
-        AND B.status<>'P'
-        AND C.ID=5");
+        $queryResult=$pdo->query("SELECT sum(A.SaldoCap)+SUM(A.SaldoInt) as totc from 2_dw_images_contratos A inner join 2_contratos B ON A.IDContrato=B.ID where A.FImage='$hoy' AND IDMoneda=2");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-            $totPQa=$row['tot'];
+            $totCarteradls=$row['totc'];
         }
+        $totCartera=$totCartera+($totCarteradls*$tc);
+        
         $queryResult=$pdo->query("SELECT
         sum(A.SaldoCap) + SUM(A.SaldoInt) AS totc
     FROM
@@ -133,10 +140,24 @@
     INNER JOIN 2_contratos B ON A.IDContrato = B.ID
     WHERE
         FImage = '$hoy'
+    AND B.IDMoneda=1    
     AND B.IDTipoCredito = 2");
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $totCatSIM=$row['totc'];
     }
+    $queryResult=$pdo->query("SELECT
+        sum(A.SaldoCap) + SUM(A.SaldoInt) AS totc
+    FROM
+        2_dw_images_contratos A
+    INNER JOIN 2_contratos B ON A.IDContrato = B.ID
+    WHERE
+        FImage = '$hoy'
+    AND B.IDMoneda=2    
+    AND B.IDTipoCredito = 2");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $totCatSIMdls=$row['totc'];
+    }
+    $totCatSIM=$totCatSIM+($totCatSIMdls*$tc);
     $queryResult=$pdo->query("SELECT
         sum(A.SaldoCap) + SUM(A.SaldoInt) AS totc
     FROM
@@ -230,5 +251,5 @@
         FImage = '$hoy'");
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $totCatIN=$row['totc'];
-    }
+    }//grafcas de cartera
 ?>
