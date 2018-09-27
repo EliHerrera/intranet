@@ -5,7 +5,7 @@
     $hoy=date('Y-m-d');
     $id_personal=$_SESSION['IDPersonal'];
     if(isset($_SESSION["IDPersonal"])){
-        $inactivo = 1000;
+        $inactivo = 10000;
            
           if(isset($_SESSION['tiempo']) ) {
           $vida_session = time() - $_SESSION['tiempo'];
@@ -64,8 +64,12 @@
 ${demo.css}
         </style>
       
-<?PHP include_once 'js/graficas.php'; ?>   
- 
+<?PHP
+if ($location=='S'){
+    include_once 'js/graficas.php';   
+}    
+
+ ?> 
 
 </head>
 <body>
