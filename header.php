@@ -42,6 +42,7 @@
         $piva=$row['piva'];
         $puntopase=$row['calfap'];
         $limpq=$row['limpq'];
+        $dpond=$row['diaspond'];
     }
 
 ?>
