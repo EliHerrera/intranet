@@ -13,7 +13,7 @@
     $row_count = $queryResult->rowCount(); 
         if ($row_count>0) {
             echo "<div class='alert alert-danger'>";
-            echo "    <strong>Exito!</strong> Este Periodo ya esta Procesado";
+            echo "    <strong>Aviso!</strong> Este Periodo ya esta Procesado";
             echo "</div>";
 
         }else {
