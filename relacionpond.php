@@ -6,7 +6,13 @@
         $periodo=$row['periodo'];
         $yy=$row['yy'];
     }
-?>    
+?>  
+<div class="row">
+    <div class="col-xs-3">
+        <a href="ponderacion.php" class="button">Regresar</a>
+        <input type="button" name="imprimir" value="Imprimir"  onClick="window.print();" class="button" />
+    </div>
+</div>  
 <h3>Relacion de Tasas Ponderadas del mes de : <?PHP echo date("M-Y", mktime(0, 0, 0, $periodo, 1, $yy)); ?></h3>
 <table class="table">
 <tr><th>Producto</th><th>Tipo</th><th>Capital</th><th>Intereses</th><th>Tasa Pond.</th><th>Mes</th><th>Ejercicio</th></tr>
