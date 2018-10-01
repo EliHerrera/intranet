@@ -64,6 +64,188 @@
         AND A.Periodo = $periodo
         AND A.yy = $yy");
             break;
+        case 3:
+            $queryResult=$pdo->query("SELECT
+            CONCAT(
+                B.Nombre,
+                ' ',
+                B.Apellido1,
+                ' ',
+                B.Apellido2
+            ) AS Cliente,
+            CONCAT('CR-', LPAD(C.Folio, 6, 0)) AS Folio,
+            D.Renglon,
+            A.SaldoCap,
+            A.Tasa,
+            A.PAdicional,
+            A.TasaTot,
+            A.Interes,
+            A.InteresFND
+        FROM
+            Intranet.relacion_tasa_pond A
+        INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+        INNER JOIN sibware.2_contratos C ON A.IDContrato = C.ID
+        INNER JOIN sibware.2_contratos_disposicion D ON A.IDDisposicion = D.ID
+        WHERE
+            A.Producto = 'CR'
+        AND A.IDMoneda = 1
+        AND A.Empresa = 'CMU'
+        AND D.IDOrigenRecursos=2
+        AND A.Periodo = $periodo
+        AND A.yy = $yy");
+            break;
+        case 4:
+            $queryResult=$pdo->query("SELECT
+            CONCAT(
+                B.Nombre,
+                ' ',
+                B.Apellido1,
+                ' ',
+                B.Apellido2
+            ) AS Cliente,
+            CONCAT('CR-', LPAD(C.Folio, 6, 0)) AS Folio,
+            D.Renglon,
+            A.SaldoCap,
+            A.Tasa,
+            A.PAdicional,
+            A.TasaTot,
+            A.Interes,
+            A.InteresFND
+        FROM
+            Intranet.relacion_tasa_pond A
+        INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+        INNER JOIN sibware.2_contratos C ON A.IDContrato = C.ID
+        INNER JOIN sibware.2_contratos_disposicion D ON A.IDDisposicion = D.ID
+        WHERE
+            A.Producto = 'CR'
+        AND A.IDMoneda = 2
+        AND A.Empresa = 'CMU'
+        AND A.Periodo = $periodo
+        AND A.yy = $yy");
+            break;
+        case 5:
+            $queryResult=$pdo->query("SELECT
+            CONCAT(
+                B.Nombre,
+                ' ',
+                B.Apellido1,
+                ' ',
+                B.Apellido2
+            ) AS Cliente,
+            CONCAT('CR-', LPAD(C.Folio, 6, 0)) AS Folio,
+            D.Renglon,
+            A.SaldoCap,
+            A.Tasa,
+            A.PAdicional,
+            A.TasaTot,
+            A.Interes,
+            A.InteresFND
+        FROM
+            Intranet.relacion_tasa_pond A
+        INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+        INNER JOIN sibware.2_contratos C ON A.IDContrato = C.ID
+        INNER JOIN sibware.2_contratos_disposicion D ON A.IDDisposicion = D.ID
+        WHERE
+            A.Producto = 'CR'
+        AND A.IDMoneda = 1
+        AND A.Empresa = 'CMU'
+        AND B.IDTipoCliente<>2
+        AND A.Periodo = $periodo
+        AND A.yy = $yy");
+            break;
+        case 6:
+            $queryResult=$pdo->query("SELECT
+            CONCAT(
+                B.Nombre,
+                ' ',
+                B.Apellido1,
+                ' ',
+                B.Apellido2
+            ) AS Cliente,
+            CONCAT('CR-', LPAD(C.Folio, 6, 0)) AS Folio,
+            D.Renglon,
+            A.SaldoCap,
+            A.Tasa,
+            A.PAdicional,
+            A.TasaTot,
+            A.Interes,
+            A.InteresFND
+        FROM
+            Intranet.relacion_tasa_pond A
+        INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+        INNER JOIN sibware.2_contratos C ON A.IDContrato = C.ID
+        INNER JOIN sibware.2_contratos_disposicion D ON A.IDDisposicion = D.ID
+        WHERE
+            A.Producto = 'CR'
+        AND A.IDMoneda = 1
+        AND A.Empresa = 'CMU'
+        AND A.TipoCartera='G'
+        AND B.IDTipoCliente<>2
+        AND A.Periodo = $periodo
+        AND A.yy = $yy");
+            break;
+        case 7:
+            $queryResult=$pdo->query("SELECT
+            CONCAT(
+                B.Nombre,
+                ' ',
+                B.Apellido1,
+                ' ',
+                B.Apellido2
+            ) AS Cliente,
+            CONCAT('CR-', LPAD(C.Folio, 6, 0)) AS Folio,
+            D.Renglon,
+            A.SaldoCap,
+            A.Tasa,
+            A.PAdicional,
+            A.TasaTot,
+            A.Interes,
+            A.InteresFND
+        FROM
+            Intranet.relacion_tasa_pond A
+        INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+        INNER JOIN sibware.2_contratos C ON A.IDContrato = C.ID
+        INNER JOIN sibware.2_contratos_disposicion D ON A.IDDisposicion = D.ID
+        WHERE
+            A.Producto = 'CR'
+        AND A.IDMoneda = 1
+        AND A.Empresa = 'CMU'
+        AND D.IDOrigenRecursos=2
+        AND B.IDTipoCliente<>2
+        AND A.Periodo = $periodo
+        AND A.yy = $yy");
+            break;
+        case 8:
+            $queryResult=$pdo->query("SELECT
+            CONCAT(
+                B.Nombre,
+                ' ',
+                B.Apellido1,
+                ' ',
+                B.Apellido2
+            ) AS Cliente,
+            CONCAT('CR-', LPAD(C.Folio, 6, 0)) AS Folio,
+            D.Renglon,
+            A.SaldoCap,
+            A.Tasa,
+            A.PAdicional,
+            A.TasaTot,
+            A.Interes,
+            A.InteresFND
+        FROM
+            Intranet.relacion_tasa_pond A
+        INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+        INNER JOIN sibware.2_contratos C ON A.IDContrato = C.ID
+        INNER JOIN sibware.2_contratos_disposicion D ON A.IDDisposicion = D.ID
+        WHERE
+            A.Producto = 'CR'
+        AND A.IDMoneda = 2
+        AND A.Empresa = 'CMU'
+        AND B.IDTipoCliente<>2
+        AND A.Periodo = $periodo
+        AND A.yy = $yy");
+            break;
+                    
         default:
         echo "<div class='alert alert-danger'>";
         echo "    <strong>Aviso!</strong> No existe Informacion Para Mostrar";
