@@ -36,7 +36,9 @@
             C.Tasa,
             C.PAdicional,
             C.TipoCartera,
-            C.IDMoneda
+            C.IDMoneda,
+            D.TasaOtros,
+            D.IDOrigenRecursos
         FROM
             sibware.2_dw_images_contratos A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -55,12 +57,21 @@
             }elseif ($row['TipoTasa']=='Fija') {
                 $tasa=$row['Tasa'];
             }
+            
             $padicional=$row['PAdicional'];
             $tasatot=$tasa+$padicional;
             $capital=$row['SaldoCap'];
             $interes=$capital*($tasatot/100)*$dpond/360;
-            $insertquery=$pdo->prepare("INSERT INTO Intranet.relacion_tasa_pond (IDCliente,IDContrato,IDDisposicion,SaldoCap,Interes,Tasa,PAdicional,TasaTot,TipoCartera,IDMoneda,Producto,Empresa,Periodo,yy)
-            VALUES ($row[IDCliente],$row[IDContrato],$row[IDDisposicion],$capital,$interes,$tasa,$padicional,$tasatot,'$row[TipoCartera]',$row[IDMoneda],'CR','CMU',$_POST[periodo],$yy)");
+            if ($row['IDOrigenRecursos']==2) {
+                $tasaotros=$row['TasaOtros'];
+                $tasatotOtros=$tasaotros+$padicional;
+                $interesFND=$capital*($tasatotOtros/100)*$dpond/360;
+            }elseif ($row['IDOrigenRecursos']<>2) {
+                $interesFND=0;
+            }
+            
+            $insertquery=$pdo->prepare("INSERT INTO Intranet.relacion_tasa_pond (IDCliente,IDContrato,IDDisposicion,SaldoCap,Interes,InteresFND,Tasa,PAdicional,TasaTot,TipoCartera,IDMoneda,Producto,Empresa,Periodo,yy)
+            VALUES ($row[IDCliente],$row[IDContrato],$row[IDDisposicion],$capital,$interes,$interesFND,$tasa,$padicional,$tasatot,'$row[TipoCartera]',$row[IDMoneda],'CR','CMU',$_POST[periodo],$yy)");
             $insertquery->execute();
            
             
@@ -309,6 +320,7 @@
 <tr><th>Mes</th><th>Año</th><th>Fecha de Generacion</th><th>Estatus</th><th>Acciones</th></tr>
 <?PHP   
     $queryResult=$pdo->query("SELECT
+    ID,
 	periodo,
 	yy,
 	fechaproceso,
@@ -319,9 +331,11 @@ END AS STATUS
 FROM
 	Intranet.ponderacion
 WHERE
-    lProcesada = 'S'");
+    lProcesada = 'S'
+    ORDER BY periodo,yy");
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-        echo "<tr><td>".$row['periodo']."</td><td>".$row['yy']."</td><td>".$row['fechaproceso']."</td><td>".$row['STATUS']."</td><td></td></tr>";
+        $idpond=$row['ID'];
+        echo "<tr><td>".$row['periodo']."</td><td>".$row['yy']."</td><td>".$row['fechaproceso']."</td><td><a href='relacionpond.php?idpon=".$idpond."'>".$row['STATUS']."</a></td><td></td></tr>";
     }
 ?>
 
