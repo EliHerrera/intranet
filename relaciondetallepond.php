@@ -60,6 +60,7 @@
             A.Producto = 'CR'
         AND A.IDMoneda = 1
         AND A.Empresa = 'CMU'
+        AND A.TipoCartera='G'
         AND A.Periodo = $periodo
         AND A.yy = $yy");
             break;
