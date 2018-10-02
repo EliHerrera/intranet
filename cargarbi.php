@@ -113,7 +113,7 @@
         }
         //graficas de colocacion
     }    
-    if($grafica=='h'||$grafica=='cr'){    
+if($grafica=='h'||$grafica=='cr'){    
         //graficas de cartera
         $queryResult=$pdo->query("SELECT sum(A.SaldoCap)+SUM(A.SaldoInt) as totc from 2_dw_images_contratos A inner join 2_contratos B ON A.IDContrato=B.ID where A.FImage='$hoy' AND IDMoneda=1");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
@@ -256,5 +256,9 @@
         $totCatIN=$row['totc'];
     }//grafcas de cartera
     
-}    
+}  
+#Graficas de finanzas 
+if ($grafica=='fi') {
+    
+}# Graficas finanzas 
 ?>

@@ -17,7 +17,7 @@
             echo "</div>";
 
         }else {
-            $queryResult=$pdo->query("SELECT sibware.gTIIE($_POST[periodo],$yy) as tiim");
+        $queryResult=$pdo->query("SELECT sibware.gTIIE($_POST[periodo],$yy) as tiim");
             while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                 $tiiem=$row['tiim'];
             }
@@ -38,7 +38,8 @@
             C.TipoCartera,
             C.IDMoneda,
             D.TasaOtros,
-            D.IDOrigenRecursos
+            D.IDOrigenRecursos,
+            D.FDescuento
         FROM
             sibware.2_dw_images_contratos A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -46,8 +47,8 @@
         INNER JOIN sibware.2_contratos_disposicion D ON A.IDDisposicion = D.ID
         WHERE
             A.Fimage = '$ffin'
-        AND C. STATUS <> 'C'
-        AND C. STATUS <> '-'
+        AND C.STATUS <> 'C'
+        AND C.STATUS <> '-'
         AND A.SaldoCap > 0");
        
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
@@ -62,10 +63,16 @@
             $tasatot=$tasa+$padicional;
             $capital=$row['SaldoCap'];
             $interes=$capital*($tasatot/100)*$dpond/360;
-            if ($row['IDOrigenRecursos']==2) {
-                $tasaotros=$row['TasaOtros'];
-                $tasatotOtros=$tasaotros+$padicional;
-                $interesFND=$capital*($tasatotOtros/100)*$dpond/360;
+            $datei= strtotime($fini);
+            $datef= strtotime($ffin);
+            $dated=$row['FDescuento'];
+            $dated2= strtotime($dated);
+            if ($row['IDOrigenRecursos']==2 && $dated2<=$datef ){
+                    
+                    $tasaotros=$row['TasaOtros'];
+                    $tasatotOtros=$tasaotros+$padicional;
+                    $interesFND=$capital*($tasatotOtros/100)*$dpond/360;
+                    
             }elseif ($row['IDOrigenRecursos']<>2) {
                 $interesFND=0;
             }
