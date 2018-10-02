@@ -220,6 +220,7 @@
         AND A.Empresa = 'CMU'
         AND D.IDOrigenRecursos=2
         AND B.IDTipoCliente<>2
+        AND A.InteresFND>0
         AND A.Periodo = $periodo
         AND A.yy = $yy");
             break;
