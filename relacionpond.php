@@ -33,7 +33,7 @@ while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $tasap=(($interes/$capital)*(360/$dpond))*100;
 echo "<tr><td>CR</td><td><a href='relaciondetallepond.php?tipo=2&periodo=".$periodo."&yy=".$yy."'>ACTIVA VIGENTE</a> </td><td>".number_format($capital,2)."</td><td>".number_format($interes,2)."</td><td>".number_format($tasap,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";    
 }
-$queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.InteresFND) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_contratos_disposicion B ON A.IDDisposicion=B.ID WHERE A.Producto='CR' AND A.IDMoneda=1 AND A.Empresa='CMU' AND B.IDOrigenRecursos=2 AND A.Periodo=$periodo AND A.yy=$yy ");
+$queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.InteresFND) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_contratos_disposicion B ON A.IDDisposicion=B.ID WHERE A.Producto='CR' AND A.IDMoneda=1 AND A.Empresa='CMU' AND B.IDOrigenRecursos=2 AND A.Periodo=$periodo AND A.yy=$yy AND A.InteresFND>0 ");
 
 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $capital=$row['Cap'];
@@ -65,7 +65,7 @@ while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $tasap=(($interes/$capital)*(360/$dpond))*100;
 echo "<tr><td>CR</td><td><a href='relaciondetallepond.php?tipo=6&periodo=".$periodo."&yy=".$yy."'>ACTIVA VIGENTE S/PR </a></td><td>".number_format($capital,2)."</td><td>".number_format($interes,2)."</td><td>".number_format($tasap,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";    
 }
-$queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.InteresFND) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_contratos_disposicion B ON A.IDDisposicion=B.ID INNER JOIN 2_cliente C ON A.IDCLiente=C.ID WHERE A.Producto='CR' AND A.IDMoneda=1 AND C.IDTipoCliente<>2  AND A.Empresa='CMU' AND B.IDOrigenRecursos=2 AND A.Periodo=$periodo AND A.yy=$yy ");
+$queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.InteresFND) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_contratos_disposicion B ON A.IDDisposicion=B.ID INNER JOIN 2_cliente C ON A.IDCLiente=C.ID WHERE A.Producto='CR' AND A.IDMoneda=1 AND C.IDTipoCliente<>2  AND A.Empresa='CMU' AND B.IDOrigenRecursos=2 AND A.InteresFND>0 AND A.Periodo=$periodo AND A.yy=$yy ");
 
 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $capital=$row['Cap'];
