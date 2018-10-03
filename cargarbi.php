@@ -259,6 +259,83 @@ if($grafica=='h'||$grafica=='cr'){
 }  
 #Graficas de finanzas 
 if ($grafica=='fi') {
+    $queryResult=$pdo->query("SELECT * FROM Intranet.parametros");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        
+        $dpond=$row['diaspond'];
+    }
+    $queryResult=$pdo->query("SELECT
+	texto
+FROM
+	Intranet.filtros_bi A
+
+WHERE
+	A.lActivo = 'S'
+	AND periodo=$periodo
+	AND yy=$yy");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        
+        $textop=$row['texto'];
+    }
+    $queryResult=$pdo->query("SELECT
+	texto
+FROM
+	Intranet.filtros_bi A
+
+WHERE
+	A.lActivo = 'S'
+	AND periodo=$periodoant
+	AND yy=$yy");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        
+        $textopa=$row['texto'];
+    }
+    $queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.Interes) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_cliente B ON A.IDCLiente=B.ID WHERE A.Producto='CR' AND A.IDMoneda=1 AND B.IDTipoCliente<>2 AND A.Empresa='CMU' AND A.Periodo=$periodo AND A.yy=$yy ");
     
-}# Graficas finanzas 
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $capital=$row['Cap'];
+            $interes=$row['Inte'];
+            $tasapaspr=(($interes/$capital)*(360/$dpond))*100;
+        }
+        // echo $tasapaspr."</br>";
+        // echo $periodo."<br>";
+        // echo $periodoant."<br>";
+        // die();
+
+    $queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.Interes) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_cliente B ON A.IDCLiente=B.ID WHERE A.Producto='CR' AND A.IDMoneda=1 AND B.IDTipoCliente<>2 AND A.Empresa='CMU' AND A.Periodo=$periodoant AND A.yy=$yy ");
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $capital=$row['Cap'];
+            $interes=$row['Inte'];
+            $tasapasprpa=(($interes/$capital)*(360/$dpond))*100;
+        } 
+    $queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.Interes) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_cliente B ON A.IDCLiente=B.ID WHERE A.Producto='IN' AND A.IDMoneda=1 AND B.IDTipoCliente<>2 AND A.Empresa='CMU' AND A.Periodo=$periodo AND A.yy=$yy ");
+
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $capital=$row['Cap'];
+            $interes=$row['Inte'];
+            $tasaacspr=(($interes/$capital)*(360/$dpond))*100;    
+    }
+    $queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.Interes) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_cliente B ON A.IDCLiente=B.ID WHERE A.Producto='IN' AND A.IDMoneda=1 AND B.IDTipoCliente<>2 AND A.Empresa='CMU' AND A.Periodo=$periodoant AND A.yy=$yy ");
+
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $capital=$row['Cap'];
+            $interes=$row['Inte'];
+            $tasaacsprpa=(($interes/$capital)*(360/$dpond))*100;    
+    }
+    $spredd=$tasapaspr-$tasaacspr;
+    $spreddpa=$tasapasprpa-$tasaacsprpa;
+    $queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.InteresFND) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_contratos_disposicion B ON A.IDDisposicion=B.ID WHERE A.Producto='CR' AND A.IDMoneda=1 AND A.Empresa='CMU' AND B.IDOrigenRecursos=2 AND A.Periodo=$periodo AND A.yy=$yy AND A.InteresFND>0 ");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $capital=$row['Cap'];
+        $interes=$row['Inte'];
+        $tasaFND=(($interes/$capital)*(360/$dpond))*100;
+    } 
+    $queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.InteresFND) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_contratos_disposicion B ON A.IDDisposicion=B.ID WHERE A.Producto='CR' AND A.IDMoneda=1 AND A.Empresa='CMU' AND B.IDOrigenRecursos=2 AND A.Periodo=$periodoant AND A.yy=$yy AND A.InteresFND>0 ");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $capital=$row['Cap'];
+        $interes=$row['Inte'];
+        $tasaFNDpa=(($interes/$capital)*(360/$dpond))*100;
+    }
+}            
+# Graficas finanzas 
 ?>

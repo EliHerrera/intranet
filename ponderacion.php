@@ -1,6 +1,19 @@
 <?php
     require_once 'header.php';
     $yy=date('Y');
+    if (!empty($_GET)) {
+            $p=$_GET['p'];
+            $y=$_GET['y'];
+            if ($idnivel>=2) {
+                $deletequery=$pdo->prepare("DELETE FROM Intranet.relacion_tasa_pond WHERE Periodo=$p AND yy=$y ");
+                $deletequery->execute();
+                $deletequery=$pdo->prepare("DELETE FROM Intranet.ponderacion WHERE periodo=$p AND yy=$y ");
+                $deletequery->execute();
+            }
+            echo "<div class='alert alert-danger'>";
+            echo "    <strong>Aviso!</strong> Se ha eliminado el periodo ".$p." del año ".$y;
+            echo "</div>";
+    }
     if (!empty($_POST['periodo'])) {
         $queryResult=$pdo->query("SELECT
         *
@@ -342,7 +355,11 @@ WHERE
     ORDER BY periodo,yy");
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $idpond=$row['ID'];
-        echo "<tr><td>".$row['periodo']."</td><td>".$row['yy']."</td><td>".$row['fechaproceso']."</td><td><a href='relacionpond.php?idpon=".$idpond."'>".$row['STATUS']."</a></td><td></td></tr>";
+        echo "<tr><td>".$row['periodo']."</td><td>".$row['yy']."</td><td>".$row['fechaproceso']."</td><td><a href='relacionpond.php?idpon=".$idpond."'>".$row['STATUS']."</a></td><td>";
+        if ($idnivel>=2) {
+            echo "<a href='ponderacion.php?p=".$row['periodo']."&y=".$row['yy']."'><img src='img/icons/delete.png' alt=''></a>";
+        }
+        echo "</td></tr>";
     }
 ?>
 

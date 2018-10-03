@@ -537,5 +537,68 @@ $(function () {
 
 
 //Graficas por producto
+//Graficas finanzas
 
-</script>   		
+$(function () {
+    $('#fi').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Tasas Ponderadas <?PHP echo date('Y');  ?>'
+        },
+        subtitle: {
+            text: 'Source: Credicor '
+        },
+        xAxis: {
+            categories: [
+                '<?PHP echo $textopa ?>',
+                
+                '<?PHP echo $textop ?>'
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'tasas (%)'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.2f} %</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: 'ACTIVA',
+            data: [<?PHP echo number_format($tasapasprpa,2).",".number_format($tasapaspr,2); ?>]
+
+        }, {
+            name: 'PASIVA',
+            data: [<?PHP echo number_format($tasaacsprpa,2).",".number_format($tasaacspr,2); ?>]
+
+        }, {
+            name: 'SPRED',
+            data: [<?PHP echo number_format($spreddpa,2).",".number_format($spredd,2); ?>]
+
+        }, {
+            name: 'FND',
+            data: [<?PHP echo number_format($tasaFNDpa,2).",".number_format($tasaFND,2); ?>]
+
+        }]
+    });
+});
+//Graficas Finanzas
+
+</script>   
+
+		
