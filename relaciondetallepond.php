@@ -478,7 +478,7 @@
             A.iTR,
             C.ValorBien,
             C.Deposito,
-            D.SaldoFinal AS VR,
+            D.Saldo AS VR,
             A.iPC,
             A.TasaTot
         FROM
@@ -492,7 +492,9 @@
         AND A.Empresa = 'CMU'
         AND A.Periodo = $periodo
         AND A.yy = $yy");
+        
             break;  
+            
         case 17:
             $titulo='AP FUTUROS S/PR';    
             $queryResult=$pdo->query("SELECT
@@ -512,7 +514,7 @@
             A.iTR,
             C.ValorBien,
             C.Deposito,
-            D.SaldoFinal AS VR,
+            D.Saldo AS VR,
             A.iPC,
             A.TasaTot
         FROM
@@ -547,14 +549,14 @@
             A.iTR,
             C.ValorBien,
             C.Deposito,
-            D.SaldoFinal AS VR,
+            D.Saldo AS VR,
             A.iPC,
             A.TasaTot
         FROM
             Intranet.relacion_tasa_pond A
-        INNER JOIN sibware.2_cliente B ON A.IDCLiente = B.ID
-        INNER JOIN sibware.2_ap_contrato C ON A.IDContrato = C.ID
-        INNER JOIN sibware.2_ap_valorresidual D ON A.IDContrato = D.IDContrato
+        INNER JOIN sibware.3_cliente B ON A.IDCLiente = B.ID
+        INNER JOIN sibware.3_ap_contrato C ON A.IDContrato = C.ID
+        INNER JOIN sibware.3_ap_valorresidual D ON A.IDContrato = D.IDContrato
         WHERE
             A.Producto = 'AP'
         AND A.IDMoneda = 1
@@ -581,14 +583,14 @@
             A.iTR,
             C.ValorBien,
             C.Deposito,
-            D.SaldoFinal AS VR,
+            D.Saldo AS VR,
             A.iPC,
             A.TasaTot
         FROM
             Intranet.relacion_tasa_pond A
-        INNER JOIN sibware.2_cliente B ON A.IDCLiente = B.ID
-        INNER JOIN sibware.2_ap_contrato C ON A.IDContrato = C.ID
-        INNER JOIN sibware.2_ap_valorresidual D ON A.IDContrato = D.IDContrato
+        INNER JOIN sibware.3_cliente B ON A.IDCLiente = B.ID
+        INNER JOIN sibware.3_ap_contrato C ON A.IDContrato = C.ID
+        INNER JOIN sibware.3_ap_valorresidual D ON A.IDContrato = D.IDContrato
         WHERE
             A.Producto = 'AP'
         AND A.IDMoneda = 1
@@ -631,7 +633,7 @@ while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $moi=$row['ValorBien'];
         $itr=$row['iTR'];
         $iPC=$row['iPC'];
-        $itr=$itr+$iPC;
+       // $itr=$itr+$iPC;
         $deposito=$row['Deposito'];
         $vr=$row['VR'];
         $utilidad=$itr+$deposito+$vr-$moi;

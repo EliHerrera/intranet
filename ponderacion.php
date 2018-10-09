@@ -128,30 +128,27 @@
         A.IDCliente,
         A.IDContrato,
         A.IDDisposicion,
-        A.SaldoRenta,
-        A.SaldoIvaRenta,
         C.TipoTasa,
         C.Tasa,
         C.PAdicional,
         C.IDMoneda,
         C.ValorBien,
         C.Deposito,
-        C.Plazo,   
-        E.SaldoFinal as VR
+        C.Plazo  
+        
     FROM
         sibware.2_dw_images_ap A
     INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
     INNER JOIN sibware.2_ap_contrato C ON A.IDContrato = C.ID
-    INNER JOIN sibware.2_ap_disposicion D ON A.IDDisposicion = D.ID
-    INNER JOIN sibware.2_ap_valorresidual E ON A.IDContrato=E.IDContrato
+    
+    
     WHERE
         A.Fimage = '$ffin'
     AND C. STATUS <> 'C'
     AND C. STATUS <> '-'
-    AND A.SaldoCap > 0");
+    AND C. STATUS <> 'P'");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-            $capital=$row['SaldoRenta'];
-            $ivarenta=$row['SaldoIvaRenta,'];
+            
             if ($row['TipoTasa']=='Variable') {
                 $tasa=$tiiem;
             }elseif ($row['TipoTasa']=='Fija') {
@@ -170,7 +167,8 @@
                 $rentaM=$row['Renta'];
                 $iva=$row['IvaRenta'];
             }
-            if(empty($rentaT)){
+            $campos = $querymovrentas->rowCount(); 
+            if($campos==0){              
                 $rentaT=$TRenta+1;
                 $rentaM=0;
                 $iva=0;
@@ -200,30 +198,26 @@
         A.IDCliente,
         A.IDContrato,
         A.IDDisposicion,
-        A.SaldoRenta,
-        A.SaldoIvaRenta,
         C.TipoTasa,
         C.Tasa,
         C.PAdicional,
         C.IDMoneda,
         C.ValorBien,
         C.Deposito,
-        C.Plazo,   
-        E.SaldoFinal as VR
+        C.Plazo 
+        
     FROM
         sibware.3_dw_images_ap A
     INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
     INNER JOIN sibware.3_ap_contrato C ON A.IDContrato = C.ID
-    INNER JOIN sibware.3_ap_disposicion D ON A.IDDisposicion = D.ID
-    INNER JOIN sibware.3_ap_valorresidual E ON A.IDContrato=E.IDContrato
+    
     WHERE
         A.Fimage = '$ffin'
     AND C. STATUS <> 'C'
     AND C. STATUS <> '-'
-    AND A.SaldoCap > 0");
+    AND C. STATUS <> 'P'");
+    
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-            $capital=$row['SaldoRenta'];
-            $ivarenta=$row['SaldoIvaRenta,'];
             if ($row['TipoTasa']=='Variable') {
                 $tasa=$tiiem;
             }elseif ($row['TipoTasa']=='Fija') {
@@ -237,12 +231,14 @@
             $TRenta=$row['Plazo'];
             $tasatot=$tasa+$padicional;
             $querymovrentas=$pdo->query("SELECT * FROM sibware.3_ap_disposicion_movs WHERE FInicial>='$fini' AND FInicial<='$ffin' and IDDisposicion=$iddisp");
+            
             while ($row=$querymovrentas->fetch(PDO::FETCH_ASSOC)) {
                 $rentaT=$row['renglon'];
                 $rentaM=$row['Renta'];
                 $iva=$row['IvaRenta'];
             }
-            if(empty($rentaT)){
+            $campos = $querymovrentas->rowCount(); 
+            if($campos==0){
                 $rentaT=$TRenta+1;
                 $rentaM=0;
                 $iva=0;
