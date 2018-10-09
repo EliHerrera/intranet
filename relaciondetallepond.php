@@ -491,7 +491,8 @@
         AND A.IDMoneda = 1
         AND A.Empresa = 'CMU'
         AND A.Periodo = $periodo
-        AND A.yy = $yy");
+        AND A.yy = $yy
+        ORDER BY Folio ");
         
             break;  
             
@@ -528,7 +529,8 @@
         AND A.Empresa = 'CMU'
         AND B.IDTipoCliente<>2
         AND A.Periodo = $periodo
-        AND A.yy = $yy");
+        AND A.yy = $yy
+        ORDER BY Folio ");
             break;  
         case 18:
             $titulo='AP FUTUROS';    
@@ -562,7 +564,8 @@
         AND A.IDMoneda = 1
         AND A.Empresa = 'CMA'
         AND A.Periodo = $periodo
-        AND A.yy = $yy");
+        AND A.yy = $yy
+        ORDER BY Folio ");
             break;  
         case 19:
             $titulo='AP FUTUROS S/PR';    
@@ -597,7 +600,8 @@
         AND A.Empresa = 'CMA'
         AND B.IDTipoCliente<>2
         AND A.Periodo = $periodo
-        AND A.yy = $yy");
+        AND A.yy = $yy
+        ORDER BY Folio ");
             break;                                    
         default:
         echo "<div class='alert alert-danger'>";
