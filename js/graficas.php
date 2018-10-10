@@ -403,7 +403,423 @@ $(function () {
 });
 
 //graficas cartera por ejecutivos
-//Graficas cartera sucursal
+//garficas ejecutivos AP
+<?PHP
+
+        $etiqueta='Ejecutivos APU CMU';
+        $queryResultcatejeAPU=$pdo->query("SELECT
+        CONCAT(
+            C.Nombre,
+            ' ',
+            C.Apellido1,
+            ' ',
+            C.Apellido2
+        ) AS Ejecutivo,
+        SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras
+    FROM
+        sibware.2_dw_images_ap A
+    INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.personal C ON B.IDEjecutivo = C.ID
+    INNER JOIN sibware.2_ap_contrato D ON A.IDContrato = D.ID
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    GROUP BY
+        C.ID");
+            
+
+?>
+
+$(function () {
+    $('#carterafilEjeAPU').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cartera',
+            data: [
+            <?PHP   
+                while ($row=$queryResultcatejeAPU->fetch(PDO::FETCH_ASSOC)) { 
+                
+                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                }
+                   
+            ?>    
+            ]
+        }]
+    });
+});
+<?PHP
+
+        $etiqueta='Ejecutivos AP CMA';
+        $queryResultcatejeAP=$pdo->query("SELECT
+        CONCAT(
+            C.Nombre,
+            ' ',
+            C.Apellido1,
+            ' ',
+            C.Apellido2
+        ) AS Ejecutivo,
+        SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras
+    FROM
+        sibware.3_dw_images_ap A
+    INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.personal C ON B.IDEjecutivo = C.ID
+    INNER JOIN sibware.3_ap_contrato D ON A.IDContrato = D.ID
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    GROUP BY
+        C.ID");
+            
+
+?>
+//garficas ejecutivos AP
+$(function () {
+    $('#carterafilEjeAP').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cartera',
+            data: [
+            <?PHP   
+                while ($row=$queryResultcatejeAP->fetch(PDO::FETCH_ASSOC)) { 
+                
+                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                }
+                   
+            ?>    
+            ]
+        }]
+    });
+});
+//graficas ejecutivos AP
+//Graficas Sucursal AP
+<?PHP
+
+        $etiqueta='Sucursal APU CMU';
+        $queryResultcatsucAPU=$pdo->query("SELECT
+        C.Nombre,
+        SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras
+    FROM
+        sibware.2_dw_images_ap A
+    INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.sucursal C ON B.IDSucursal = C.ID
+    INNER JOIN sibware.2_ap_contrato D ON A.IDContrato = D.ID
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    GROUP BY
+        C.ID");
+            
+
+?>
+
+$(function () {
+    $('#carterafilSucAPU').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cartera',
+            data: [
+            <?PHP   
+                while ($row=$queryResultcatsucAPU->fetch(PDO::FETCH_ASSOC)) { 
+                
+                    echo "['".$row['Nombre']."',   ".$row['Saldo']."],";
+                }
+                   
+            ?>    
+            ]
+        }]
+    });
+});
+<?PHP
+
+        $etiqueta='Sucursal AP CMA';
+        $queryResultcatsucAP=$pdo->query("SELECT
+        C.Nombre,
+        SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras
+    FROM
+        sibware.3_dw_images_ap A
+    INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.sucursal C ON B.IDSucursal = C.ID
+    INNER JOIN sibware.3_ap_contrato D ON A.IDContrato = D.ID
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    GROUP BY
+        C.ID");
+            
+
+?>
+
+$(function () {
+    $('#carterafilSucAP').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cartera',
+            data: [
+            <?PHP   
+                while ($row=$queryResultcatsucAP->fetch(PDO::FETCH_ASSOC)) { 
+                
+                    echo "['".$row['Nombre']."',   ".$row['Saldo']."],";
+                }
+                   
+            ?>    
+            ]
+        }]
+    });
+});
+//Grafias Sucursal AP
+//Graficas Ejecutivos VP
+<?PHP
+
+        $etiqueta='Ejecutivos Venta Plazo';
+        $queryResultcatejeVP=$pdo->query("SELECT
+        CONCAT(
+            C.Nombre,
+            ' ',
+            C.Apellido1,
+            ' ',
+            C.Apellido2
+        ) AS Ejecutivo,
+        SUM(A.SaldoCap) + SUM(A.SaldoInt) + SUM(A.SaldoIvaInt) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras
+    FROM
+        sibware.3_dw_images_vp A
+    INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.personal C ON B.IDEjecutivo = C.ID
+    INNER JOIN sibware.3_vp_contrato D ON A.IDContrato = D.ID
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    GROUP BY
+        C.ID");
+            
+
+?>
+
+$(function () {
+    $('#carterafilEjeVP').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cartera',
+            data: [
+            <?PHP   
+                while ($row=$queryResultcatejeVP->fetch(PDO::FETCH_ASSOC)) { 
+                
+                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                }
+                   
+            ?>    
+            ]
+        }]
+    });
+});
+//Graficas Ejecutivos VP
+//Grafias Sucursal VP
+<?PHP
+
+        $etiqueta='Sucursal Venta a Plazo';
+        $queryResultcatsucVP=$pdo->query("SELECT
+        C.Nombre,
+        SUM(A.SaldoCap) + SUM(A.SaldoInt)+ SUM(A.SaldoIvaInt) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras
+    FROM
+        sibware.3_dw_images_vp A
+    INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.sucursal C ON B.IDSucursal = C.ID
+    INNER JOIN sibware.3_vp_contrato D ON A.IDContrato = D.ID
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    GROUP BY
+        C.ID");
+            
+
+?>
+
+$(function () {
+    $('#carterafilSucVP').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cartera',
+            data: [
+            <?PHP   
+                while ($row=$queryResultcatsucVP->fetch(PDO::FETCH_ASSOC)) { 
+                
+                    echo "['".$row['Nombre']."',   ".$row['Saldo']."],";
+                }
+                   
+            ?>    
+            ]
+        }]
+    });
+});
+//Grafias Sucursal VP
+//Graficas cartera sucursal CR
 <?PHP
 
         $etiqueta='Sucursal';

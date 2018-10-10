@@ -29,6 +29,22 @@
     if($_POST['col']==4){
         echo "<div id='carterafilpro'></div>";
     }
+    if($_POST['col']==5){
+        echo "<div id='carterafilEjeAPU' ></div>";
+        echo "<div id='carterafilEjeAP'></div>";
+    }
+    if($_POST['col']==7){
+        echo "<div id='carterafilSucAPU' ></div>";
+        echo "<div id='carterafilSucAP'></div>";
+    }
+    if($_POST['col']==8){
+        
+        echo "<div id='carterafilSucVP'></div>";
+    }
+    if($_POST['col']==6){
+        
+        echo "<div id='carterafilEjeVP'></div>";
+    }
     
 ?>
 <form action="" method="post">
@@ -37,9 +53,13 @@
             <label for="col">Filtrar por :</label><select name="col" id="col" class="form-control" onchange="this.form.submit();return false;">
                 <option value="">Seleccione...</option>
                 <option value="1">Clientes</option>
-                <option value="2">Ejecutivo</option>
-                <option value="3">Sucursal</option>
-                <option value="4">Producto</option>
+                <option value="2">Ejecutivo CR</option>
+                <option value="5">Ejecutivo AP</option>
+                <option value="6">Ejecutivo VP</option>
+                <option value="3">Sucursal CR</option>
+                <option value="7">Sucursal AP</option>
+                <option value="8">Sucursal VP</option>
+                <option value="4">Producto CR</option>
             </select>
         </div>
         <div class="col-xs-2">
