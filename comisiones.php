@@ -39,9 +39,9 @@
                     $factorPCv=$row['icv'];
                 }
                     $ajustei=.15;
-                    $ajustelc=.40;
-                    $ajusteap=.50;
-                    $ajustevp=.40;
+                    $ajustelc=.55;
+                    $ajusteap=.37;
+                    $ajustevp=.55;
                     $reserva=0.00;
                     $argumeto='first day of january '.$yy;
                     $_date = new DateTime();
@@ -83,10 +83,13 @@
                         
                     if ($diferenciaLC>=$metaLC) {
                             $ptoLC=3;
+                            $plc=$plc;
                         }elseif (($diferenciaLC<$metaLC) AND($diferenciaLC>0)) {
                             $ptoLC=2;
+                            $plc=$plc-$ajustelc;
                         }elseif ($diferenciaLC<=0) {
                             $ptoLC=0;
+                            $plc=0;
                         }     
                         $queryResult = $pdo->query("SELECT
                         A.SaldoIni,
@@ -114,10 +117,13 @@
                         
                     if ($diferenciaVP>=$metaVP) {
                             $ptoVP=3;
+                            $pvp=$pvp;
                         }elseif (($diferenciaVP<$metaVP) AND($diferenciaVP>0)) {
                             $ptoVP=2;
+                            $pvp=$pvp-$ajustevp;
                         }elseif ($diferenciaVP<=0) {
                             $ptoVP=0;
+                            $pvp=0;
                         }      
                         $queryResult = $pdo->query("SELECT
                         SUM(A.SaldoIni) as SaldoIni,
@@ -145,10 +151,13 @@
                         
                     if ($diferenciaAP>=$metaAP) {
                             $ptoAP=3;
+                            $pap=$pap;
                         }elseif (($diferenciaAP<$metaAP) AND($diferenciaAP>0)) {
                             $ptoAP=2;
+                            $pap=$pap-$ajusteap;
                         }elseif ($diferenciaAP<=0) {
                             $ptoAP=0;
+                            $pap=0;
                         }
                         $queryResult = $pdo->query("SELECT
                         SUM(A.SaldoIni) as SaldoIni,
@@ -177,10 +186,13 @@
                         
                     if ($diferenciaIN>=$metaIN) {
                             $ptoIN=3;
+                            $pin=$pin;
                         }elseif (($diferenciaIN<$metaIN) AND($diferenciaIN>0)) {
                             $ptoIN=2;
+                            $pin=$pin-$ajustei;
                         }elseif ($diferenciaIN<=0) {
                             $ptoIN=0;
+                            $pin=0;
                         } 
                               
                     if (($ptoLC==3 AND $ptoAP==3 AND $ptoVP==3)OR($ptoLC==2 AND $ptoAP==3 AND $ptoVP==3)) {
@@ -353,10 +365,10 @@
 
 <table class="table">
     <tr><th>Saldo Inicial</th><th>Saldos Final</th><th>Diferencia</th><th>Prod.</th><th>Meta</th><th>%</th><td>Comision</th></tr>
-    <tr><td><?php echo number_format($saldoiniLC,2) ;?></td><td><?php echo  number_format($SaldoFinLC,2) ;?></td><td><?php echo number_format($diferenciaLC,2); ?></td><td>CR</td><td><?php echo number_format($metaLC,2) ?></td><td><?php echo $porcomi ?></td><td><?php $comisionLC=$porcomi*$diferenciaLC; if ($comisionLC<0) {$comisionLC=0;} echo number_format($comisionLC,2) ?></td></tr>	
-	<tr><td><?php echo number_format($saldoiniAP,2) ?></td><td><?php echo  number_format($SaldoFinAP,2) ?></td><td><?php echo number_format($diferenciaAP,2) ?></td><td>AP</td><td><?php echo number_format($metaAP,2) ?></td><td><?php echo $porcomi ?></td><td><?php $comisionAP=$porcomi*$diferenciaAP; if ($comisionAP<0) {$comisionAP=0;} echo number_format($comisionAP,2) ?></td></tr>
-	<tr><td><?php echo number_format($saldoiniVP,2) ?></td><td><?php echo  number_format($SaldoFinVP,2) ?></td><td><?php echo number_format($diferenciaVP,2) ?></td><td>VP</td><td><?php echo number_format($metaVP,2) ?></td><td><?php echo $porcomi ?></td><td><?php $comisionVP=$porcomi*$diferenciaVP; if ($comisionVP<0) {$comisionVP=0;} echo number_format($comisionVP,2) ?></td></tr>
-	<tr><td><?php echo number_format($saldoiniIN,2) ?></td><td><?php echo  number_format($SaldoFinIN,2) ?></td><td><?php echo number_format($diferenciaIN,2) ?></td><td>IN</td><td><?php echo number_format($metaIN,2) ?></td><td><?php echo $porcomIN ?></td><td><?php $comisionIN=$porcomIN*$diferenciaIN; if ($comisionIN<0) {$comisionIN=0;} echo number_format($comisionIN,2) ?></td></tr>
+    <tr><td><?php echo number_format($saldoiniLC,2) ;?></td><td><?php echo  number_format($SaldoFinLC,2) ;?></td><td><?php echo number_format($diferenciaLC,2); ?></td><td>CR</td><td><?php echo number_format($metaLC,2) ?></td><td><?php echo $plc ?></td><td><?php $comisionLC=($plc/100)*$diferenciaLC; if ($comisionLC<0) {$comisionLC=0;} echo number_format($comisionLC,2) ?></td></tr>	
+	<tr><td><?php echo number_format($saldoiniAP,2) ?></td><td><?php echo  number_format($SaldoFinAP,2) ?></td><td><?php echo number_format($diferenciaAP,2) ?></td><td>AP</td><td><?php echo number_format($metaAP,2) ?></td><td><?php echo $pap ?></td><td><?php $comisionAP=($pap/100)*$diferenciaAP; if ($comisionAP<0) {$comisionAP=0;} echo number_format($comisionAP,2) ?></td></tr>
+	<tr><td><?php echo number_format($saldoiniVP,2) ?></td><td><?php echo  number_format($SaldoFinVP,2) ?></td><td><?php echo number_format($diferenciaVP,2) ?></td><td>VP</td><td><?php echo number_format($metaVP,2) ?></td><td><?php echo $pvp ?></td><td><?php $comisionVP=($pvp/100)*$diferenciaVP; if ($comisionVP<0) {$comisionVP=0;} echo number_format($comisionVP,2) ?></td></tr>
+	<tr><td><?php echo number_format($saldoiniIN,2) ?></td><td><?php echo  number_format($SaldoFinIN,2) ?></td><td><?php echo number_format($diferenciaIN,2) ?></td><td>IN</td><td><?php echo number_format($metaIN,2) ?></td><td><?php echo $pin ?></td><td><?php $comisionIN=($pin/100)*$diferenciaIN; if ($comisionIN<0) {$comisionIN=0;} echo number_format($comisionIN,2) ?></td></tr>
 	<?php $totaldecomisiones=$comisionAP+$comisionIN+$comisionLC+$comisionVP; ?>
 	<tr><th colspan="6">Total de Comisiones</th><th><?php echo number_format($totaldecomisiones,2); ?></th></tr>	
     <?php
