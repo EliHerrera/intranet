@@ -1,0 +1,350 @@
+<?php
+    require_once 'header.php';
+    //////inicio de contenido
+    $yy=date('Y');
+    define("pComi", 2.5);
+    define("metaCR",20000000);
+    define("metaAP",5000000);
+    define("metaVP",500000);
+    define(pcumpli,90);
+    if (!empty($_GET['idcom'])) {
+        $deletequery=$pdo->prepare("DELETE FROM Intranet.com_extensionistas WHERE ID=$_GET[idcom]");
+        $deletequery->execute(); 
+        echo "<div class='alert alert-danger'>";
+        echo "    <strong>Aviso! </strong> Comision Eliminada!";
+        echo "</div>";
+    }
+    if (!empty($_POST['calcular'])) {
+        $accr=$_POST['accr'];
+        $acaccr=$_POST['acaccr'];
+        $acap=$_POST['acap'];
+        $acacap=$_POST['acacap'];
+        $acvp=$_POST['acvp'];
+        $acacvp=$_POST['acacvp'];
+        $periodo=$_POST['periodo'];
+        $yy=$_POST['yy'];
+        $queryResult=$pdo->query("SELECT * FROM Intranet.param_com_extensionistas");
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $idpersonalcom=$row['IDPersonal'];
+            $porc=$row['porc'];
+            $queryResult2=$pdo->query("SELECT * FROM Intranet.com_extensionistas WHERE yy=$yy AND periodo=$periodo AND IDPersonal=$idpersonalcom");
+            $row_count = $queryResult2->rowCount(); 
+            if ($row_count==0) {
+                $comcr=$acaccr*($porc/100);
+                $comap=$acacap*($porc/100);
+                $comvp=$acacvp*($porc/100);
+                $insertquery=$pdo->prepare("INSERT INTO Intranet.com_extensionistas (IDPersonal,porc,accr,acaccr,comcr,acap,acacap,comap,acvp,acacvp,comvp,periodo,yy,status) VALUES ($idpersonalcom,$porc,$accr,$acaccr,$comcr,$acap,$acacap,$comap,$acvp,$acacvp,$comvp,$periodo,$yy,1)");
+                $insertquery->execute(); 
+               
+            }
+
+
+        }
+        echo "<div class='alert alert-success'>";
+        echo "    <strong>Exito! </strong> Comisiones Calculadas!";
+        echo "</div>";
+    }
+    if(!empty($_POST['col'])){
+        $queryResult=$pdo->query("SELECT * FROM Intranet.filtros_bi WHERE valor=$_POST[col]");
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $fini=$row['fini'];
+            $ffin=$row['ffin'];
+            $yy=$row['yy'];
+            $periodo=$row['periodo'];
+            $valor=$row['valor'];
+            $texto=$row['texto'];
+        }
+    }
+    
+?>  
+<h3>Relacion de Comisiones por Colocacion <?php echo $texto; ?></h3>
+
+<form action="extencomisiones.php" method="post">
+    <div class="row">
+        <div class="col-xs-3">
+            <label for="col">Periodo</label><select name="col" id="col" class="form-control"  onchange="this.form.submit();return false;">
+                <option value="">Selecione periodo...</option>
+                <?php
+                    $queryResult=$pdo->query("SELECT * FROM Intranet.filtros_bi WHERE yy=$yy and periodo>0");
+                    
+                    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                        echo "<option value='".$row['valor']."'>".$row['texto']."</option>";
+                    }
+                ?>
+            </select>
+        </div>
+
+    </div>
+</form>
+<table class="table">
+    <tr><th>Producto</th><th>Monto Colocado</th><th>Meta</th><th>% de Cump.</th><th>Comision Cobrada</th><th>Periodo</th><th>Año</th></tr>
+    <?php
+    if(!empty($_POST)){
+        $queryResult=$pdo->query("SELECT
+        B.PApertura,
+        B.NApertura,
+        B.Autorizado,
+        B.FInicio
+    FROM
+        sibware.2_contratos B 
+    INNER JOIN sibware.2_cliente C ON B.IDCliente = C.ID
+    INNER JOIN sibware.2_entorno_tipocliente E ON C.IDTipoCliente = E.ID
+    WHERE
+        B.FInicio BETWEEN '$fini'
+    AND '$ffin'
+    AND B. STATUS <> 'C'
+    AND B. STATUS <> '-'
+    AND (E.ID = 1 OR E.ID = 3)");
+        $acumcolocado=0;
+        $acumPCalcular=0;
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $colocado=$row['Autorizado'];
+            $papertura=$row['PApertura'];
+            $napertura=$row['NApertura'];
+            $acumcolocado=$acumcolocado+$colocado;
+            $acumapertura=$acumapertura+$napertura;
+            $pCalcular=$papertura*100/pComi;
+            $montoCal=($pCalcular/100)*$colocado;
+            $acumPCalcular=$acumPCalcular+$montoCal;
+            
+        }
+        $queryResult=$pdo->query("SELECT
+        B.PApertura,
+        B.NApertura,
+        A.Disposicion,
+        B.FInicio
+    FROM
+        sibware.2_contratos_disposicion A
+    INNER JOIN sibware.2_contratos B ON A.IDContrato=B.ID 
+    INNER JOIN sibware.2_cliente C ON B.IDCliente = C.ID
+    INNER JOIN sibware.2_entorno_tipocliente E ON C.IDTipoCliente = E.ID
+    WHERE
+        A.FInicio BETWEEN '$fini'
+    AND '$ffin'
+    AND B. STATUS <> 'C'
+    AND B. STATUS <> '-'
+    AND (E.ID = 1 OR E.ID = 3)");  
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $dispuesto=$row['Disposicion'];
+        $acumdispuesto=$acumdispuesto+$dispuesto;
+    }  
+        $pCol=($acumdispuesto/metaCR)*100;
+        if ($pCol>=pcumpli) {
+            $class='success';
+        }elseif ($pCol<pcumpli) {
+            $class='danger';
+            $acumPCalcular=0;
+        }
+        echo "<tr><td><a href='detallecomiext.php?valor=".$valor."&c=1'>Creditos</a></td><td>".number_format($acumcolocado,2)."</td><td>".number_format(metaCR,2)."</td><td class='".$class."'>%".number_format($pCol,2)."</td><td>".number_format($acumapertura,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";
+        $queryResult=$pdo->query("SELECT
+        B.PApertura,
+        B.NApertura,
+        B.plazo,
+        A.FInicio,
+        D.Renta
+    FROM
+        sibware.2_ap_disposicion A
+    INNER JOIN sibware.2_ap_contrato B ON A.IDContrato = B.ID
+    INNER JOIN sibware.2_cliente C ON B.IDCliente = C.ID
+    INNER JOIN sibware.2_ap_disposicion_movs D ON A.ID = D.IDDisposicion
+    INNER JOIN sibware.2_entorno_tipocliente E ON C.IDTipoCliente = E.ID
+    WHERE
+        (
+            A.FInicio BETWEEN '$fini'
+            AND '$ffin'
+        )
+    AND B. STATUS <> 'C'
+    AND B. STATUS <> '-'
+    AND (E.ID = 1 OR E.ID = 3)
+    AND D.renglon = 1");
+  
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $renta=$row['Renta'];
+            $plazo=$row['plazo'];
+            $colocado=$renta*$plazo;
+            $papertura=$row['PApertura'];
+            $napertura=$row['NApertura'];
+            $acumcolocadoAP2=$acumcolocadoAP2+$colocado;
+            $acumaperturaAP2=$acumaperturaAP2+$napertura;
+            $pCalcular=$papertura*100/pComi;
+            $montoCal=($pCalcular/100)*$colocado;
+            $acumPCalcularAP2=$acumPCalcularAP2+$montoCal;
+            
+        }
+        $queryResult=$pdo->query("SELECT
+        B.PApertura,
+        B.NApertura,
+        B.plazo,
+        A.FInicio,
+        D.Renta
+    FROM
+        sibware.3_ap_disposicion A
+    INNER JOIN sibware.3_ap_contrato B ON A.IDContrato = B.ID
+    INNER JOIN sibware.3_cliente C ON B.IDCliente = C.ID
+    INNER JOIN sibware.3_ap_disposicion_movs D ON A.ID = D.IDDisposicion
+    INNER JOIN sibware.3_entorno_tipocliente E ON C.IDTipoCliente = E.ID
+    WHERE
+        (
+            A.FInicio BETWEEN '$fini'
+            AND '$ffin'
+        )
+    AND B. STATUS <> 'C'
+    AND B. STATUS <> '-'
+    AND (E.ID = 1 OR E.ID = 3)
+    AND D.renglon = 1");
+  
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $renta=$row['Renta'];
+            $plazo=$row['plazo'];
+            $colocado=$renta*$plazo;
+            $papertura=$row['PApertura'];
+            $napertura=$row['NApertura'];
+            $acumcolocadoAP3=$acumcolocadoAP3+$colocado;
+            $acumaperturaAP3=$acumaperturaAP3+$napertura;
+            $pCalcular=$papertura*100/pComi;
+            $montoCal=($pCalcular/100)*$colocado;
+            $acumPCalcularAP3=$acumPCalcularAP3+$montoCal;
+            
+        }
+        $acumcolocadoAP=0;
+        $acumPCalcularAP=0;
+        $acumcolocadoAP=$acumcolocadoAP2+$acumcolocadoAP3;
+        $acumaperturaAP=$acumaperturaAP2+$acumaperturaAP3;
+        $acumPCalcularAP=$acumPCalcularAP2+$acumPCalcularAP3;
+        $pCol=($acumcolocadoAP/metaAP)*100;
+        
+        if ($pCol>=pcumpli) {
+            $class='success';
+        }elseif ($pCol<pcumpli) {
+            $class='danger';
+            $acumPCalcularAP=0;
+        }
+        echo "<tr><td><a href='detallecomiext.php?valor=".$valor."&c=2'>Arrendamientos</a></td><td>".number_format($acumcolocadoAP,2)."</td><td>".number_format(metaAP,2)."</td><td class='".$class."'>%".number_format($pCol,2)."</td><td>".number_format($acumaperturaAP,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";
+        $queryResult=$pdo->query("SELECT
+        B.PApertura,
+        B.NApertura,
+        A.FInicio,
+        A.SaldoFinal AS Dispuesto
+    FROM
+        sibware.3_vp_disposicion A
+    INNER JOIN sibware.3_vp_contrato B ON A.IDContrato = B.ID
+    INNER JOIN sibware.3_cliente C ON B.IDCliente = C.ID
+    INNER JOIN sibware.3_entorno_tipocliente E ON C.IDTipoCliente = E.ID
+    WHERE
+        (
+            A.FInicio BETWEEN '$fini'
+            AND '$ffin'
+        )
+    AND B. STATUS <> 'C'
+    AND B. STATUS <> '-'
+    AND (E.ID = 1 OR E.ID = 3)");
+
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $acumcolocadoVP=0;
+            $acumPCalcularVP=0;
+            $colocado=$row['Dispuesto'];
+            $papertura=$row['PApertura'];
+            $napertura=$row['NApertura'];
+            $acumcolocadoVP=$acumcolocadoVP+$colocado;
+            $acumaperturaVP=$acumapertura+$napertura;
+            $pCalcular=$papertura*100/pComi;
+            $montoCal=($pCalcular/100)*$colocado;
+            $acumPCalcularVP=$acumPCalcularVP+$montoCal;
+            
+        }
+        $pCol=($acumcolocadoVP/metaVP)*100;
+        if ($pCol>=pcumpli) {
+            $class='success';
+        }elseif ($pCol<pcumpli) {
+            $class='danger';
+            $acumPCalcularVP=0;
+        }
+        echo "<tr><td><a href='detallecomiext.php?valor=".$valor."&c=3'>Venta a Plazo</a></td><td>".number_format($acumcolocadoVP,2)."</td><td>".number_format(metaVP,2)."</td><td class='".$class."'>%".number_format($pCol,2)."</td><td>".number_format($acumaperturaVP,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";
+    }
+    ?>
+
+
+</table>
+<?php
+    if(!empty($_POST['col'])){
+        if (empty($acumcolocado)) {
+            $acumcolocado=0;
+        }
+        if (empty($acumPCalcular)) {
+            $acumPCalcular=0;
+        }
+        if (empty($acumcolocadoAP)) {
+            $acumcolocadoAP=0;
+        }
+        if (empty($acumPCalcularAP)) {
+            $acumPCalcularAP=0;
+        }
+        if (empty($acumcolocadoVP)) {
+            $acumcolocadoVP=0;
+        }
+        if (empty($acumPCalcularVP)) {
+            $acumPCalcularVP=0;
+        }
+?>
+<form action="extencomisiones.php" method="post">
+    <input type="text" name="accr" id="accr" value="<?php echo $acumcolocado  ?>" readonly="true" hidden="true">
+    <input type="text" name="acaccr" id="acaccr" value="<?php echo $acumPCalcular ?>" readonly="true" hidden="true">
+    <input type="text" name="acap" id="acap" value="<?php echo $acumcolocadoAP  ?>" readonly="true" hidden="true">
+    <input type="text" name="acacap" id="acacap" value="<?php echo $acumPCalcularAP  ?>" readonly="true" hidden="true">
+    <input type="text" name="acvp" id="acvp" value="<?php echo $acumcolocadoVP ?>" readonly="true" hidden="true">
+    <input type="text" name="acacvp" id="acacvp" value="<?php echo $acumPCalcularVP  ?>" readonly="true" hidden="true">
+    <input type="text" name="periodo" id="periodo" value="<?php echo $periodo ?>" readonly="true" hidden="true">
+    <input type="text" name="yy" id="yy" value="<?php echo $yy ?>" readonly="true" hidden="true">
+    <input type="submit" value="calcular" class="button" name="calcular" id="calcular">
+</form>
+<h3>Relacion de Comisiones Pagar</h3>
+<table class="table">
+<tr><th>Nombre</th><th>%</th><th>Creditos</th><th>Arrendamientos</th><th>Venta PLazo</th><th>Total</th><th>Acciones</th></tr>
+<?php
+    $queryResult=$pdo->Query("SELECT A.ID,CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as ejecutivo, C.alias as personal , A.porc,A.comcr,A.comap,A.comvp,A.status FROM Intranet.com_extensionistas A INNER JOIN sibware.personal B ON A.IDpersonal=B.ID INNER JOIN Intranet.param_com_extensionistas C ON A.IDPersonal=C.IDPersonal WHERE periodo=$periodo AND yy=$yy");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $comap=$row['comap'];
+        $comcr=$row['comcr'];
+        $comvp=$row['comvp'];
+        $total=$comap+$comvp+$comcr;
+        $totalcr=$totalcr+$comcr;
+        $totalap=$totalap+$comap;
+        $totalvp=$totalvp+$comvp;
+        $idcom=$row['ID'];
+        echo "<tr><td>".$row['personal']."</td><td>".$row['porc']."</td><td>".number_format($comcr,2)."</td><td>".number_format($comap,2)."</td><td>".number_format($comvp,2)."</td><td>".number_format($total,2)."</td>";
+        if ($row['status']==1) {
+            echo "<td><a href='extencomisiones.php?idcom=".$idcom."'><img src='img/icons/delete.png'></a><img src='img/icons/aprove.png'></td>";
+        }elseif ($row['status']>1) {
+            echo "<td><img src='img/icons/icon_ok.png'></td>";
+        }
+        
+        echo "</tr>";
+    }
+    $rescr=$acumapertura-$totalcr;
+    $resap=$acumaperturaAP-$totalap;
+    $resvp=$acumaperturaVP-$totalvp;
+    if ($rescr<0) {
+        $classcr='danger';
+    }else{
+        $classcr='success';
+    }
+    if ($resap<0) {
+        $classap='danger';
+    }else{
+        $classap='success';
+    }
+    if ($resvp<0) {
+        $classvp='danger';
+    }else{
+        $classvp='success';
+    }
+?>
+<tr><td>Restante</td><td></td><td class="<?php echo $classcr ?>"><?PHP echo  number_format($rescr,2) ?></td><td class=" <?php echo $classap ?>"><?PHP echo number_format($resap,2) ?></td><td class=" <?php echo $classvp ?>"><?PHP echo  number_format($resvp,2) ?></td><td></td></tr>
+</table>
+<?php
+    }
+?>
+<?php
+    /////fin de contenido
+    require_once 'footer.php';
+?>

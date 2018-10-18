@@ -51,7 +51,8 @@ WHERE
         A.total_apagar,
         A.mes,
         A.yy,
-        A.status
+        A.status,
+        B.ID as IDeje
     FROM
         Intranet.comisiones A
     INNER JOIN sibware.personal B ON A.id_ejecutivo = B.ID
@@ -76,7 +77,8 @@ WHERE
         A.total_apagar,
         A.mes,
         A.yy,
-        A.status
+        A.status,
+        B.ID as IDeje
     FROM
         Intranet.comisiones A
     INNER JOIN sibware.personal B ON A.id_ejecutivo = B.ID
@@ -141,12 +143,14 @@ WHERE
 <tr><th>Ejecutivo</th><th>Fecha</th><th>Periodo</th><th>Año</th><th>Inversiones</th><th>Creditos</th><th>Venta a Plazo</th><th>Arrendamiento</th><th>Bonos</th><th>Total</th><th>Acciones</th></tr>
 <?PHP
 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+
     $cominv=number_format($row['total_comi_inv'],2);
     $comcred=number_format($row['total_comi_cred'],2);
     $comvp=number_format($row['total_comi_vp'],2);
     $comap=number_format($row['total_comi_apvp'],2);
     $bonos=number_format($row['total_bono'],2);
     $apagar=number_format($row['total_apagar'],2);
+    $idejec=$row['IDeje'];
     echo "<tr><td>$row[Ejecutivo]</td><td>$row[fecha]</td><td>$row[mes]</td><td>$row[yy]</td><td>$cominv</td><td>$comcred</td><td>$comvp</td><td>$comap</td><td>$bonos</td><td>$apagar</td><td>";
     if ($row['status']>=2 ) {
         ?>
