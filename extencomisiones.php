@@ -2,11 +2,7 @@
     require_once 'header.php';
     //////inicio de contenido
     $yy=date('Y');
-    define("pComi", 2.5);
-    define("metaCR",20000000);
-    define("metaAP",5000000);
-    define("metaVP",5000000);
-    define(pcumpli,90);
+    
     if (!empty($_GET['idcom'])) {
         $deletequery=$pdo->prepare("DELETE FROM Intranet.com_extensionistas WHERE ID=$_GET[idcom]");
         $deletequery->execute(); 
@@ -127,6 +123,21 @@
             $periodo=$row['periodo'];
             $valor=$row['valor'];
             $texto=$row['texto'];
+        }
+        $queryResult=$pdo->query("SELECT * FROM Intranet.metas_colocacion WHERE periodo=$periodo AND yy=$yy");
+        //var_dump($queryResult);
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $metaCR=$row['metaCR'];
+            $metaAP=$row['metaAP'];
+            $metaVP=$row['metaVP'];
+            $metaIN=$row['metaIN'];
+            $pComi=$row['pComi'];
+            $pCumpli=$row['pCumpli'];
+            define("pComi", $pComi);
+            define("metaCR",$metaCR);
+            define("metaAP",$metaAP);
+            define("metaVP",$metaVP);
+            define(pcumpli,$pCumpli);
         }
     }
     
@@ -414,6 +425,88 @@
     }
 ?>
 <tr><td colspan="2">Remanente por Utilizar</td><td></td><td class="<?php echo $classcr ?>"><?PHP echo  number_format($rescr,2) ?></td><td class=" <?php echo $classap ?>"><?PHP echo number_format($resap,2) ?></td><td class=" <?php echo $classvp ?>"><?PHP echo  number_format($resvp,2) ?></td><td></td></tr>
+</table>
+<h3>Relacion de Contratos Asignados</h3>
+<table class="table">
+<tr><th>Cliente</th><th>Folio</th><th>Producto</th><th>Monto</th><th>%Comision</th><th>$Comision Pagada</th><th>Asignado a : </th></tr>
+<?php
+    $queryResult=$pdo->query("SELECT CONCAT('CR-', LPAD(B.Folio, 6, 0)) AS Folio, CONCAT(C.Nombre,' ',C.Apellido1,
+		' ',
+		C.Apellido2
+	) AS Cliente,
+CONCAT(
+		D.Nombre,
+		' ',
+		D.Apellido1,
+		' ',
+		D.Apellido2
+	) AS Ejecutivo ,
+    B.Autorizado,
+    B.PApertura,
+    B.NAPertura
+    FROM Intranet.asignacion_ctos_ext A INNER JOIN sibware.2_contratos B ON A.IDContrato=B.ID INNER JOIN sibware.2_cliente C ON A.IDCliente=C.ID INNER JOIN sibware.personal D ON A.IDPersonal=D.ID WHERE periodo=$periodo AND yy=$yy AND Producto='cr'");
+    //var_dump($queryResult);
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        echo "<tr><td>".$row['Cliente']."</td><td>".$row['Folio']."</td><td>Creditos</td><td>".number_format($row['Autorizado'],2)."</td><td>%".number_format($row['PApertura'],2)."</td><td>$".number_format($row['NAPertura'],2)."</td><td>".$row['Ejecutivo']."</td></tr>";
+    }
+    $queryResult=$pdo->query("SELECT CONCAT('AP-', LPAD(B.Folio, 6, 0)) AS Folio, CONCAT(C.Nombre,' ',C.Apellido1,
+		' ',
+		C.Apellido2
+	) AS Cliente,
+CONCAT(
+		D.Nombre,
+		' ',
+		D.Apellido1,
+		' ',
+		D.Apellido2
+	) AS Ejecutivo ,
+    B.Saldo as Autorizado,
+    B.PApertura,
+    B.NAPertura
+    FROM Intranet.asignacion_ctos_ext A INNER JOIN sibware.2_ap_contrato B ON A.IDContrato=B.ID INNER JOIN sibware.2_cliente C ON A.IDCliente=C.ID INNER JOIN sibware.personal D ON A.IDPersonal=D.ID WHERE periodo=$periodo AND yy=$yy AND Producto='ap' AND Empresa='cmu'");
+    //var_dump($queryResult);
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        echo "<tr><td>".$row['Cliente']."</td><td>".$row['Folio']."</td><td>Arrendamientos</td><td>".number_format($row['Autorizado'],2)."</td><td>%".number_format($row['PApertura'],2)."</td><td>$".number_format($row['NAPertura'],2)."</td><td>".$row['Ejecutivo']."</td></tr>";
+    }
+    $queryResult=$pdo->query("SELECT CONCAT('AP-', LPAD(B.Folio, 6, 0)) AS Folio, CONCAT(C.Nombre,' ',C.Apellido1,
+		' ',
+		C.Apellido2
+	) AS Cliente,
+CONCAT(
+		D.Nombre,
+		' ',
+		D.Apellido1,
+		' ',
+		D.Apellido2
+	) AS Ejecutivo ,
+    B.Saldo as Autorizado,
+    B.PApertura,
+    B.NAPertura
+    FROM Intranet.asignacion_ctos_ext A INNER JOIN sibware.3_ap_contrato B ON A.IDContrato=B.ID INNER JOIN sibware.3_cliente C ON A.IDCliente=C.ID INNER JOIN sibware.personal D ON A.IDPersonal=D.ID WHERE periodo=$periodo AND yy=$yy AND Producto='ap' AND Empresa='cma'");
+    //var_dump($queryResult);
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        echo "<tr><td>".$row['Cliente']."</td><td>".$row['Folio']."</td><td>Arrendamientos</td><td>".number_format($row['Autorizado'],2)."</td><td>%".number_format($row['PApertura'],2)."</td><td>$".number_format($row['NAPertura'],2)."</td><td>".$row['Ejecutivo']."</td></tr>";
+    }
+    $queryResult=$pdo->query("SELECT CONCAT('VP-', LPAD(B.Folio, 6, 0)) AS Folio, CONCAT(C.Nombre,' ',C.Apellido1,
+		' ',
+		C.Apellido2
+	) AS Cliente,
+CONCAT(
+		D.Nombre,
+		' ',
+		D.Apellido1,
+		' ',
+		D.Apellido2
+	) AS Ejecutivo ,
+    B.SaldoFinal as Autorizado,
+    B.PApertura,
+    B.NAPertura
+    FROM Intranet.asignacion_ctos_ext A INNER JOIN sibware.3_vp_contrato B ON A.IDContrato=B.ID INNER JOIN sibware.3_cliente C ON A.IDCliente=C.ID INNER JOIN sibware.personal D ON A.IDPersonal=D.ID WHERE periodo=$periodo AND yy=$yy AND Producto='vp' AND Empresa='cma'");
+    //var_dump($queryResult);
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        echo "<tr><td>".$row['Cliente']."</td><td>".$row['Folio']."</td><td>Arrendamientos</td><td>".number_format($row['Autorizado'],2)."</td><td>%".number_format($row['PApertura'],2)."</td><td>$".number_format($row['NAPertura'],2)."</td><td>".$row['Ejecutivo']."</td></tr>";
+    }
+?>
 </table>
 <?php
     }
