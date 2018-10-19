@@ -220,6 +220,7 @@
             $class='danger';
             $acumPCalcular=0;
         }
+        $pColCR=$pCol;
         echo "<tr><td><a href='detallecomiext.php?valor=".$valor."&c=1'>Creditos</a></td><td>".number_format($acumcolocado,2)."</td><td>".number_format(metaCR,2)."</td><td class='".$class."'>%".number_format($pCol,2)."</td><td>".number_format($acumapertura,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";
         $queryResult=$pdo->query("SELECT
         B.PApertura,
@@ -304,6 +305,7 @@
             $class='danger';
             $acumPCalcularAP=0;
         }
+        $pColAP=$pCol;
         echo "<tr><td><a href='detallecomiext.php?valor=".$valor."&c=2'>Arrendamientos</a></td><td>".number_format($acumcolocadoAP,2)."</td><td>".number_format(metaAP,2)."</td><td class='".$class."'>%".number_format($pCol,2)."</td><td>".number_format($acumaperturaAP,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";
         $queryResult=$pdo->query("SELECT
         B.PApertura,
