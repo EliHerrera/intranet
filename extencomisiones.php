@@ -419,7 +419,7 @@
         $idcom=$row['ID'];
         echo "<tr><td>".$row['personal']."</td><td>".$row['porcp']."</td><td>".$row['porcc']."</td><td>".number_format($comcr,2)."</td><td>".number_format($comap,2)."</td><td>".number_format($comvp,2)."</td><td>".number_format($total,2)."</td>";
         if ($row['status']==1) {
-            echo "<td><a href='extencomisiones.php?idcom=".$idcom."'><img src='img/icons/delete.png'></a><img src='img/icons/aprove.png'></td>";
+            echo "<td><a href='extencomisiones.php?idcom=".$idcom."'><img src='img/icons/delete.png'></a><a href='aprovecomext.php?idcom=".$idcom."'><img src='img/icons/aprove.png'></a></td>";
         }elseif ($row['status']>1) {
             echo "<td><img src='img/icons/icon_ok.png'></td>";
         }
