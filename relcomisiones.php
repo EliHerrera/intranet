@@ -153,9 +153,15 @@ while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $idejec=$row['IDeje'];
     echo "<tr><td>$row[Ejecutivo]</td><td>$row[fecha]</td><td>$row[mes]</td><td>$row[yy]</td><td>$cominv</td><td>$comcred</td><td>$comvp</td><td>$comap</td><td>$bonos</td><td>$apagar</td><td>";
     if ($row['status']>=2 ) {
+        if ($idejec==42 || $idejec==18 || $idejec==39 || $idejec==52 || $idejec==28) {
+            echo "<a href='detextencomisiones.php?idcomi=".$row[id_comision]."'><img src='img/icons/review.png'></a>";
+        }else {
+
+        
         ?>
         <a href="comisiones.php?idcomi=<?php echo $row[id_comision]; ?>"><img src="img/icons/review.png"></a>
         <?php
+        }
     }elseif ($row['status']==1 ) {
         ?>
          <a href="relcomisiones.php?idcomi=<?php echo $row[id_comision]; ?>&&baja=N"><img src="img/icons/aprove.png"></a>
