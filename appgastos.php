@@ -3,7 +3,7 @@
     //////inicio de contenido
 ?>
 <h3>Relacion de Gastos</h3> 
-<form action="gastos.php" method="post">
+<form action="appgastos.php" method="post">
 <div class="row">
     <div class="col-xs-3">
         <label for="fini">Desde</label><input type="date" name="fini" id="fini" class="form-control" required="true">
@@ -54,7 +54,7 @@
         A.Fecha BETWEEN '$fini'
     AND '$ffin'
     AND C.IDEncargado = $idpersonal");
-        #var_dump($queryResult);
+        //var_dump($queryResult);
         while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             if ($row['St']==1) {
                 $class='warning';
@@ -65,7 +65,7 @@
             }else{
                 $class='danger';
             }
-            echo "<tr><td>".$row['Folio']."</td><td>".$row['Fecha']."</td><td>".$row['Personal']."</td><td>".$row['Total']."</td><td class='".$class."'>".$row['Status']."</td><td><a href='viewgastos.php?idg=".$row['ID']."'><img src='img//icons/review.png'></a></td></tr>";
+            echo "<tr><td>".$row['Folio']."</td><td>".$row['Fecha']."</td><td>".$row['Personal']."</td><td>".$row['Total']."</td><td class='".$class."'>".$row['STATUS']."</td><td><a href='viewgastos2.php?idg=".$row['ID']."'><img src='img//icons/review.png'></a></td></tr>";
         }
     }
     
