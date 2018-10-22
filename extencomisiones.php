@@ -14,6 +14,9 @@
         
         $periodo=$_POST['periodo'];
         $yy=$_POST['yy'];
+        $pColCR=$_POST['pColCR'];
+        $pColAP=$_POST['pColAP'];
+        $pColVP=$_POST['pColVP'];
         $queryResult=$pdo->query("SELECT * FROM Intranet.param_com_extensionistas");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             $idpersonalcom=$row['IDPersonal'];
@@ -102,6 +105,18 @@
                 $comcr=$acaccr*($porc/100);   
                 $comvp=$acacvp*($porc/100);   
                 $comap=$acacap*($porc/100);   
+                $pColCR;
+                $pColAP;
+                $pColVP;
+                if ($pColCR<90) {
+                    $comcr=0;
+                }
+                if ($pColAP<90) {
+                    $comap=0;
+                }
+                if ($pColVP<90) {
+                    $comvp=0;
+                }
                 $insertquery=$pdo->prepare("INSERT INTO Intranet.com_extensionistas (IDPersonal,porcp,porcc,accr,acaccr,comcr,acap,acacap,comap,acvp,acacvp,comvp,periodo,yy,status) VALUES ($idpersonalcom,$porcp,$porcc,$accr,$acaccr,$comcr,$acap,$acacap,$comap,$acvp,$acacvp,$comvp,$periodo,$yy,1)");
                 $insertquery->execute(); 
                 //var_dump($insertquery);
@@ -346,6 +361,7 @@
             $class='danger';
             $acumPCalcularVP=0;
         }
+        $pColVP=$pCol;
         echo "<tr><td><a href='detallecomiext.php?valor=".$valor."&c=3'>Venta a Plazo</a></td><td>".number_format($acumcolocadoVP,2)."</td><td>".number_format(metaVP,2)."</td><td class='".$class."'>%".number_format($pCol,2)."</td><td>".number_format($acumaperturaVP,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";
     }
     ?>
@@ -382,6 +398,9 @@
     <input type="text" name="acacvp" id="acacvp" value="<?php echo $acumPCalcularVP  ?>" readonly="true" hidden="true" >
     <input type="text" name="periodo" id="periodo" value="<?php echo $periodo ?>" readonly="true" hidden="true">
     <input type="text" name="yy" id="yy" value="<?php echo $yy ?>" readonly="true" hidden="true">
+    <input type="text" name="pColCR" id="pColCR" value="<?php echo $pColCR ?>" readonly="true" hidden="true">
+    <input type="text" name="pColAP" id="pColAP" value="<?php echo $pColAP ?>" readonly="true" hidden="true">
+    <input type="text" name="pColVP" id="pColVP" value="<?php echo $pColVP ?>" readonly="true" hidden="true">
     <input type="submit" value="calcular" class="button" name="calcular" id="calcular">
 </form>
 <h3>Relacion de Comisiones Pagar</h3>
