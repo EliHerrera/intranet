@@ -3,6 +3,7 @@
     //////inicio de contenido
     $yy=date('Y');
     
+    
     if(!empty($_GET['idcomi'])){
         $queryResult=$pdo->query("SELECT * FROM Intranet.comisiones WHERE id_comision=$_GET[idcomi]");
         
@@ -38,16 +39,40 @@
             define(pcumpli,$pCumpli);
         }
     }
+    if (!empty($_POST['compras'])) {
+        $queryResult=$pdo->query("SELECT A.id_comision,A.id_ejecutivo, A.total_apagar, CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2)as emp FROM Intranet.comisiones A INNER JOIN sibware.personal B ON A.id_ejecutivo=B.ID  WHERE A.id_comision=$_POST[idcomi]");
+        while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $emp=$row['emp'];
+            $total=$row['total_apagar'];
+            $idcom=$row['id_comision'];
+            $id_ejec=$row['id_ejecutivo'];
+            $total=$total+$total*($piva/100);
+        }
+        $queryResult = $pdo->prepare("INSERT INTO sibware.7_ad_autorizacionpagos (IDConcepto,IDPersonal,FechaPago,ImporteSolicitado,lAutorizado,IDMoneda,origen,Referencia,Beneficiario,Nombre,Modulo,Concepto,Status) VALUES (1,$id_ejec,'$hoy',$total,'N',1,'PV','PAGO PROVEEDORES','$emp','$emp','PD','COMISION POR INTERMEDIACION FINANCIERA','N') ");
+        $queryResult->execute();
+        $lastid = $pdo->lastInsertId();
+        $queryResult1=$pdo->prepare("INSERT INTO sibware.7_ad_docs_solicitudpagos (IDAutorizacion,Descripcion,Comentario,Requerido,lDocumento) VALUES ($lastid,'COMISION POR INTERMEDIACION FINANCIERA','COMISION POR INTERMEDIACION FINANCIERA','S','N')");
+        $queryResult1->execute();
+        $queryResult1=$pdo->prepare("INSERT INTO sibware.7_ad_docs_solicitudpagos (IDAutorizacion,Descripcion,Comentario,Requerido,lDocumento) VALUES ($lastid,'RELACION DE PAGO DE COMISION','RELACION DE PAGO DE COMISION','S','N')");
+        $queryResult1->execute();
+        $queryResult = $pdo->prepare("UPDATE Intranet.comisiones SET status=3 WHERE id_comision=$_POST[idcomi] ");
+        $queryResult->execute();
+        echo "<div class='alert alert-success'>";
+        echo "    <strong>Exito!</strong> Solicitud Fue enviada a compras con Exito!";
+        echo "</div>";
+    }
     
 ?>  
 <h3>Relacion de Comisiones por Colocacion <?php echo $texto; ?></h3>
 
-<form action="extencomisiones.php" method="post">
+<form action="detextencomisiones.php" method="post">
     <div class="row">
-    <div class="col-xs-2>">    
+    <div class="col-xs-2>"> 
+        <input type="hidden" name="idcomi" id="idcomi" value="<?PHP echo $_GET['idcomi'] ?>">   
         <br><a href="relcomisiones.php" class="button">Regresar</a>
         <a href="solicitudch.php?idcomi=<?PHP echo $_GET['idcomi'] ?>" target="_blank" class="button">Solicitud</a>
         <input type="button" name="imprimir" value="Relacion"  onClick="window.print();" class="button" />
+        <input type='submit' value='Enviar a Compras' class='button' name='compras' id='compras'>
     </div>
 
     </div>
