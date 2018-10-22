@@ -121,7 +121,7 @@
              <option value="">Seleccione uno...</option>
              <?PHP 
              if ($_POST['emp']==2) {
-                $queryResult = $pdo->query("SELECT A.IDCte,CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Nombre FROM sibware.pipeline_prospec A INNER JOIN sibware.2_cliente B ON A.IDCte=B.ID  WHERE A.IDEjecutivo=21 and A.Emp=2 GROUP BY A.IDCte ORDER BY A.Nombre ASC ") ;
+                $queryResult = $pdo->query("SELECT A.IDCte,CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Nombre FROM sibware.pipeline_prospec A INNER JOIN sibware.2_cliente B ON A.IDCte=B.ID  WHERE A.IDEjecutivo=$idpersonal and A.Emp=2 GROUP BY A.IDCte ORDER BY A.Nombre ASC ") ;
                 while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                     if ($row['IDCte']==$_POST['idcte']) {
                         echo "<option selected='selected' value='".$row['IDCte']."'>[CMU]".$row['Nombre']."</option>";# code...
@@ -131,7 +131,7 @@
                     
                 }
              }elseif ($_POST['emp']==3) {
-                $queryResult = $pdo->query("SELECT A.IDCte,CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Nombre FROM sibware.pipeline_prospec A INNER JOIN sibware.3_cliente B ON A.IDCte=B.ID  WHERE A.IDEjecutivo=21 and A.Emp=3 GROUP BY A.IDCte ORDER BY A.Nombre ASC ") ;
+                $queryResult = $pdo->query("SELECT A.IDCte,CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Nombre FROM sibware.pipeline_prospec A INNER JOIN sibware.3_cliente B ON A.IDCte=B.ID  WHERE A.IDEjecutivo=$idpersonal and A.Emp=3 GROUP BY A.IDCte ORDER BY A.Nombre ASC ") ;
                 while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                     if ($row['IDCte']==$_POST['idcte']) {
                         echo "<option selected='selected' value='".$row['IDCte']."'>[CMA]".$row['Nombre']."</option>";

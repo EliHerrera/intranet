@@ -66,7 +66,7 @@
  <form action="viewgastos.php" method="post">
             <input type="hidden" name="idg" id="idg" value="<?PHP echo $_GET['idg'] ?>">
             <?PHP
-            if ($fila>0 && $status==1) {
+            if ($fila>0 && $status==1 && $_SESSION['Nivel']>=2) {
                 echo "<input type='submit' value='Autorizar' class='button' name='guardar' id='guardar'>";
             }
             if ($status==2) {
