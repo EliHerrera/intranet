@@ -33,7 +33,7 @@
         $idrel=$row['ID'];
         echo "<tr><td>".$row['Emp']."</td><td>".$row['Calf']."</td><td>".$yy."</td>";
         if (!empty($calf)) {
-            echo "<td><a href='imprimirpld.php?idemp=".$idemp."&periodo=".$yy."' target='_blank'>".Imprimir."</a></td>";
+            echo "<td><a href='constancia.php?idcuest=".$idrel."' target='_blank'>".$aprobo."</a></td>";
         }else
         {
             echo "<td></td>";
