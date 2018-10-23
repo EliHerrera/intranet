@@ -1,5 +1,7 @@
+
 <?php
 date_default_timezone_set("America/Mexico_City");
+
 $fecha_imp=date('d M y h:m');
   include('reportes/Barcode.php');
   require('reportes/fpdf.php');
@@ -98,23 +100,26 @@ while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
  // $pdf->TextWithRotation($x + $xt, $y + $yt, $data['hri'], $angle);
   
   /**$pdf->Cell(80,100,$artista,0);**/
-$pdf->SetFont('Arial','B',20);
+   
+$pdf->AddFont('Montserrat-Bold','B','Montserrat-Bold.php');  
+$pdf->SetFont('Montserrat-Bold','B',20);
 $pdf->TextWithRotation(55,40,'CREDICOR MEXICANO UNION DE CREDITO SA DE CV',360);
-$pdf->SetFont('Arial','B',15);
+$pdf->SetFont('Montserrat-Bold','B',15);
 $pdf->TextWithRotation(125,50,'Otorga la Presente',360);  
-$pdf->SetFont('Arial','B',40);
+$pdf->SetFont('Montserrat-Bold','B',40);
 $pdf->TextWithRotation(85,70,'C O N S T A N C I A',360);  
 $pdf->Image('img/logos/logo.png',100,15);
-$pdf->SetFont('Arial','B',20);
+$pdf->SetFont('Montserrat-Bold','B',20);
 $pdf->TextWithRotation(145,82,'a',360); 
-$pdf->TextWithRotation(105,94,$nombre,360);
-$pdf->SetFont('Arial','B',15);
+$pdf->TextWithRotation(80,94,$nombre,360);
+$pdf->SetFont('Montserrat-Bold','B',15);
 $pdf->TextWithRotation(110,110,'Por su Participacion en el curso',360);
-$pdf->SetFont('Arial','B',20);
-$pdf->TextWithRotation(0,130,$curso,360);
-$pdf->SetFont('Arial','B',15);
+$pdf->SetFont('Montserrat-Bold','B',20);
+$pdf->TextWithRotation(50,130,'ACTUALIZACION EN PREVENCION DE LAVADO DE DINERO',360);
+$pdf->TextWithRotation(90,140,'Y FINANCIAMIENTO AL TERRORISMO',360);
+$pdf->SetFont('Montserrat-Bold','B',15);
 $pdf->TextWithRotation(107,150,$fecha_ap,360);
-$pdf->SetFont('Arial','B',15);
+$pdf->SetFont('Montserrat-Bold','B',15);
 $pdf->Image('img/logos/firma_jorge.png',50,165);
 $pdf->TextWithRotation(15,190,'C.P. '.$director,360);
 $pdf->TextWithRotation(45,195,'Director General',360);
