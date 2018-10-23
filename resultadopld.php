@@ -33,7 +33,7 @@
         $idrel=$row['ID'];
         echo "<tr><td>".$row['Emp']."</td><td>".$row['Calf']."</td><td>".$yy."</td>";
         if (!empty($calf)) {
-            echo "<td><a href='constancia.php?idcuest=".$idrel."' target='_blank'>".$aprobo."</a></td>";
+            echo "<td><a href='constancia.php?idcuest=".$idrel."' target='_blank'>Constancia</a></td>";
         }else
         {
             echo "<td></td>";
