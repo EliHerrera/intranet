@@ -14,7 +14,12 @@ while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $fecha_ap=$row['fecha_ap'];
     $periodo=$row['periodo'];
   }
- 
+  
+$num_caracteres = strlen ($nombre);
+$puntomedio=135;
+$puntox=$puntomedio-($num_caracteres*2);
+// echo $puntox;
+// die(); 
   
   $queryResult = $pdo->query("SELECT * FROM Intranet.cursos where periodo=$periodo and ID=1");
   while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
@@ -114,7 +119,7 @@ $pdf->TextWithRotation(75,70,'C O N S T A N C I A',360);
 $pdf->Image('img/logos/logo.png',100,15);
 $pdf->SetFont('Montserrat-Bold','B',20);
 $pdf->TextWithRotation(135,82,'a',360); 
-$pdf->TextWithRotation(70,94,$nombre,360);
+$pdf->TextWithRotation($puntox,94,$nombre,360);
 $pdf->SetFont('Montserrat-Bold','B',15);
 $pdf->TextWithRotation(100,110,'Por su Participacion en el curso',360);
 $pdf->SetFont('Montserrat-Bold','B',20);

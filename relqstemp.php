@@ -59,12 +59,12 @@
         }
         
         $idrel=$row['ID'];
-        echo "<tr><td>".$fila."</td><td>".$row['codigo']."</td><td>".$row['Emp']."</td><td>".$row['Calf']."</td><td>".$row['llave']."</td><td><a href='relqstemp.php?idrel=".$idrel."&banda=".$bandA."&idqst=".$idqst."'>".$activo."</a></td><td><a href='constancia.php?idcuest=".$idrel."' target='_blank'>".$aprobo."</a></td>";
+        echo "<tr><td>".$fila."</td><td>".$row['codigo']."</td><td>".$row['Emp']."</td><td>".$row['Calf']."</td><td>".$row['llave']."</td><td><a href='relqstemp.php?idrel=".$idrel."&banda=".$bandA."&idqst=".$idqst."'>".$activo."</a></td>";
         if (!empty($calf)) {
-            echo "<td><a href='imprimirpld.php?idemp=".$idemp."&periodo=".$yy."' target='_blank'>".Imprimir."</a></td>";
+            echo "<td><a href='constancia.php?idcuest=".$idrel."' target='_blank'>".$aprobo."</a></td><td><a href='imprimirpld.php?idemp=".$idemp."&periodo=".$yy."' target='_blank'>".Imprimir."</a></td>";
         }else
         {
-            echo "<td></td>";
+            echo "<td></td><td></td>";
         }        
         echo "</tr>";
     }
