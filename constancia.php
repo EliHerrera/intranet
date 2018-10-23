@@ -100,7 +100,10 @@ while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
  // $pdf->TextWithRotation($x + $xt, $y + $yt, $data['hri'], $angle);
   
   /**$pdf->Cell(80,100,$artista,0);**/
-   
+$pdf->SetDrawColor(186, 12, 47); //Lineas Color blanco  
+$pdf->SetLineWidth(2);
+$pdf->Line(5, 10 , 270, 10);  //Horizontal;  
+$pdf->Line(5, 205 , 270, 205);  //Horizontal;  
 $pdf->AddFont('Montserrat-Bold','B','Montserrat-Bold.php');  
 $pdf->SetFont('Montserrat-Bold','B',20);
 $pdf->TextWithRotation(45,40,'CREDICOR MEXICANO UNION DE CREDITO SA DE CV',360);
@@ -115,8 +118,8 @@ $pdf->TextWithRotation(70,94,$nombre,360);
 $pdf->SetFont('Montserrat-Bold','B',15);
 $pdf->TextWithRotation(100,110,'Por su Participacion en el curso',360);
 $pdf->SetFont('Montserrat-Bold','B',20);
-$pdf->TextWithRotation(33,130,'ACTUALIZACION EN PREVENCION DE LAVADO DE DINERO',360);
-$pdf->TextWithRotation(70,140,'Y FINANCIAMIENTO AL TERRORISMO',360);
+$pdf->TextWithRotation(33,130,'"ACTUALIZACION EN PREVENCION DE LAVADO DE DINERO',360);
+$pdf->TextWithRotation(70,140,'Y FINANCIAMIENTO AL TERRORISMO"',360);
 $pdf->SetFont('Montserrat-Bold','B',15);
 $pdf->TextWithRotation(97,150,$fecha_ap,360);
 $pdf->SetFont('Montserrat-Bold','B',15);
