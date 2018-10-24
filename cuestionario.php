@@ -52,6 +52,7 @@ while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $qst++;
     $idpregunta=$row['IDq'];
     echo "<p>".$qst.") ".$row['Pregunta']."</p>";
+    $cont=0;
     $queryResult1=$pdo->query("SELECT ID as IDw, Respuesta,lAcertivo  FROM Intranet.PLD_Answer WHERE IDCuest=$idpregunta ");
     while($row=$queryResult1->fetch(PDO::FETCH_ASSOC)) {
         $idw=$row['IDw'];
@@ -68,7 +69,8 @@ while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             if($row['IDRespuesta']==$idwc){
                 $mensaje='Correcta!';
                 $class="alert alert-info";
-            }else{
+                $cont++;
+            }elseif(($row['IDRespuesta']<>$idwc) && ($cont==0)){
                 $mensaje='Incorrecta! La respuesta Correcta es : '.$respuestac;
                 $class="alert alert-danger";
             }

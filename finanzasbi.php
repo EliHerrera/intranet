@@ -1,7 +1,7 @@
 <?php
     $hoy=date('Y-m-d');
     $location='S';
-    $grafica='fi';  
+    $grafica='in';  
     $yy=date('Y');
     $periodo=date("n",strtotime($fini."- 1 month"));
     $periodoant=$periodo-1;
