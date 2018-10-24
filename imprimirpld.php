@@ -89,29 +89,38 @@ while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $qst++;
     $idpregunta=$row['IDq'];
     echo "<p>".$qst.") ".$row['Pregunta']."</p>";
-    $queryResult1=$pdo->query("SELECT ID as IDw, Respuesta,lAcertivo  FROM Intranet.PLD_Answer WHERE IDCuest=$row[IDq] ");
+    $queryResult1=$pdo->query("SELECT ID as IDw, Respuesta,lAcertivo  FROM Intranet.PLD_Answer WHERE IDCuest=$idpregunta ");
     while($row=$queryResult1->fetch(PDO::FETCH_ASSOC)) {
-        
-        $queryResult2=$pdo->query("SELECT * FROM  Intranet.PLD_Resultados WHERE IDpersonal=$id_personal AND IDPregunta=$idpregunta AND IDRespuesta=$row[IDw]");
-        $bandera = $queryResult2->rowCount(); 
-        if($bandera==1){
-            $mensaje='Correcta';
-        }else{
-            $mensaje='Incorrecta';
+        $idw=$row['IDw'];
+        $respuesta=$row['Respuesta'];
+        $acertivo=$row['lAcertivo'];
+        if ($acertivo=='S') {
+            $idwc=$idw;
         }
+        $queryResult2=$pdo->query("SELECT * FROM  Intranet.PLD_Resultados WHERE IDpersonal=$id_personal AND IDPregunta=$idpregunta");
+        $bandera = $queryResult2->rowCount(); 
+        while($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
         
-        if($row['lAcertivo']=='S'){
+            if($row['IDRespuesta']==$idwc){
+                $mensaje='Correcta';
+            }else{
+                $mensaje='Incorrecta';
+            }
+            $idr=$row['IDRespuesta'];
+        } 
+        if($idw==$idr){
         echo "<div class='radio'>";
-        echo "    <label><input type='radio' name='".$clave."' checked>".$row['Respuesta']."</label>";
+        echo "    <label><input type='radio' name='".$clave."' checked>".$respuesta."</label>";
         echo "</div>";
-        echo "<div class='alert alert-info'>".$mensaje."</div>";
-        }elseif (['lAcertivo']=='N') {
+        
+        }elseif ($idw<>$idr) {
         echo "<div class='radio disabled'>";
-        echo "    <label><input type='radio' name='".$clave."' disabled>".$row['Respuesta']."</label>";
+        echo "    <label><input type='radio' name='".$clave."' disabled>".$respuesta."</label>";
         echo "</div>";
-        echo "<div class='alert alert-info'>".$mensaje."</div>";
-        }    
-    }
+        }
+         
+       
+    }echo "<div class='alert alert-info'>".$mensaje."</div>";  
 
 }
 $row_count='N';
