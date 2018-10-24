@@ -106,7 +106,7 @@ while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                 $mensaje='Correcta!';
                 $class="alert alert-info";
             }else{
-                $mensaje='Incorrecta! La respuesta correta es : '.$respuestac;
+                $mensaje='Incorrecta! La respuesta Correcta es : '.$respuestac;
                 $class="alert alert-danger";
             }
             $idr=$row['IDRespuesta'];

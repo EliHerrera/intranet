@@ -45,37 +45,51 @@
             $idqst=$row['ID'];
             $llave=$row['llave'];
         }
+        ##Inicia ipresion de cuestionario
         $queryResult=$pdo->query("SELECT ID as IDq, Pregunta, clave FROM Intranet.PLD_Cuest WHERE IDQst=$idqst ");
-        while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-            $clave=$row['clave'];
-            $qst++;
-            $idpregunta=$row['IDq'];
-            echo "<p>".$qst.") ".$row['Pregunta']."</p>";
-            $queryResult1=$pdo->query("SELECT ID as IDw, Respuesta,lAcertivo  FROM Intranet.PLD_Answer WHERE IDCuest=$row[IDq] ");
-            while($row=$queryResult1->fetch(PDO::FETCH_ASSOC)) {
-                
-                $queryResult2=$pdo->query("SELECT * FROM  Intranet.PLD_Resultados WHERE IDpersonal=$idpersonal AND IDPregunta=$idpregunta AND IDRespuesta=$row[IDw]");
-                $bandera = $queryResult2->rowCount(); 
-                if($bandera==1){
-                    $mensaje='Correcta';
-                }else{
-                    $mensaje='Incorrecta';
-                }
-                
-                if($row['lAcertivo']=='S'){
-                echo "<div class='radio'>";
-                echo "    <label><input type='radio' name='".$clave."' checked>".$row['Respuesta']."</label>";
-                echo "</div>";
-                echo "<div class='alert alert-info'>".$mensaje."</div>";
-                }elseif (['lAcertivo']=='N') {
-                echo "<div class='radio disabled'>";
-                echo "    <label><input type='radio' name='".$clave."' disabled>".$row['Respuesta']."</label>";
-                echo "</div>";
-                echo "<div class='alert alert-info'>".$mensaje."</div>";
-                }    
-            }
-
+while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+    $clave=$row['clave'];
+    $qst++;
+    $idpregunta=$row['IDq'];
+    echo "<p>".$qst.") ".$row['Pregunta']."</p>";
+    $queryResult1=$pdo->query("SELECT ID as IDw, Respuesta,lAcertivo  FROM Intranet.PLD_Answer WHERE IDCuest=$idpregunta ");
+    while($row=$queryResult1->fetch(PDO::FETCH_ASSOC)) {
+        $idw=$row['IDw'];
+        $respuesta=$row['Respuesta'];
+        $acertivo=$row['lAcertivo'];
+        if ($acertivo=='S') {
+            $idwc=$idw;
+            $respuestac=$respuesta;
         }
+        $queryResult2=$pdo->query("SELECT * FROM  Intranet.PLD_Resultados WHERE IDpersonal=$idpersonal AND IDPregunta=$idpregunta");
+        $bandera = $queryResult2->rowCount(); 
+        while($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+        
+            if($row['IDRespuesta']==$idwc){
+                $mensaje='Correcta!';
+                $class="alert alert-info";
+            }else{
+                $mensaje='Incorrecta! La respuesta Correcta es : '.$respuestac;
+                $class="alert alert-danger";
+            }
+            $idr=$row['IDRespuesta'];
+        } 
+        if($idw==$idr){
+        echo "<div class='radio'>";
+        echo "    <label><input type='radio' name='".$clave."' checked>".$respuesta."</label>";
+        echo "</div>";
+        
+        }elseif ($idw<>$idr) {
+        echo "<div class='radio disabled'>";
+        echo "    <label><input type='radio' name='".$clave."' disabled>".$respuesta."</label>";
+        echo "</div>";
+        }
+         
+       
+    }echo "<div class='".$class."'>".$mensaje."</div>";  
+
+}
+        ##termina impresion de cuestionario
         $row_count='N';
         echo "<a href='cuestionario.php' class='button'>Finalizar</a>";
         echo "<a href='javascript:window.print(); void 0;' class='button'>Imprimir</a> ";
