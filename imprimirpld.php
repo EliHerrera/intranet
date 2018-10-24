@@ -96,15 +96,18 @@ while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $acertivo=$row['lAcertivo'];
         if ($acertivo=='S') {
             $idwc=$idw;
+            $respuestac=$respuesta;
         }
         $queryResult2=$pdo->query("SELECT * FROM  Intranet.PLD_Resultados WHERE IDpersonal=$id_personal AND IDPregunta=$idpregunta");
         $bandera = $queryResult2->rowCount(); 
         while($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
         
             if($row['IDRespuesta']==$idwc){
-                $mensaje='Correcta';
+                $mensaje='Correcta!';
+                $class="alert alert-info";
             }else{
-                $mensaje='Incorrecta';
+                $mensaje='Incorrecta! La respuesta correta es : '.$respuestac;
+                $class="alert alert-danger";
             }
             $idr=$row['IDRespuesta'];
         } 
@@ -120,7 +123,7 @@ while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         }
          
        
-    }echo "<div class='alert alert-info'>".$mensaje."</div>";  
+    }echo "<div class='".$class."'>".$mensaje."</div>";  
 
 }
 $row_count='N';
