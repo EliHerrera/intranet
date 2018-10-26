@@ -34,6 +34,7 @@
         $calf=($correctas/$row_count)*10;
         setlocale(LC_ALL, 'es_ES').': ';
         $fecha_ap=iconv('ISO-8859-1', 'UTF-8', strftime('%A %d de %B de %Y', time())); 
+        $fecha_ap="Martes 30 de Octubre de 2018";
         $queryResult = $pdo->query("UPDATE Intranet.RelQst SET Calf=$calf, lActivo='N',fecha_ap='$fecha_ap' WHERE IDPersonal=$idpersonal AND periodo=$periodo");
         echo "<p>Examen no ".$_POST[codigo]." Fecha : ".$hoy." Empleado : ".$nombre."</p>";
         echo "<div class='alert alert-success'>";
@@ -135,7 +136,8 @@ if(!empty($_POST['llave'])){
         while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             $clave=$row['clave'];
             $qst++;
-            echo "<p>".$qst.") ".$row['Pregunta']."</p>";
+            echo "<div  style='background-color:lavender;''>";
+            echo "<p><strong>".$qst.") ".$row['Pregunta']."</strong></p>";
             $queryResult1=$pdo->query("SELECT ID as IDw, Respuesta  FROM Intranet.PLD_Answer WHERE IDCuest=$row[IDq] ");
             while($row=$queryResult1->fetch(PDO::FETCH_ASSOC)) {
                 echo "<div class='radio'>";
@@ -143,6 +145,7 @@ if(!empty($_POST['llave'])){
                 echo "</div>";
 
             }
+            echo "</div>";
 
         }
     }    
