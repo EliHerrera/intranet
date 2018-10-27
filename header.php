@@ -43,6 +43,7 @@
         $puntopase=$row['calfap'];
         $limpq=$row['limpq'];
         $dpond=$row['diaspond'];
+        $idcontraloria=$row['id_contraloria'];
     }
 
 ?>

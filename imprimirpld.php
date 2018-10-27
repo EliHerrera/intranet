@@ -83,12 +83,14 @@ while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $idqst=$row['ID'];
     $llave=$row['llave'];
 }
+//Inicia la impresion del cuestionario
 $queryResult=$pdo->query("SELECT ID as IDq, Pregunta, clave FROM Intranet.PLD_Cuest WHERE IDQst=$idqst ");
 while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $clave=$row['clave'];
     $qst++;
     $idpregunta=$row['IDq'];
     echo "<p>".$qst.") ".$row['Pregunta']."</p>";
+    $cont=0;
     $queryResult1=$pdo->query("SELECT ID as IDw, Respuesta,lAcertivo  FROM Intranet.PLD_Answer WHERE IDCuest=$idpregunta ");
     while($row=$queryResult1->fetch(PDO::FETCH_ASSOC)) {
         $idw=$row['IDw'];
@@ -101,11 +103,13 @@ while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $queryResult2=$pdo->query("SELECT * FROM  Intranet.PLD_Resultados WHERE IDpersonal=$id_personal AND IDPregunta=$idpregunta");
         $bandera = $queryResult2->rowCount(); 
         while($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
-        
+            
             if($row['IDRespuesta']==$idwc){
                 $mensaje='Correcta!';
                 $class="alert alert-info";
-            }else{
+                $cont++;
+                
+            }elseif(($row['IDRespuesta']<>$idwc) && ($cont==0)){
                 $mensaje='Incorrecta! La respuesta Correcta es : '.$respuestac;
                 $class="alert alert-danger";
             }
@@ -126,6 +130,7 @@ while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     }echo "<div class='".$class."'>".$mensaje."</div>";  
 
 }
+//aqui termina la impresion del cuestionario
 $row_count='N';
 echo "<input name='button' type='button' onclick='window.close();' value='Cerrar' class='button' /> ";
 echo "<a href='javascript:window.print(); void 0;' class='button'>Imprimir</a> ";

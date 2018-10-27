@@ -25,12 +25,20 @@
         echo "<div id='carterafilEjeAPU' ></div>";
         echo "<div id='carterafilEjeAP'></div>";
         echo "<div id='carterafilEjeVP'></div>";
+        echo "<div id='carterafiltodoseje'></div>";
+        echo "<div id='carterafilinv'></div>";
+        
+        
     }
     if($_POST['col']==3){
         echo "<div id='carterafilsuc'></div>";
         echo "<div id='carterafilSucAPU' ></div>";
         echo "<div id='carterafilSucAP'></div>";
         echo "<div id='carterafilSucVP'></div>";
+        echo "<div id='carterafiltodosuc'></div>";
+        echo "<div id='carterafilsucinv'></div>";
+        
+
     }
     if($_POST['col']==4){
         echo "<div id='carterafilpro'></div>";
