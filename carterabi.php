@@ -117,6 +117,151 @@
             }
             echo "<tr><td>".$row['tipo']."</td><td>".$row['Folio']."</td><td>".$row['STATUS']."</td><td>".$row['Cliente']."</td><td>".number_format($saldo,2)."</td><td>".number_format($moras,2)."</td><td>".$row['Ejecutivo']."</td><td>".$row['Sucursal']."</td></tr>";
         }
+        $queryResult=$pdo->query("SELECT
+        
+        CONCAT(
+            C.Nombre,
+            ' ',
+            C.Apellido1,
+            ' ',
+            C.Apellido2
+        ) AS Cliente,
+        CONCAT('AP-', LPAD(B.Folio, 6, 0)) AS Folio,
+        CASE B. STATUS WHEN 'A' THEN 'ACTIVO' WHEN 'P' THEN 'Pagado' WHEN 'J' THEN 'Juridico' ELSE 'Otro' END as STATUS,
+        SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo, SUM(A.SaldoMora) + SUM(A.SaldoIvaMora)  as moras,
+        CONCAT(
+            E.Nombre,
+            ' ',
+            E.Apellido1,
+            ' ',
+            E.Apellido2
+        ) AS Ejecutivo,
+        F.Nombre as Sucursal,
+        B.IDMoneda
+    FROM
+        2_dw_images_ap A
+    INNER JOIN 2_ap_contrato B ON A.IDContrato = B.ID
+    INNER JOIN 2_cliente C ON A.IDCliente = C.ID
+    INNER JOIN personal E ON C.IDEjecutivo = E.ID
+    INNER JOIN sucursal F ON C.IDSucursal = F.ID
+    WHERE
+        FImage = '$hoy'
+    AND B. STATUS <> 'C'
+    AND B. STATUS <> '-'
+    AND B. STATUS <> 'P'
+    GROUP BY
+        A.IDContrato");
+        
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            if ($row['IDMoneda']==2) {
+                $saldo=$row['Saldo'];
+                $saldo=$saldo*$tc;
+                $moras=$row['moras'];
+                $moras=$moras*$tc;
+
+            }else {
+                $saldo=$row['Saldo'];
+                $moras=$row['moras'];
+            }
+            echo "<tr><td>APU</td><td>".$row['Folio']."</td><td>".$row['STATUS']."</td><td>".$row['Cliente']."</td><td>".number_format($saldo,2)."</td><td>".number_format($moras,2)."</td><td>".$row['Ejecutivo']."</td><td>".$row['Sucursal']."</td></tr>";
+        }
+        $queryResult=$pdo->query("SELECT
+        
+        CONCAT(
+            C.Nombre,
+            ' ',
+            C.Apellido1,
+            ' ',
+            C.Apellido2
+        ) AS Cliente,
+        CONCAT('AP-', LPAD(B.Folio, 6, 0)) AS Folio,
+        CASE B. STATUS WHEN 'A' THEN 'ACTIVO' WHEN 'P' THEN 'Pagado' WHEN 'J' THEN 'Juridico' ELSE 'Otro' END as STATUS,
+        SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo, SUM(A.SaldoMora) + SUM(A.SaldoIvaMora)  as moras,
+        CONCAT(
+            E.Nombre,
+            ' ',
+            E.Apellido1,
+            ' ',
+            E.Apellido2
+        ) AS Ejecutivo,
+        F.Nombre as Sucursal,
+        B.IDMoneda
+    FROM
+        3_dw_images_ap A
+    INNER JOIN 3_ap_contrato B ON A.IDContrato = B.ID
+    INNER JOIN 3_cliente C ON A.IDCliente = C.ID
+    INNER JOIN personal E ON C.IDEjecutivo = E.ID
+    INNER JOIN sucursal F ON C.IDSucursal = F.ID
+    WHERE
+        FImage = '$hoy'
+    AND B. STATUS <> 'C'
+    AND B. STATUS <> '-'
+    AND B. STATUS <> 'P'
+    GROUP BY
+        A.IDContrato");
+        
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            if ($row['IDMoneda']==2) {
+                $saldo=$row['Saldo'];
+                $saldo=$saldo*$tc;
+                $moras=$row['moras'];
+                $moras=$moras*$tc;
+
+            }else {
+                $saldo=$row['Saldo'];
+                $moras=$row['moras'];
+            }
+            echo "<tr><td>AP</td><td>".$row['Folio']."</td><td>".$row['STATUS']."</td><td>".$row['Cliente']."</td><td>".number_format($saldo,2)."</td><td>".number_format($moras,2)."</td><td>".$row['Ejecutivo']."</td><td>".$row['Sucursal']."</td></tr>";
+        }    
+        $queryResult=$pdo->query("SELECT
+        
+        CONCAT(
+            C.Nombre,
+            ' ',
+            C.Apellido1,
+            ' ',
+            C.Apellido2
+        ) AS Cliente,
+        CONCAT('VP-', LPAD(B.Folio, 6, 0)) AS Folio,
+        CASE B. STATUS WHEN 'A' THEN 'ACTIVO' WHEN 'P' THEN 'Pagado' WHEN 'J' THEN 'Juridico' ELSE 'Otro' END as STATUS,
+        SUM(A.SaldoCap) + SUM(A.SaldoInt) + SUM(A.SaldoIvaInt) AS Saldo, SUM(A.SaldoMora) + SUM(A.SaldoIvaMora)  as moras,
+        CONCAT(
+            E.Nombre,
+            ' ',
+            E.Apellido1,
+            ' ',
+            E.Apellido2
+        ) AS Ejecutivo,
+        F.Nombre as Sucursal,
+        B.IDMoneda
+    FROM
+        3_dw_images_vp A
+    INNER JOIN 3_vp_contrato B ON A.IDContrato = B.ID
+    INNER JOIN 3_cliente C ON A.IDCliente = C.ID
+    INNER JOIN personal E ON C.IDEjecutivo = E.ID
+    INNER JOIN sucursal F ON C.IDSucursal = F.ID
+    WHERE
+        FImage = '$hoy'
+    AND B. STATUS <> 'C'
+    AND B. STATUS <> '-'
+    AND B. STATUS <> 'P'
+    GROUP BY
+        A.IDContrato");
+        
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            if ($row['IDMoneda']==2) {
+                $saldo=$row['Saldo'];
+                $saldo=$saldo*$tc;
+                $moras=$row['moras'];
+                $moras=$moras*$tc;
+
+            }else {
+                $saldo=$row['Saldo'];
+                $moras=$row['moras'];
+            }
+            echo "<tr><td>VP</td><td>".$row['Folio']."</td><td>".$row['STATUS']."</td><td>".$row['Cliente']."</td><td>".number_format($saldo,2)."</td><td>".number_format($moras,2)."</td><td>".$row['Ejecutivo']."</td><td>".$row['Sucursal']."</td></tr>";
+        }
+            
     ?>
 
 </table>
