@@ -1191,7 +1191,7 @@ $(function () {
 //graficas por producto
 <?PHP
 
-        $etiqueta='Producto';
+        $etiqueta='Productos';
         $queryResultcateje=$pdo->query("SELECT
         C.Tipo,
         SUM(A.SaldoCap) + SUM(A.SaldoInt) AS Saldo,
@@ -1209,7 +1209,98 @@ $(function () {
     AND D. STATUS <> 'P'
     GROUP BY
         C.ID");
-            
+    while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+        $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (Saldo,Producto,fecha,Empresa,tipo) VALUES($row[Saldo],'CR','$hoy',2,3)");
+                    $queryInsert->execute();
+    } 
+    $queryResultcateje=$pdo->query("SELECT
+        
+        SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora)  AS moras
+    FROM
+        sibware.2_dw_images_ap A
+    INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.2_ap_contrato D ON A.IDContrato = D.ID
+   
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    "); 
+    while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+        $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (Saldo,Producto,fecha,Empresa,tipo) VALUES($row[Saldo],'APU','$hoy',2,3)");
+        $queryInsert->execute();
+    }
+    $queryResultcateje=$pdo->query("SELECT
+        
+        SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora)  AS moras
+    FROM
+        sibware.3_dw_images_ap A
+    INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.3_ap_contrato D ON A.IDContrato = D.ID
+   
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    "); 
+    while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+        $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (Saldo,Producto,fecha,Empresa,tipo) VALUES($row[Saldo],'AP','$hoy',3,3)");
+        $queryInsert->execute();
+    }  
+    $queryResultcateje=$pdo->query("SELECT
+        
+        SUM(A.SaldoCap) + SUM(A.SaldoInt) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora)  AS moras
+    FROM
+        sibware.3_dw_images_vp A
+    INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.3_vp_contrato D ON A.IDContrato = D.ID
+   
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    "); 
+    while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+        $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (Saldo,Producto,fecha,Empresa,tipo) VALUES($row[Saldo],'VP','$hoy',3,3)");
+        $queryInsert->execute();
+    } 
+    $queryResultcateje=$pdo->query("SELECT
+        
+        SUM(A.SaldoProm) + SUM(A.SaldoInt) - SUM(A.SaldoRet) AS Saldo
+        
+    FROM
+        sibware.2_dw_images_in A
+    INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.2_prestamos D ON A.IDPrestamo = D.ID
+   
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    
+    "); 
+    while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+        $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (Saldo,Producto,fecha,Empresa,tipo) VALUES($row[Saldo],'INV','$hoy',2,3)");
+        $queryInsert->execute();
+    }  
+    $queryResultcateje=$pdo->query("SELECT
+        A.Producto as Tipo,
+        SUM(A.Saldo) AS Saldo
+    FROM
+        Intranet.carterabi A
+    WHERE
+        A.fecha = '$hoy'
+    GROUP BY
+    A.Producto
+    ");    
 
 ?>  
 $(function () {
@@ -1247,7 +1338,8 @@ $(function () {
                 
                     echo "['".$row['Tipo']."',   ".$row['Saldo']."],";
                 }
-                   
+                $querydelete=$pdo->prepare("DELETE FROM Intranet.carterabi WHERE fecha='$hoy' and tipo=3");
+                $querydelete->execute();   
             ?>    
             ]
         }]
