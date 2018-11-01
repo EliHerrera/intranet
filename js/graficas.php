@@ -333,7 +333,7 @@ $(function () {
 //graficas cartera por ejecutivos
 <?PHP
 
-        $etiqueta='Ejecutivos';
+        $etiqueta='Ejecutivos Creditos';
         $queryResultcateje=$pdo->query("SELECT
                 CONCAT(
                     C.Nombre,
@@ -370,7 +370,7 @@ $(function () {
             plotShadow: false
         },
         title: {
-            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y-m-d')  ?>'
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -398,7 +398,7 @@ $(function () {
                     $querydelete->execute(); 
                     $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDEjecutivo,IDCliente,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDEjecutivo],$row[IDCliente],$row[Saldo],'CR','$hoy',2,1)");
                     $queryInsert->execute();
-                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                    
             ?>    
@@ -475,7 +475,7 @@ $(function () {
                 while ($row=$queryResultcatejeAPU->fetch(PDO::FETCH_ASSOC)) { 
                     $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDEjecutivo,IDCliente,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDEjecutivo],$row[IDCliente],$row[Saldo],'APU','$hoy',2,1)");
                     $queryInsert->execute();
-                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                    
             ?>    
@@ -549,7 +549,7 @@ $(function () {
                 while ($row=$queryResultcatejeAP->fetch(PDO::FETCH_ASSOC)) { 
                     $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDEjecutivo,IDCliente,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDEjecutivo],$row[IDCliente],$row[Saldo],'AP','$hoy',3,1)");
                     $queryInsert->execute();
-                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                    
             ?>    
@@ -620,7 +620,7 @@ $(function () {
                 while ($row=$queryResultcatsucAPU->fetch(PDO::FETCH_ASSOC)) { 
                     $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDSucursal,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDSucursal],$row[Saldo],'APU','$hoy',2,2)");
                     $queryInsert->execute();
-                    echo "['".$row['Nombre']."',   ".$row['Saldo']."],";
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                    
             ?>    
@@ -687,7 +687,7 @@ $(function () {
                 while ($row=$queryResultcatsucAP->fetch(PDO::FETCH_ASSOC)) { 
                     $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDSucursal,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDSucursal],$row[Saldo],'AP','$hoy',3,2)");
                     $queryInsert->execute();
-                    echo "['".$row['Nombre']."',   ".$row['Saldo']."],";
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                    
             ?>    
@@ -763,7 +763,7 @@ $(function () {
                 while ($row=$queryResultcatejeVP->fetch(PDO::FETCH_ASSOC)) { 
                     $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDEjecutivo,IDCliente,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDEjecutivo],$row[IDCliente],$row[Saldo],'VP','$hoy',3,1)");
                     $queryInsert->execute();
-                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                    
             ?>    
@@ -834,7 +834,7 @@ $(function () {
             <?PHP   
                 while ($row=$queryResultcatejetodo->fetch(PDO::FETCH_ASSOC)) { 
                     
-                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                 $querydelete=$pdo->prepare("DELETE FROM Intranet.carterabi WHERE fecha='$hoy' and tipo=1");
                 $querydelete->execute();    
@@ -905,7 +905,7 @@ $(function () {
             <?PHP   
                 while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) {
                     
-                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                    
             ?>    

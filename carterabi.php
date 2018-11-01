@@ -66,7 +66,7 @@
     
 ?> 
 <table class="table">   
-    <tr><th>Producto</th><th>Folio</th><th>Estatus</th><th>Cliente</th><th>Saldo</th><th>Moratorios</th><th>Ejectutivo</th><th>Sucursal</th></tr>
+    <tr><th>Producto</th><th>Folio</th><th>Estatus</th><th>Cliente</th><th>Tipo Cte</th><th>Saldo</th><th>Moratorios</th><th>Ejectutivo</th><th>Sucursal</th></tr>
     <?php
         $queryResult=$pdo->query("SELECT
         D.tipo,
@@ -88,14 +88,16 @@
             E.Apellido2
         ) AS Ejecutivo,
         F.Nombre as Sucursal,
-        B.IDMoneda
+        B.IDMoneda,
+        G.tipo as tipocte
     FROM
-        2_dw_images_contratos A
-    INNER JOIN 2_contratos B ON A.IDContrato = B.ID
-    INNER JOIN 2_cliente C ON A.IDCliente = C.ID
-    INNER JOIN 2_entorno_tipocredito D ON B.IDTipoCredito = D.ID
-    INNER JOIN personal E ON C.IDEjecutivo = E.ID
-    INNER JOIN sucursal F ON C.IDSucursal = F.ID
+        sibware.2_dw_images_contratos A
+    INNER JOIN sibware.2_contratos B ON A.IDContrato = B.ID
+    INNER JOIN sibware.2_cliente C ON A.IDCliente = C.ID
+    INNER JOIN sibware.2_entorno_tipocredito D ON B.IDTipoCredito = D.ID
+    INNER JOIN sibware.personal E ON C.IDEjecutivo = E.ID
+    INNER JOIN sibware.sucursal F ON C.IDSucursal = F.ID
+    INNER JOIN sibware.2_entorno_tipocliente G ON C.IDTipoCliente=G.ID
     WHERE
         FImage = '$hoy'
     AND B. STATUS <> 'C'
@@ -115,7 +117,7 @@
                 $saldo=$row['Saldo'];
                 $moras=$row['moras'];
             }
-            echo "<tr><td>".$row['tipo']."</td><td>".$row['Folio']."</td><td>".$row['STATUS']."</td><td>".$row['Cliente']."</td><td>".number_format($saldo,2)."</td><td>".number_format($moras,2)."</td><td>".$row['Ejecutivo']."</td><td>".$row['Sucursal']."</td></tr>";
+            echo "<tr><td>".$row['tipo']."</td><td>".$row['Folio']."</td><td>".$row['STATUS']."</td><td>".$row['Cliente']."</td><td>".$row['tipocte']."</td><td>".number_format($saldo,2)."</td><td>".number_format($moras,2)."</td><td>".$row['Ejecutivo']."</td><td>".$row['Sucursal']."</td></tr>";
         }
         $queryResult=$pdo->query("SELECT
         
@@ -137,13 +139,15 @@
             E.Apellido2
         ) AS Ejecutivo,
         F.Nombre as Sucursal,
-        B.IDMoneda
+        B.IDMoneda,
+        G.tipo as tipocte
     FROM
-        2_dw_images_ap A
-    INNER JOIN 2_ap_contrato B ON A.IDContrato = B.ID
-    INNER JOIN 2_cliente C ON A.IDCliente = C.ID
-    INNER JOIN personal E ON C.IDEjecutivo = E.ID
-    INNER JOIN sucursal F ON C.IDSucursal = F.ID
+        sibware.2_dw_images_ap A
+    INNER JOIN sibware.2_ap_contrato B ON A.IDContrato = B.ID
+    INNER JOIN sibware.2_cliente C ON A.IDCliente = C.ID
+    INNER JOIN sibware.personal E ON C.IDEjecutivo = E.ID
+    INNER JOIN sibware.sucursal F ON C.IDSucursal = F.ID
+    INNER JOIN sibware.2_entorno_tipocliente G ON C.IDTipoCliente=G.ID
     WHERE
         FImage = '$hoy'
     AND B. STATUS <> 'C'
@@ -163,7 +167,7 @@
                 $saldo=$row['Saldo'];
                 $moras=$row['moras'];
             }
-            echo "<tr><td>APU</td><td>".$row['Folio']."</td><td>".$row['STATUS']."</td><td>".$row['Cliente']."</td><td>".number_format($saldo,2)."</td><td>".number_format($moras,2)."</td><td>".$row['Ejecutivo']."</td><td>".$row['Sucursal']."</td></tr>";
+            echo "<tr><td>APU</td><td>".$row['Folio']."</td><td>".$row['STATUS']."</td><td>".$row['Cliente']."</td><td>".$row['tipocte']."</td><td>".number_format($saldo,2)."</td><td>".number_format($moras,2)."</td><td>".$row['Ejecutivo']."</td><td>".$row['Sucursal']."</td></tr>";
         }
         $queryResult=$pdo->query("SELECT
         
@@ -185,13 +189,15 @@
             E.Apellido2
         ) AS Ejecutivo,
         F.Nombre as Sucursal,
-        B.IDMoneda
+        B.IDMoneda,
+        G.tipo as tipocte
     FROM
-        3_dw_images_ap A
-    INNER JOIN 3_ap_contrato B ON A.IDContrato = B.ID
-    INNER JOIN 3_cliente C ON A.IDCliente = C.ID
-    INNER JOIN personal E ON C.IDEjecutivo = E.ID
-    INNER JOIN sucursal F ON C.IDSucursal = F.ID
+        sibware.3_dw_images_ap A
+    INNER JOIN sibware.3_ap_contrato B ON A.IDContrato = B.ID
+    INNER JOIN sibware.3_cliente C ON A.IDCliente = C.ID
+    INNER JOIN sibware.personal E ON C.IDEjecutivo = E.ID
+    INNER JOIN sibware.sucursal F ON C.IDSucursal = F.ID
+    INNER JOIN sibware.3_entorno_tipocliente G ON C.IDTipoCliente=G.ID
     WHERE
         FImage = '$hoy'
     AND B. STATUS <> 'C'
@@ -211,7 +217,7 @@
                 $saldo=$row['Saldo'];
                 $moras=$row['moras'];
             }
-            echo "<tr><td>AP</td><td>".$row['Folio']."</td><td>".$row['STATUS']."</td><td>".$row['Cliente']."</td><td>".number_format($saldo,2)."</td><td>".number_format($moras,2)."</td><td>".$row['Ejecutivo']."</td><td>".$row['Sucursal']."</td></tr>";
+            echo "<tr><td>AP</td><td>".$row['Folio']."</td><td>".$row['STATUS']."</td><td>".$row['Cliente']."</td><td>".$row['tipocte']."</td><td>".number_format($saldo,2)."</td><td>".number_format($moras,2)."</td><td>".$row['Ejecutivo']."</td><td>".$row['Sucursal']."</td></tr>";
         }    
         $queryResult=$pdo->query("SELECT
         
@@ -233,13 +239,15 @@
             E.Apellido2
         ) AS Ejecutivo,
         F.Nombre as Sucursal,
-        B.IDMoneda
+        B.IDMoneda,
+        G.tipo as tipocte
     FROM
-        3_dw_images_vp A
-    INNER JOIN 3_vp_contrato B ON A.IDContrato = B.ID
-    INNER JOIN 3_cliente C ON A.IDCliente = C.ID
-    INNER JOIN personal E ON C.IDEjecutivo = E.ID
-    INNER JOIN sucursal F ON C.IDSucursal = F.ID
+        sibware.3_dw_images_vp A
+    INNER JOIN sibware.3_vp_contrato B ON A.IDContrato = B.ID
+    INNER JOIN sibware.3_cliente C ON A.IDCliente = C.ID
+    INNER JOIN sibware.personal E ON C.IDEjecutivo = E.ID
+    INNER JOIN sibware.sucursal F ON C.IDSucursal = F.ID
+    INNER JOIN sibware.2_entorno_tipocliente G ON C.IDTipoCliente=G.ID
     WHERE
         FImage = '$hoy'
     AND B. STATUS <> 'C'
@@ -259,7 +267,7 @@
                 $saldo=$row['Saldo'];
                 $moras=$row['moras'];
             }
-            echo "<tr><td>VP</td><td>".$row['Folio']."</td><td>".$row['STATUS']."</td><td>".$row['Cliente']."</td><td>".number_format($saldo,2)."</td><td>".number_format($moras,2)."</td><td>".$row['Ejecutivo']."</td><td>".$row['Sucursal']."</td></tr>";
+            echo "<tr><td>VP</td><td>".$row['Folio']."</td><td>".$row['STATUS']."</td><td>".$row['Cliente']."</td><td>".$row['tipocte']."</td><td>".number_format($saldo,2)."</td><td>".number_format($moras,2)."</td><td>".$row['Ejecutivo']."</td><td>".$row['Sucursal']."</td></tr>";
         }
             
     ?>
@@ -275,7 +283,7 @@
     <?PHP
     while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
                 
-        echo "<tr><td>".$row['Ejecutivo']."</td><td>".$row['Saldo']."</td><td>".$row['moras']."</td></tr>";
+        echo "<tr><td>".$row['Ejecutivo']."</td><td>".$row['Saldo']."</td><td>".$row['tipocte']."</td><td>".$row['moras']."</td></tr>";
     }
     
  } ?>
