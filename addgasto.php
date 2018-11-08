@@ -119,6 +119,7 @@
      <div class="col-xs-4">
          <label for="idcte">Socio/Prospecto</label><select name="idcte" id="idcte" class="form-control" required="true" onchange="this.form.submit();return false;" >
              <option value="">Seleccione uno...</option>
+             <option value="0">Otro</option>
              <?PHP 
              if ($_POST['emp']==2) {
                 $queryResult = $pdo->query("SELECT A.IDCte,CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Nombre FROM sibware.pipeline_prospec A INNER JOIN sibware.2_cliente B ON A.IDCte=B.ID  WHERE A.IDEjecutivo=$idpersonal and A.Emp=2 GROUP BY A.IDCte ORDER BY A.Nombre ASC ") ;

@@ -348,10 +348,11 @@ WHERE
 }            
 # Graficas finanzas 
 #Graficas de Incidencias
-    if ($grafica=='in') {
+    if ($grafica=='inc') {
         $tabiertos=0;
         $tproceso=0;
         $tcerrados=0;
+        
         
         $queryResult=$pdo->query("SELECT * from Intranet.ticket A where A.fecha_alta BETWEEN '$finiinci' and '$ffininci'");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {

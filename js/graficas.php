@@ -1418,7 +1418,7 @@ $(function () {
             plotShadow: false
         },
         title: {
-            text: 'Reporte de Incidencias, 2018'
+            text: '<?php echo $ffininci; ?>'
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -1440,11 +1440,11 @@ $(function () {
             type: 'pie',
             name: 'Incidencias',
             data: [
-                ['Abiertos',   45.0],
-                ['Pendientes',       26.0],
+                ['Abiertos',   <?php echo $tabiertos ?>],
+                ['Pendientes',       <?php echo $tproceso ?>],
                 {
                     name: 'Cerrados',
-                    y: 29.0,
+                    y: <?php echo $tcerrados ?>,
                     sliced: true,
                     selected: true
                 }

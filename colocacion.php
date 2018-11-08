@@ -1,9 +1,6 @@
 <?php
-    $location='S';
-    $grafica='c';
-    require_once 'cargarbi.php';    
-    require_once 'header.php';
-    //////inicio de contenido
+    $location="colocacion";
+    require_once 'headerbi.php';
     require 'estiloconst.php'; 
     require 'menubi.php';
    
