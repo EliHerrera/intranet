@@ -8,10 +8,9 @@
         $fechafin = new DateTime($fecha);
         $fechafin->modify('last day of this month');
         $ffin=$fechafin->format('Y-m-d'); 
-        $queryResult=$pdo->query("SELECT sibware.gTIIE($_POST[mes],$_POST[yy]) as tiim");
-            while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-                $tiiem=$row['tiim'];
-            }
+        
+        echo $fini;
+        echo $ffin;    
         $queryResult=$pdo->query("SELECT
         CONCAT(
             D.Nombre,
@@ -40,29 +39,24 @@
         E.renglon as Periodo,
         MONTH(E.FFinal) as mes,
         YEAR(E.FFinal) as yy,
-        D.IDSucursal,
-        
+        D.IDSucursal        
         FROM
-        2_contratos_disposicion A
-        INNER JOIN 2_contratos B ON A.IDContrato = B.ID
-        INNER JOIN 2_cliente C ON B.IDCliente = C.ID
-        INNER JOIN personal D ON C.IDEjecutivo = D.ID
-        INNER JOIN 2_contratos_disposicion_movs E ON E.IDDisposicion = A.ID
+        sibware.2_contratos_disposicion A
+        INNER JOIN sibware.2_contratos B ON A.IDContrato = B.ID
+        INNER JOIN sibware.2_cliente C ON B.IDCliente = C.ID
+        INNER JOIN sibware.personal D ON C.IDEjecutivo = D.ID
+        INNER JOIN sibware.2_contratos_disposicion_movs E ON E.IDDisposicion = A.ID
         WHERE
         B.`status` <> 'C'
         AND B.`status` <> '-'
         AND E.Fpago BETWEEN '$fini'
         AND '$ffin'");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-            $idCto=$row['ID'];
-            $iddisp=$row['IDd'];
-            $idCte=$row['IDCliente'];
-            $tasa=$row['Tasa'];
-            $pAdicional=$row['PAdicional'];
-            $tTasa=$row['TipoTasa'];
+            $queryResult2=$pdo->query("SELECT sibware.gTIIE($_POST[mes],$_POST[yy]) as tiim");
+            while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+                $tiiem=$row['tiim'];
+            }
             
-            
-            # code...
         }
       
 
