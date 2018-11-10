@@ -333,7 +333,7 @@ $(function () {
 //graficas cartera por ejecutivos
 <?PHP
 
-        $etiqueta='Ejecutivos';
+        $etiqueta='Ejecutivos Creditos';
         $queryResultcateje=$pdo->query("SELECT
                 CONCAT(
                     C.Nombre,
@@ -343,11 +343,13 @@ $(function () {
                     C.Apellido2
                 ) AS Ejecutivo,
                 SUM(A.SaldoCap) + SUM(A.SaldoInt) AS Saldo,
-                SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) + SUM(A.SaldoPena) + SUM(A.SaldoIvaPena) AS moras
+                SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) + SUM(A.SaldoPena) + SUM(A.SaldoIvaPena) AS moras,
+                A.IDEjecutivo,
+                A.IDCliente
             FROM
                 sibware.2_dw_images_contratos A
             INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
-            INNER JOIN sibware.personal C ON B.IDEjecutivo = C.ID
+            INNER JOIN sibware.personal C ON A.IDEjecutivo = C.ID
             INNER JOIN sibware.2_contratos D ON A.IDContrato = D.ID
             WHERE
                 A.FImage = '$hoy'
@@ -368,7 +370,7 @@ $(function () {
             plotShadow: false
         },
         title: {
-            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y-m-d')  ?>'
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -391,9 +393,12 @@ $(function () {
             name: 'Cartera',
             data: [
             <?PHP   
-                while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
-                
-                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) {
+                    $querydelete=$pdo->prepare("DELETE FROM Intranet.carterabi WHERE fecha='$hoy' AND tipo=1");
+                    $querydelete->execute(); 
+                    $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDEjecutivo,IDCliente,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDEjecutivo],$row[IDCliente],$row[Saldo],'CR','$hoy',2,1)");
+                    $queryInsert->execute();
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                    
             ?>    
@@ -416,11 +421,13 @@ $(function () {
             C.Apellido2
         ) AS Ejecutivo,
         SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo,
-        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras,
+        A.IDEjecutivo,
+        A.IDCliente
     FROM
         sibware.2_dw_images_ap A
     INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
-    INNER JOIN sibware.personal C ON B.IDEjecutivo = C.ID
+    INNER JOIN sibware.personal C ON A.IDEjecutivo = C.ID
     INNER JOIN sibware.2_ap_contrato D ON A.IDContrato = D.ID
     WHERE
         A.FImage = '$hoy'
@@ -466,8 +473,9 @@ $(function () {
             data: [
             <?PHP   
                 while ($row=$queryResultcatejeAPU->fetch(PDO::FETCH_ASSOC)) { 
-                
-                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                    $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDEjecutivo,IDCliente,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDEjecutivo],$row[IDCliente],$row[Saldo],'APU','$hoy',2,1)");
+                    $queryInsert->execute();
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                    
             ?>    
@@ -487,11 +495,13 @@ $(function () {
             C.Apellido2
         ) AS Ejecutivo,
         SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo,
-        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras,
+        A.IDEjecutivo,
+        A.IDCliente
     FROM
         sibware.3_dw_images_ap A
     INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
-    INNER JOIN sibware.personal C ON B.IDEjecutivo = C.ID
+    INNER JOIN sibware.personal C ON A.IDEjecutivo = C.ID
     INNER JOIN sibware.3_ap_contrato D ON A.IDContrato = D.ID
     WHERE
         A.FImage = '$hoy'
@@ -537,8 +547,9 @@ $(function () {
             data: [
             <?PHP   
                 while ($row=$queryResultcatejeAP->fetch(PDO::FETCH_ASSOC)) { 
-                
-                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                    $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDEjecutivo,IDCliente,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDEjecutivo],$row[IDCliente],$row[Saldo],'AP','$hoy',3,1)");
+                    $queryInsert->execute();
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                    
             ?>    
@@ -554,7 +565,8 @@ $(function () {
         $queryResultcatsucAPU=$pdo->query("SELECT
         C.Nombre,
         SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo,
-        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras,
+        C.ID as IDSucursal
     FROM
         sibware.2_dw_images_ap A
     INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -603,9 +615,12 @@ $(function () {
             name: 'Cartera',
             data: [
             <?PHP   
+                $querydelete=$pdo->prepare("DELETE FROM Intranet.carterabi WHERE fecha='$hoy' AND tipo=2");
+                $querydelete->execute(); 
                 while ($row=$queryResultcatsucAPU->fetch(PDO::FETCH_ASSOC)) { 
-                
-                    echo "['".$row['Nombre']."',   ".$row['Saldo']."],";
+                    $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDSucursal,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDSucursal],$row[Saldo],'APU','$hoy',2,2)");
+                    $queryInsert->execute();
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                    
             ?>    
@@ -619,7 +634,8 @@ $(function () {
         $queryResultcatsucAP=$pdo->query("SELECT
         C.Nombre,
         SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo,
-        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras,
+        C.ID as IDSucursal
     FROM
         sibware.3_dw_images_ap A
     INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
@@ -669,8 +685,9 @@ $(function () {
             data: [
             <?PHP   
                 while ($row=$queryResultcatsucAP->fetch(PDO::FETCH_ASSOC)) { 
-                
-                    echo "['".$row['Nombre']."',   ".$row['Saldo']."],";
+                    $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDSucursal,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDSucursal],$row[Saldo],'AP','$hoy',3,2)");
+                    $queryInsert->execute();
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                    
             ?>    
@@ -692,11 +709,13 @@ $(function () {
             C.Apellido2
         ) AS Ejecutivo,
         SUM(A.SaldoCap) + SUM(A.SaldoInt) + SUM(A.SaldoIvaInt) AS Saldo,
-        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras,
+        A.IDEjecutivo,
+        A.IDCliente
     FROM
         sibware.3_dw_images_vp A
     INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
-    INNER JOIN sibware.personal C ON B.IDEjecutivo = C.ID
+    INNER JOIN sibware.personal C ON A.IDEjecutivo = C.ID
     INNER JOIN sibware.3_vp_contrato D ON A.IDContrato = D.ID
     WHERE
         A.FImage = '$hoy'
@@ -742,8 +761,9 @@ $(function () {
             data: [
             <?PHP   
                 while ($row=$queryResultcatejeVP->fetch(PDO::FETCH_ASSOC)) { 
-                
-                    echo "['".$row['Ejecutivo']."',   ".$row['Saldo']."],";
+                    $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDEjecutivo,IDCliente,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDEjecutivo],$row[IDCliente],$row[Saldo],'VP','$hoy',3,1)");
+                    $queryInsert->execute();
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
                 }
                    
             ?>    
@@ -752,6 +772,150 @@ $(function () {
     });
 });
 //Graficas Ejecutivos VP
+//Graficas todos los ejecutivos todos los productos
+
+<?PHP
+
+        $etiqueta='Ejecutivos Cartera Total';
+        $queryResultcatejetodo=$pdo->query("SELECT
+        CONCAT(
+            B.Nombre,
+            ' ',
+            B.Apellido1,
+            ' ',
+            B.Apellido2
+        ) AS Ejecutivo,
+        SUM(A.Saldo)  AS Saldo
+        
+    FROM
+        Intranet.carterabi A
+    INNER JOIN sibware.personal B ON A.IDEjecutivo = B.ID
+    
+    WHERE
+        A.fecha = '$hoy'
+    AND
+        A.tipo=1   
+    GROUP BY
+        B.ID");
+            
+
+?>
+
+$(function () {
+    $('#carterafiltodoseje').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cartera',
+            data: [
+            <?PHP   
+                while ($row=$queryResultcatejetodo->fetch(PDO::FETCH_ASSOC)) { 
+                    
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
+                }
+                $querydelete=$pdo->prepare("DELETE FROM Intranet.carterabi WHERE fecha='$hoy' and tipo=1");
+                $querydelete->execute();    
+            ?>    
+            ]
+        }]
+    });
+});
+//Graficas todos los ejecutivos todos los productos
+//Graficas por ejecutivos Inversiones
+<?PHP
+
+        $etiqueta='Ejecutivos Inversiones';
+        $queryResultcateje=$pdo->query("SELECT
+                CONCAT(
+                    C.Nombre,
+                    ' ',
+                    C.Apellido1,
+                    ' ',
+                    C.Apellido2
+                ) AS Ejecutivo,
+                SUM(A.SaldoProm) + SUM(A.SaldoInt) - SUM(A.SaldoRet) AS Saldo,
+                A.IDEjecutivo,
+                A.IDCliente
+            FROM
+                sibware.2_dw_images_in A
+            INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+            INNER JOIN sibware.personal C ON A.IDEjecutivo = C.ID
+            INNER JOIN sibware.2_prestamos D ON A.IDCliente = B.ID
+            WHERE
+                A.FImage = '$hoy'
+            AND D.IDMoneda = 1
+            GROUP BY
+                C.ID");
+            
+
+?>  
+$(function () {
+    $('#carterafilinv').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cartera',
+            data: [
+            <?PHP   
+                while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) {
+                    
+                    echo "['".$row['Ejecutivo']." $".$row['Saldo']." ',   ".$row['Saldo']."],";
+                }
+                   
+            ?>    
+            ]
+        }]
+    });
+});
+
+
+//Graficas por ejecutivos Inversiones
 //Grafias Sucursal VP
 <?PHP
 
@@ -759,7 +923,8 @@ $(function () {
         $queryResultcatsucVP=$pdo->query("SELECT
         C.Nombre,
         SUM(A.SaldoCap) + SUM(A.SaldoInt)+ SUM(A.SaldoIvaInt) AS Saldo,
-        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) AS moras,
+        C.ID as IDSucursal
     FROM
         sibware.3_dw_images_vp A
     INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
@@ -809,7 +974,8 @@ $(function () {
             data: [
             <?PHP   
                 while ($row=$queryResultcatsucVP->fetch(PDO::FETCH_ASSOC)) { 
-                
+                    $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDSucursal,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDSucursal],$row[Saldo],'VP','$hoy',3,2)");
+                    $queryInsert->execute();
                     echo "['".$row['Nombre']."',   ".$row['Saldo']."],";
                 }
                    
@@ -825,7 +991,8 @@ $(function () {
         $etiqueta='Sucursal';
         $queryResultcateje=$pdo->query("SELECT
         C.Nombre, SUM(A.SaldoCap) + SUM(A.SaldoInt) AS Saldo,
-        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) + SUM(A.SaldoPena) + SUM(A.SaldoIvaPena) AS moras
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora) + SUM(A.SaldoPena) + SUM(A.SaldoIvaPena) AS moras,
+        C.ID as IDSucursal
     FROM
         sibware.2_dw_images_contratos A
     INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -873,8 +1040,10 @@ $(function () {
             name: 'Cartera',
             data: [
             <?PHP   
+                                
                 while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
-                
+                    $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (IDSucursal,Saldo,Producto,fecha,Empresa,tipo) VALUES($row[IDSucursal],$row[Saldo],'CR','$hoy',2,2)");
+                    $queryInsert->execute();
                     echo "['".$row['Nombre']."',   ".$row['Saldo']."],";
                 }
                    
@@ -885,10 +1054,144 @@ $(function () {
 });
 
 //Graficas cartera sucursal
+//Graficas todos los ejecutivos todos los productos
+
+<?PHP
+
+$etiqueta='Sucursal Cartera Total';
+$queryResultcatejetodo=$pdo->query("SELECT
+    B.Nombre
+    AS Sucursal,
+SUM(A.Saldo)  AS Saldo
+
+FROM
+Intranet.carterabi A
+INNER JOIN sibware.sucursal B ON A.IDSucursal = B.ID
+
+WHERE
+A.fecha = '$hoy'
+AND
+A.tipo=2   
+GROUP BY
+B.ID");
+    
+
+?>
+
+$(function () {
+$('#carterafiltodosuc').highcharts({
+chart: {
+    plotBackgroundColor: null,
+    plotBorderWidth: null,
+    plotShadow: false
+},
+title: {
+    text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+},
+tooltip: {
+    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+},
+plotOptions: {
+    pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+            style: {
+                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+            }
+        }
+    }
+},
+series: [{
+    type: 'pie',
+    name: 'Cartera',
+    data: [
+    <?PHP   
+        while ($row=$queryResultcatejetodo->fetch(PDO::FETCH_ASSOC)) { 
+            
+            echo "['".$row['Sucursal']."',   ".$row['Saldo']."],";
+        }
+        $querydelete=$pdo->prepare("DELETE FROM Intranet.carterabi WHERE fecha='$hoy' and tipo=2");
+        $querydelete->execute();    
+    ?>    
+    ]
+}]
+});
+});
+//Graficas todos los sucursal todos los productos
+//Graficas por sucuirsal Inversiones
+<?PHP
+
+        $etiqueta='Sucursal Inversiones';
+        $queryResultcateje=$pdo->query("SELECT
+                E.Nombre
+                AS Sucursal,
+                SUM(A.SaldoProm) + SUM(A.SaldoInt) - SUM(A.SaldoRet) AS Saldo
+                
+            FROM
+                sibware.2_dw_images_in A
+            INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+            INNER JOIN sibware.personal C ON A.IDEjecutivo = C.ID
+            INNER JOIN sibware.2_prestamos D ON A.IDCliente = B.ID
+            INNER JOIN sibware.sucursal E ON A.IDSucursal = E.ID
+            WHERE
+                A.FImage = '$hoy'
+            AND D.IDMoneda = 1
+            GROUP BY
+                E.ID");
+            
+
+?>  
+$(function () {
+    $('#carterafilsucinv').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volumen de Cartera por <?PHP echo $etiqueta." ".date('Y')  ?>'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Cartera',
+            data: [
+            <?PHP   
+                while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) {
+                    
+                    echo "['".$row['Sucursal']."',   ".$row['Saldo']."],";
+                }
+                   
+            ?>    
+            ]
+        }]
+    });
+});
+
+
+//Graficas por Sucursal Inversiones
 //graficas por producto
 <?PHP
 
-        $etiqueta='Producto';
+        $etiqueta='Productos';
         $queryResultcateje=$pdo->query("SELECT
         C.Tipo,
         SUM(A.SaldoCap) + SUM(A.SaldoInt) AS Saldo,
@@ -899,14 +1202,105 @@ $(function () {
     INNER JOIN sibware.2_contratos D ON A.IDContrato = D.ID
     INNER JOIN sibware.2_entorno_tipocredito C ON D.IDTipoCredito = C.ID
     WHERE
-        A.FImage = '2018-09-27'
+        A.FImage = '$hoy'
     AND D.IDMoneda = 1
     AND D. STATUS <> 'C'
     AND D. STATUS <> '-'
     AND D. STATUS <> 'P'
     GROUP BY
         C.ID");
-            
+    while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+        $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (Saldo,Producto,fecha,Empresa,tipo) VALUES($row[Saldo],'CR','$hoy',2,3)");
+                    $queryInsert->execute();
+    } 
+    $queryResultcateje=$pdo->query("SELECT
+        
+        SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora)  AS moras
+    FROM
+        sibware.2_dw_images_ap A
+    INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.2_ap_contrato D ON A.IDContrato = D.ID
+   
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    "); 
+    while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+        $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (Saldo,Producto,fecha,Empresa,tipo) VALUES($row[Saldo],'APU','$hoy',2,3)");
+        $queryInsert->execute();
+    }
+    $queryResultcateje=$pdo->query("SELECT
+        
+        SUM(A.SaldoRenta) + SUM(A.SaldoIvaRenta) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora)  AS moras
+    FROM
+        sibware.3_dw_images_ap A
+    INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.3_ap_contrato D ON A.IDContrato = D.ID
+   
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    "); 
+    while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+        $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (Saldo,Producto,fecha,Empresa,tipo) VALUES($row[Saldo],'AP','$hoy',3,3)");
+        $queryInsert->execute();
+    }  
+    $queryResultcateje=$pdo->query("SELECT
+        
+        SUM(A.SaldoCap) + SUM(A.SaldoInt) AS Saldo,
+        SUM(A.SaldoMora) + SUM(A.SaldoIvaMora)  AS moras
+    FROM
+        sibware.3_dw_images_vp A
+    INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.3_vp_contrato D ON A.IDContrato = D.ID
+   
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    AND D. STATUS <> 'C'
+    AND D. STATUS <> '-'
+    AND D. STATUS <> 'P'
+    "); 
+    while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+        $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (Saldo,Producto,fecha,Empresa,tipo) VALUES($row[Saldo],'VP','$hoy',3,3)");
+        $queryInsert->execute();
+    } 
+    $queryResultcateje=$pdo->query("SELECT
+        
+        SUM(A.SaldoProm) + SUM(A.SaldoInt) - SUM(A.SaldoRet) AS Saldo
+        
+    FROM
+        sibware.2_dw_images_in A
+    INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+    INNER JOIN sibware.2_prestamos D ON A.IDPrestamo = D.ID
+   
+    WHERE
+        A.FImage = '$hoy'
+    AND D.IDMoneda = 1
+    
+    "); 
+    while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
+        $queryInsert=$pdo->prepare("INSERT INTO Intranet.carterabi (Saldo,Producto,fecha,Empresa,tipo) VALUES($row[Saldo],'INV','$hoy',2,3)");
+        $queryInsert->execute();
+    }  
+    $queryResultcateje=$pdo->query("SELECT
+        A.Producto as Tipo,
+        SUM(A.Saldo) AS Saldo
+    FROM
+        Intranet.carterabi A
+    WHERE
+        A.fecha = '$hoy'
+    GROUP BY
+    A.Producto
+    ");    
 
 ?>  
 $(function () {
@@ -944,7 +1338,8 @@ $(function () {
                 
                     echo "['".$row['Tipo']."',   ".$row['Saldo']."],";
                 }
-                   
+                $querydelete=$pdo->prepare("DELETE FROM Intranet.carterabi WHERE fecha='$hoy' and tipo=3");
+                $querydelete->execute();   
             ?>    
             ]
         }]
@@ -1014,6 +1409,93 @@ $(function () {
     });
 });
 //Graficas Finanzas
+//graficas incidencias
+$(function () {
+    $('#incidenciasn').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: '<?php echo $ffininci; ?>'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Incidencias',
+            data: [
+                ['Abiertos',   <?php echo $tabiertos ?>],
+                ['Pendientes',       <?php echo $tproceso ?>],
+                {
+                    name: 'Cerrados',
+                    y: <?php echo $tcerrados ?>,
+                    sliced: true,
+                    selected: true
+                }
+            ]
+        }]
+    });
+});
+$(function () {
+    $('#incidenciasr').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Reporte de Incidencias de Riesgo, 2018'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Incidencias',
+            data: [
+                ['Normales',   85.0],
+                
+                {
+                    name: 'Riesgo',
+                    y: 15.0,
+                    sliced: true,
+                    selected: true
+                }
+            ]
+        }]
+    });
+});
+
+//Graficas Incidencias
 
 </script>   
 

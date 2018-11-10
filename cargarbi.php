@@ -3,6 +3,15 @@
     $fini='2018-01-01';
     $ffin='2018-12-31';
     require_once 'cn/cn.php';
+    $queryResult=$pdo->query("SELECT * FROM Intranet.parametros");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $dialimpape=$row['dialimpape'];
+        $piva=$row['piva'];
+        $puntopase=$row['calfap'];
+        $limpq=$row['limpq'];
+        $dpond=$row['diaspond'];
+        $idcontraloria=$row['id_contraloria'];
+    }
     
         if ($grafica=='c') {//carga filtros de colocacion
             $queryResult=$pdo->query("SELECT * FROM Intranet.filtros_bi WHERE valor='$_POST[col]' ");
@@ -338,4 +347,40 @@ WHERE
     }
 }            
 # Graficas finanzas 
+#Graficas de Incidencias
+    if ($grafica=='inc') {
+        $tabiertos=0;
+        $tproceso=0;
+        $tcerrados=0;
+        
+        
+        $queryResult=$pdo->query("SELECT * from Intranet.ticket A where A.fecha_alta BETWEEN '$finiinci' and '$ffininci'");
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            if($row['Estatus']=='A'){
+                $tabiertos++; 
+            }elseif ($row['Estatus']=='C') {
+                $tcerrados++;
+            }elseif ($row['Estatus']=='P') {
+                $tproceso++;
+            }
+            $ttotales=$tabiertos+$tproceso+$tcerrados;
+           
+        }
+        $queryResult=$pdo->query("SELECT
+        *
+    FROM
+        Intranet.ticket A
+    INNER JOIN Intranet.msj_ticket B ON A.ID_Ticket = B.IDTicket
+    WHERE
+        (
+            A.fecha_alta BETWEEN '$finiinci'
+            AND '$ffininci'
+        )
+    AND B.IDUsuario = $idcontraloria
+    AND A.ID_Usuario<>$idcontraloria");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $triesgo++;
+    }
+    }
+#Grafcas de Incidencias
 ?>

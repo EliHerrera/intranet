@@ -1,0 +1,7 @@
+<?php
+$fecha = new DateTime();
+$fecha->modify('first day of this month');
+echo $fecha->format('d/m/Y'); // imprime por ejemplo: 01/12/2012
+
+
+?>

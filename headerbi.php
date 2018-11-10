@@ -2,7 +2,7 @@
     session_start();
     set_time_limit(0);
     date_default_timezone_set("America/Mexico_City");
-    $hoy=date('Y-m-d');
+    //$hoy=date('Y-m-d');
     $id_personal=$_SESSION['IDPersonal'];
     if(isset($_SESSION["IDPersonal"])){
         $inactivo = 10000;
@@ -65,7 +65,24 @@
 		<style type="text/css">
 ${demo.css}
         </style>
-      
+<?PHP
+if ($location=='dashboard'){
+    include_once 'js/graficasd.php';   
+}elseif ($location=='colocacion') {
+    include_once 'js/graficascol.php';  
+}elseif ($location=='incidencias') {
+    include_once 'js/graficasincidencias.php';  
+}elseif ($location=='cartera') {
+    include_once 'js/graficascartera.php';  
+}elseif ($location=='carteraeje') {
+    include_once 'js/graficascarteraeje.php';  
+}elseif ($location=='carteraejeinv') {
+    include_once 'js/graficainveje.php';  
+}elseif ($location=='carteraejevp') {
+    include_once 'js/graficavpeje.php';  
+}    
+
+ ?>       
 
 
 </head>

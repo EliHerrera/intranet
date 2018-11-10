@@ -1,12 +1,6 @@
 <?php
-    $hoy=date('Y-m-d');
-    $location='S';
-    $grafica='cr';    
-    if (empty($_POST)) {
-        require_once 'cargarbi.php';
-    } 
-    
-    require_once 'header.php';
+     
+    require_once 'headerbi.php';
     //////inicio de contenido
     //consulta tipo de cambio
     $queryResult=$pdo->query("SELECT * FROM sibware.indicador_tipocambio WHERE Fecha='$hoy'");
@@ -15,56 +9,26 @@
     }//consulta tipo de cambio
     require 'estiloconst.php'; 
     require 'menubi.php';
+    if (!empty($_POST['hoy'])) {
+        $hoy=$_POST['hoy'];
+        
+    }
 ?>
-<?PHP
-    if (empty($_POST)) {
-        echo "<div id='totCat'></div>";
-    }
-    if($_POST['col']==2){
-        echo "<div id='carterafil'></div>";
-        echo "<div id='carterafilEjeAPU' ></div>";
-        echo "<div id='carterafilEjeAP'></div>";
-        echo "<div id='carterafilEjeVP'></div>";
-        echo "<div id='carterafiltodoseje'></div>";
-        echo "<div id='carterafilinv'></div>";
-        
-        
-    }
-    if($_POST['col']==3){
-        echo "<div id='carterafilsuc'></div>";
-        echo "<div id='carterafilSucAPU' ></div>";
-        echo "<div id='carterafilSucAP'></div>";
-        echo "<div id='carterafilSucVP'></div>";
-        echo "<div id='carterafiltodosuc'></div>";
-        echo "<div id='carterafilsucinv'></div>";
-        
-
-    }
-    if($_POST['col']==4){
-        echo "<div id='carterafilpro'></div>";
-    }
-    
-    
-?>
-<form action="" method="post">
+<h3>Relacion de Clientes al dia <?php echo $hoy; ?> </h3> 
+<form action="carterabicte.php" method="post">
     <div class="row">
         <div class="col-xs-3">
-            <label for="col">Filtrar por :</label><select name="col" id="col" class="form-control" onchange="this.form.submit();return false;">
-                <option value="">Seleccione...</option>
-                <option value="1">Clientes</option>
-                <option value="2">Ejecutivo</option>                
-                <option value="3">Sucursal</option>                
-                <option value="4">Producto</option>
-            </select>
+            <a href="carterabi2.php" class="button">Regresar</a>
         </div>
-        <div class="col-xs-2">
-            <br><input type="button" name="imprimir" value="Imprimir"  onClick="window.print();" class="button" />
+        <div class="col-xs-3">            
+           <label for="hoy">Buscar</label> <input type="date" name="hoy" id="hoy" class="form-control" required="true">
+        </div>
+        <div class="col-xs-3">    
+            <br><input type="submit" value="Buscar" class="button">
         </div>
     </div>
 </form>
-<?PHP if ($_POST['col']==1) {
-    
-?> 
+
 <table class="table">   
     <tr><th>Producto</th><th>Folio</th><th>Estatus</th><th>Cliente</th><th>Tipo Cte</th><th>Saldo</th><th>Moratorios</th><th>Ejectutivo</th><th>Sucursal</th></tr>
     <?php
@@ -273,21 +237,6 @@
     ?>
 
 </table>
-    <?PHP } ?> 
-    <?PHP if ($_POST['col']==2) {
-       
-    ?> 
-    <table class="table">
-        <tr><th>Ejecutivo</th><th>Saldos</th><th>Moratorios</th></tr>
-  
-    <?PHP
-    while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) { 
-                
-        echo "<tr><td>".$row['Ejecutivo']."</td><td>".$row['Saldo']."</td><td>".$row['tipocte']."</td><td>".$row['moras']."</td></tr>";
-    }
-    
- } ?>
-    </table>         
 <?php
     /////fin de contenido
     require_once 'footer.php';
