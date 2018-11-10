@@ -6,7 +6,7 @@
         $p=$_GET['p'];
         $e=$_GET['e'];
         if ($idnivel>=2) {
-            $deletequery=$pdo->prepare("DELETE FROM Intranet.cobranzaesperada WHERE mesp=$m AND yyp=$y AND emp=$e AND producto='$p'");
+            $deletequery=$pdo->prepare("DELETE FROM Intranet.cobranzaesperada WHERE mesp=$m AND yyp=$y ");
             $deletequery->execute();
         }
         echo "<div class='alert alert-danger'>";
@@ -31,7 +31,8 @@
         $fechafin = new DateTime($fecha);
         $fechafin->modify('last day of this month');
         $ffin=$fechafin->format('Y-m-d'); 
-          
+        
+        ###inicio calculo de creditos
         $queryResult=$pdo->query("SELECT
         CONCAT(
             D.Nombre,
@@ -65,18 +66,24 @@
         E.renglon as Periodo,
         MONTH(E.FFinal) as mes,
         YEAR(E.FFinal) as yy,
-        D.IDSucursal, 
+        C.IDSucursal, 
         D.ID as IDEjecutivo,
-        B.ID as IDCto         
+        B.ID as IDCto,   
+        C.ID as IDCte,
+        F.Nombre as Sucursal,
+        G.tipo as TipoCte      
         FROM
         sibware.2_contratos_disposicion A
         INNER JOIN sibware.2_contratos B ON A.IDContrato = B.ID
         INNER JOIN sibware.2_cliente C ON B.IDCliente = C.ID
+        INNER JOIN sibware.sucursal F ON C.IDSucursal=F.ID
+        INNER JOIN sibware.2_entorno_tipocliente G ON C.IDTipoCliente=G.ID
         INNER JOIN sibware.personal D ON C.IDEjecutivo = D.ID
         INNER JOIN sibware.2_contratos_disposicion_movs E ON E.IDDisposicion = A.ID
         WHERE
-        B.`status` <> 'C'
-        AND B.`status` <> '-'
+        B.status <> 'C'
+        AND B.status <> '-'
+        AND B.status<>'P'
         AND E.Fpago BETWEEN '$fini'
         AND '$ffin'");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
@@ -97,6 +104,11 @@
             $mes=$row['mes'];
             $yy=$row['yy'];
             $capital=$row['Capital'];
+            $idcte=$row['IDCte'];
+            $cliente=$row['Socio'];
+            $ejecutivo=$row['Ejecutivo'];
+            $sucursal=$row['Sucursal'];
+            $tipocte=$row['TipoCte'];
             $queryResult2=$pdo->query("SELECT sibware.gTIIE($mes,$yy) as tiim");
             while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
                 $tiiem=$row['tiim']; 
@@ -130,10 +142,372 @@
             $saldoprom=(($saldo*$diasp)-$pagocapital)/$diasp;
             $interes=($saldoprom*($tiie/100)/360)*$diasp;
             
-            $queryInsert=$pdo->prepare("INSERT INTO Intranet.cobranzaesperada (IDContrato,IDDisposicion,IDEjecutivo,IDSucursal,Folio,Saldo,SaldoProm,Tasa,diasp,mes,yy,producto,emp,periodo,disposicion,fechapago,capitalesperado,capitalpagado,interesesperado,interespagado,mesp,yyp)
-                                                                      VALUES($idcto,$iddisp,$idejecutivo,$idsucursal,'$folio',$saldo,$saldoprom,$tiie,$diasp,$mes,$yy,'CR',2,$periodo,$disposicion,'$fechapago',$capital,$pagocapital,$interes,$pagointeres,$mesp,$yyp) ");            
+            $queryInsert=$pdo->prepare("INSERT INTO Intranet.cobranzaesperada (IDContrato,IDDisposicion,IDEjecutivo,IDSucursal,Folio,Saldo,SaldoProm,Tasa,diasp,mes,yy,producto,emp,periodo,disposicion,fechapago,capitalesperado,capitalpagado,interesesperado,interespagado,mesp,yyp,cliente,IDCliente,ejecutivo,sucursal,tipocte,IvaCapitalEsperado,IvaCapitalPagado,RentaEsperada,IvaRentaEsperada,RentaPagada,IvaRentaPagada,IvaInteresEsperado,IvaInteresPagado)
+                                                                      VALUES($idcto,$iddisp,$idejecutivo,$idsucursal,'$folio',$saldo,$saldoprom,$tiie,$diasp,$mes,$yy,'CR',2,$periodo,$disposicion,'$fechapago',$capital,$pagocapital,$interes,$pagointeres,$mesp,$yyp,'$cliente',$idcte,'$ejecutivo','$sucursal','$tipocte',0,0,0,0,0,0,0,0) ");            
             $queryInsert->execute();           
         }
+        ##fin calculo de creditos
+        ###inicio calculo de ap cmu
+        $queryResult=$pdo->query("SELECT
+        CONCAT(
+            D.Nombre,
+            ' ',
+            D.Apellido1,
+            ' ',
+            D.Apellido2
+        ) AS Ejecutivo,
+        CONCAT(
+            C.Nombre,
+            ' ',
+            C.Apellido1,
+            ' ',
+            C.Apellido2
+        ) AS Socio,
+        CONCAT('AP-', LPAD(B.Folio, 6, 0)) AS Folio,
+        A.renglon as Disp,
+        A.ID as IDDisp,
+        B.Tasa,            
+	    B.PAdicional,
+        B.TasaTotal,
+        B.TipoTasa,
+        E.FInicial,
+        E.FFinal,
+        DATEDIFF(E.FFinal,E.FInicial) as dias,
+        E.Renta,
+        E.IvaRenta,
+        E.FInicial,
+        E.FFinal,
+        E.FInicial as FPago,
+        E.renglon as Periodo,
+        MONTH(E.FInicial) as mes,
+        YEAR(E.FInicial) as yy,
+        C.IDSucursal, 
+        D.ID as IDEjecutivo,
+        B.ID as IDCto,   
+        C.ID as IDCte,
+        F.Nombre as Sucursal,
+        G.tipo as TipoCte      
+        FROM
+        sibware.2_ap_disposicion A
+        INNER JOIN sibware.2_ap_contrato B ON A.IDContrato = B.ID
+        INNER JOIN sibware.2_cliente C ON B.IDCliente = C.ID
+        INNER JOIN sibware.sucursal F ON C.IDSucursal=F.ID
+        INNER JOIN sibware.2_entorno_tipocliente G ON C.IDTipoCliente=G.ID
+        INNER JOIN sibware.personal D ON C.IDEjecutivo = D.ID
+        INNER JOIN sibware.2_ap_disposicion_movs E ON E.IDDisposicion = A.ID
+        WHERE
+        B.status <> 'C'
+        AND B.status <> '-'
+        AND B.status<>'P'
+        AND E.FInicial BETWEEN '$fini'
+        AND '$ffin'");
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $idcto=$row['IDCto'];
+            $idejecutivo=$row['IDEjecutivo'];
+            $idsucursal=$row['IDSucursal'];
+            $folio=$row['Folio'];
+            $padicional=$row['PAdicional']; 
+            $tipotasa=$row['TipoTasa'];
+            #$saldo=$row['Saldo'];
+            $diasp=$row['dias'];
+            $iddisp=$row['IDDisp'];
+            $finicial=$row['FInicial'];
+            $ffinal=$row['FFinal'];
+            $periodo=$row['Periodo'];
+            $disposicion=$row['Disp'];
+            $fechapago=$row['FPago'];
+            $mes=$row['mes'];
+            $yy=$row['yy'];
+            $renta=$row['Renta'];
+            $ivarenta=$row['IvaRenta'];
+            $idcte=$row['IDCte'];
+            $cliente=$row['Socio'];
+            $ejecutivo=$row['Ejecutivo'];
+            $sucursal=$row['Sucursal'];
+            $tipocte=$row['TipoCte'];
+            $queryResult2=$pdo->query("SELECT sibware.gTIIE($mes,$yy) as tiim");
+            while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+                $tiiem=$row['tiim']; 
+            }    
+            if ($tipotasa=='Variable') {
+                $tasa=$tiiem;
+            } else {
+                $tasa=$row['Tasa'];
+            } 
+            $queryResult3=$pdo->query("SELECT
+            sum(A.Renta) AS PagoRenta,
+            sum(A.IvaRenta) As PagoIvaRenta
+            FROM
+                sibware.2_ap_disposicion_pagos_detalle A
+            INNER JOIN sibware.2_ap_disposicion_pagos B ON A.IDMov = B.ID
+            WHERE
+                A.IDDisposicion = $iddisp
+            AND B.FPago >= '$finicial'
+            AND B.FPago <= '$ffinal'"); 
+            while ($row=$queryResult3->fetch(PDO::FETCH_ASSOC)) {
+                   $pagorenta=$row['PagoRenta']; 
+                   $pagoivarenta=$row['PagoIvaRenta'];
+            }  
+            if (empty($pagorenta)) {
+                $pagorenta=0;
+            } 
+            if (empty($pagoivarenta)) {
+                $pagoivarenta=0;
+            }        
+            $tiie=$tasa+$padicional;
+            // $saldoprom=(($saldo*$diasp)-$pagocapital)/$diasp;
+            // $interes=($saldoprom*($tiie/100)/360)*$diasp;
+            
+            $queryInsert=$pdo->prepare("INSERT INTO Intranet.cobranzaesperada (IDContrato,IDDisposicion,IDEjecutivo,IDSucursal,Folio,Saldo,SaldoProm,Tasa,diasp,mes,yy,producto,emp,periodo,disposicion,fechapago,capitalesperado,capitalpagado,interesesperado,interespagado,rentaesperada,rentapagada,IvaRentaEsperada,IvaRentaPagada,mesp,yyp,cliente,IDCliente,ejecutivo,sucursal,tipocte,IvaCapitalEsperado,IvaCapitalPagado,IvaInteresEsperado,IvaInteresPagado)
+                                                                      VALUES($idcto,$iddisp,$idejecutivo,$idsucursal,'$folio',0,0,$tiie,$diasp,$mes,$yy,'AP',2,$periodo,$disposicion,'$fechapago',0,0,0,0,$renta,$pagorenta,$ivarenta,$pagoivarenta,$mesp,$yyp,'$cliente',$idcte,'$ejecutivo','$sucursal','$tipocte',0,0,0,0) ");            
+            $queryInsert->execute();           
+        }
+        ##fin calculo de ap cmu
+        ###inicio calculo de ap cma
+        $queryResult=$pdo->query("SELECT
+        CONCAT(
+            D.Nombre,
+            ' ',
+            D.Apellido1,
+            ' ',
+            D.Apellido2
+        ) AS Ejecutivo,
+        CONCAT(
+            C.Nombre,
+            ' ',
+            C.Apellido1,
+            ' ',
+            C.Apellido2
+        ) AS Socio,
+        CONCAT('AP-', LPAD(B.Folio, 6, 0)) AS Folio,
+        A.renglon as Disp,
+        A.ID as IDDisp,
+        B.Tasa,            
+	    B.PAdicional,
+        B.TasaTotal,
+        B.TipoTasa,
+        E.FInicial,
+        E.FFinal,
+        DATEDIFF(E.FFinal,E.FInicial) as dias,
+        E.Renta,
+        E.IvaRenta,
+        E.FInicial,
+        E.FFinal,
+        E.FInicial as FPago,
+        E.renglon as Periodo,
+        MONTH(E.FInicial) as mes,
+        YEAR(E.FInicial) as yy,
+        C.IDSucursal, 
+        D.ID as IDEjecutivo,
+        B.ID as IDCto,   
+        C.ID as IDCte,
+        F.Nombre as Sucursal,
+        G.tipo as TipoCte      
+        FROM
+        sibware.3_ap_disposicion A
+        INNER JOIN sibware.3_ap_contrato B ON A.IDContrato = B.ID
+        INNER JOIN sibware.3_cliente C ON B.IDCliente = C.ID
+        INNER JOIN sibware.sucursal F ON C.IDSucursal=F.ID
+        INNER JOIN sibware.3_entorno_tipocliente G ON C.IDTipoCliente=G.ID
+        INNER JOIN sibware.personal D ON C.IDEjecutivo = D.ID
+        INNER JOIN sibware.3_ap_disposicion_movs E ON E.IDDisposicion = A.ID
+        WHERE
+        B.status <> 'C'
+        AND B.status <> '-'
+        AND B.status<>'P'
+        AND E.FInicial BETWEEN '$fini'
+        AND '$ffin'");
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $idcto=$row['IDCto'];
+            $idejecutivo=$row['IDEjecutivo'];
+            $idsucursal=$row['IDSucursal'];
+            $folio=$row['Folio'];
+            $padicional=$row['PAdicional']; 
+            $tipotasa=$row['TipoTasa'];
+            #$saldo=$row['Saldo'];
+            $diasp=$row['dias'];
+            $iddisp=$row['IDDisp'];
+            $finicial=$row['FInicial'];
+            $ffinal=$row['FFinal'];
+            $periodo=$row['Periodo'];
+            $disposicion=$row['Disp'];
+            $fechapago=$row['FPago'];
+            $mes=$row['mes'];
+            $yy=$row['yy'];
+            $renta=$row['Renta'];
+            $ivarenta=$row['IvaRenta'];
+            $idcte=$row['IDCte'];
+            $cliente=$row['Socio'];
+            $ejecutivo=$row['Ejecutivo'];
+            $sucursal=$row['Sucursal'];
+            $tipocte=$row['TipoCte'];
+            $queryResult2=$pdo->query("SELECT sibware.gTIIE($mes,$yy) as tiim");
+            while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+                $tiiem=$row['tiim']; 
+            }    
+            if ($tipotasa=='Variable') {
+                $tasa=$tiiem;
+            } else {
+                $tasa=$row['Tasa'];
+            } 
+            $queryResult3=$pdo->query("SELECT
+            sum(A.Renta) AS PagoRenta,
+            sum(A.IvaRenta) As PagoIvaRenta
+            FROM
+                sibware.3_ap_disposicion_pagos_detalle A
+            INNER JOIN sibware.2_ap_disposicion_pagos B ON A.IDMov = B.ID
+            WHERE
+                A.IDDisposicion = $iddisp
+            AND B.FPago >= '$finicial'
+            AND B.FPago <= '$ffinal'"); 
+            while ($row=$queryResult3->fetch(PDO::FETCH_ASSOC)) {
+                   $pagorenta=$row['PagoRenta']; 
+                   $pagoivarenta=$row['PagoIvaRenta'];
+            }  
+            if (empty($pagorenta)) {
+                $pagorenta=0;
+            } 
+            if (empty($pagoivarenta)) {
+                $pagoivarenta=0;
+            }        
+            $tiie=$tasa+$padicional;
+            // $saldoprom=(($saldo*$diasp)-$pagocapital)/$diasp;
+            // $interes=($saldoprom*($tiie/100)/360)*$diasp;
+            
+            $queryInsert=$pdo->prepare("INSERT INTO Intranet.cobranzaesperada (IDContrato,IDDisposicion,IDEjecutivo,IDSucursal,Folio,Saldo,SaldoProm,Tasa,diasp,mes,yy,producto,emp,periodo,disposicion,fechapago,capitalesperado,capitalpagado,interesesperado,interespagado,rentaesperada,rentapagada,IvaRentaEsperada,IvaRentaPagada,mesp,yyp,cliente,IDCliente,ejecutivo,sucursal,tipocte,IvaCapitalEsperado,IvaCapitalPagado,IvaInteresEsperado,IvaInteresPagado)
+                                                                      VALUES($idcto,$iddisp,$idejecutivo,$idsucursal,'$folio',0,0,$tiie,$diasp,$mes,$yy,'AP',3,$periodo,$disposicion,'$fechapago',0,0,0,0,$renta,$pagorenta,$ivarenta,$pagoivarenta,$mesp,$yyp,'$cliente',$idcte,'$ejecutivo','$sucursal','$tipocte',0,0,0,0) ");            
+            $queryInsert->execute();           
+        }
+        ##fin calculo de ap cma
+        ###inicio calculo de vp cma
+        $queryResult=$pdo->query("SELECT
+        CONCAT(
+            D.Nombre,
+            ' ',
+            D.Apellido1,
+            ' ',
+            D.Apellido2
+        ) AS Ejecutivo,
+        CONCAT(
+            C.Nombre,
+            ' ',
+            C.Apellido1,
+            ' ',
+            C.Apellido2
+        ) AS Socio,
+        CONCAT('VP-', LPAD(B.Folio, 6, 0)) AS Folio,
+        A.renglon as Disp,
+        A.ID as IDDisp,
+        B.Tasa,            
+	    B.PAdicional,
+        B.TasaTotal,
+        B.TipoTasa,
+        E.FInicial,
+        E.FFinal,
+        DATEDIFF(E.FFinal,E.FInicial) as dias,
+        E.Saldo,
+        E.Capital,
+        E.IvaCapital,
+        E.FInicial,
+        E.FFinal,
+        E.FFinal as FPago,
+        E.renglon as Periodo,
+        MONTH(E.FFinal) as mes,
+        YEAR(E.FFinal) as yy,
+        C.IDSucursal, 
+        D.ID as IDEjecutivo,
+        B.ID as IDCto,   
+        C.ID as IDCte,
+        F.Nombre as Sucursal,
+        G.tipo as TipoCte      
+        FROM
+        sibware.3_vp_disposicion A
+        INNER JOIN sibware.3_vp_contrato B ON A.IDContrato = B.ID
+        INNER JOIN sibware.3_cliente C ON B.IDCliente = C.ID
+        INNER JOIN sibware.sucursal F ON C.IDSucursal=F.ID
+        INNER JOIN sibware.3_entorno_tipocliente G ON C.IDTipoCliente=G.ID
+        INNER JOIN sibware.personal D ON C.IDEjecutivo = D.ID
+        INNER JOIN sibware.3_vp_disposicion_movs E ON E.IDDisposicion = A.ID
+        WHERE
+        B.status <> 'C'
+        AND B.status <> '-'
+        AND B.status<>'P'
+        AND E.FFinal BETWEEN '$fini'
+        AND '$ffin'");
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $idcto=$row['IDCto'];
+            $idejecutivo=$row['IDEjecutivo'];
+            $idsucursal=$row['IDSucursal'];
+            $folio=$row['Folio'];
+            $padicional=$row['PAdicional']; 
+            $tipotasa=$row['TipoTasa'];
+            $saldo=$row['Saldo'];
+            $diasp=$row['dias'];
+            $iddisp=$row['IDDisp'];
+            $finicial=$row['FInicial'];
+            $ffinal=$row['FFinal'];
+            $periodo=$row['Periodo'];
+            $disposicion=$row['Disp'];
+            $fechapago=$row['FPago'];
+            $mes=$row['mes'];
+            $yy=$row['yy'];
+            $capital=$row['Capital'];
+            $ivacapital=$row['IvaCapital'];
+            $idcte=$row['IDCte'];
+            $cliente=$row['Socio'];
+            $ejecutivo=$row['Ejecutivo'];
+            $sucursal=$row['Sucursal'];
+            $tipocte=$row['TipoCte'];
+            $queryResult2=$pdo->query("SELECT sibware.gTIIE($mes,$yy) as tiim");
+            while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+                $tiiem=$row['tiim']; 
+            }    
+            if ($tipotasa=='Variable') {
+                $tasa=$tiiem;
+            } else {
+                $tasa=$row['Tasa'];
+            } 
+            $queryResult3=$pdo->query("SELECT
+            sum(A.Capital) AS PagoCapital,
+            sum(A.InteresOrdinario) As PagoInteres,
+            sum(A.IvaCapital) as IvaPagoCapital,
+            sum(A.IvaInteresOrdinario) as IvaPagoInteres
+            FROM
+                sibware.3_vp_disposicion_pagos_detalle A
+            INNER JOIN sibware.3_vp_disposicion_pagos B ON A.IDMov = B.ID
+            WHERE
+                A.IDDisposicion = $iddisp
+            AND B.FPago >= '$finicial'
+            AND B.Fpago <= '$ffinal'"); 
+            while ($row=$queryResult3->fetch(PDO::FETCH_ASSOC)) {
+                   $pagocapital=$row['PagoCapital']; 
+                   $pagointeres=$row['PagoInteres'];
+                   $ivapagocapital=$row['IvaPagoCapital'];
+                   $ivapagointeres=$row['IvaPagoInteres'];
+            }  
+            if (empty($pagocapital)) {
+                $pagocapital=0;
+            } 
+            if (empty($pagointeres)) {
+                $pagointeres=0;
+            } 
+            if (empty($ivapagointeres)) {
+                $ivapagointeres=0;
+            } 
+            if (empty($ivapagocapital)) {
+                $ivapagocapital=0;
+            }  
+                
+            $tiie=$tasa+$padicional;
+            $saldoprom=(($saldo)-$pagocapital);
+            $interes=($saldoprom*($tiie/100)/360)*$diasp;
+            $ivainteres=$interes*.16;
+            
+            $queryInsert=$pdo->prepare("INSERT INTO Intranet.cobranzaesperada (IDContrato,IDDisposicion,IDEjecutivo,IDSucursal,Folio,Saldo,SaldoProm,Tasa,diasp,mes,yy,producto,emp,periodo,disposicion,fechapago,capitalesperado,capitalpagado,interesesperado,interespagado,mesp,yyp,cliente,IDCliente,ejecutivo,sucursal,tipocte,IvaCapitalEsperado,IvaCapitalPagado,RentaEsperada,IvaRentaEsperada,RentaPagada,IvaRentaPagada,IvaInteresEsperado,IvaInteresPagado)
+                                                                      VALUES($idcto,$iddisp,$idejecutivo,$idsucursal,'$folio',$saldo,$saldoprom,$tiie,$diasp,$mes,$yy,'VP',3,$periodo,$disposicion,'$fechapago',$capital,$pagocapital,$interes,$pagointeres,$mesp,$yyp,'$cliente',$idcte,'$ejecutivo','$sucursal','$tipocte',$ivacapital,$ivapagocapital,0,0,0,0,$ivainteres,$ivapagointeres) ");            
+            $queryInsert->execute();           
+        }
+        ##fin calculo de vp cma
         echo "<div class='alert alert-success'>";
         echo "    <strong>Exito!</strong> Procesado con Exito!";
         echo "</div>";
@@ -183,26 +557,27 @@
 </form>
 <h3>Cobranza Esperada</h3>
 <table class="table">
-    <tr><th>Empresa</th><th>Producto</th><th>Mes</th><th>Año</th><th>Capital Esperado</th><th>Capital Recibido</th><th>Interes Esperado</th><th>Interes Pagado</th><th>Acciones</th></tr>
+    <tr><th>Empresa</th><th>Producto</th><th>Mes</th><th>Año</th><th>Capital/Renta Esperado</th><th>Capital/Renta Recibido</th><th>Interes Esperado</th><th>Interes Pagado</th><th>Acciones</th></tr>
     <?php
         $queryResult=$pdo->query("SELECT
         mesp,
         yyp,
         emp,
         producto,
-        SUM(capitalesperado) AS capitalesperado,
-        SUM(capitalpagado) AS capitalpagado,
-        SUM(interesesperado) AS interesesperado,
-        SUM(interespagado) AS interespagado
+        SUM(capitalesperado) + SUM(RentaEsperada) + SUM(IvaCapitalEsperado) AS capitalesperado,
+	    SUM(capitalpagado) + SUM(RentaPagada) + SUM(IvaCapitalPagado) AS capitalpagado,
+	    SUM(interesesperado) AS interesesperado,
+	    SUM(interespagado) AS interespagado
     FROM
         Intranet.cobranzaesperada
     GROUP BY
-        mesp
-    AND yyp
-    AND producto
-    AND emp
+    emp,
+	producto,
+	mesp,
+	yyp
     ORDER BY
         emp ASC ");
+        
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             if ($row['emp']==2) {
                 $empresa='CMU';
@@ -227,7 +602,7 @@
                     $producto='NA';
                     break;
             }
-            echo "<tr><td>".$empresa."</td><td><a href='viewcobesperada.php?mes=".$row['mesp']."&yy=".$row['yyp']."&pro=".$row['producto']."&emp=".$row['emp']."'>".$producto."</a></td><td>".$row['mes']."</td><td>".$row['yy']."</td><td>".number_format($row['capitalesperado'],2)."</td><td>".number_format($row['capitalpagado'],2)."</td><td>".number_format($row['interesesperado'],2)."</td><td>".number_format($row['interespagado'],2)."</td></td>><td>";
+            echo "<tr><td>".$empresa."</td><td><a href='viewcobesperada.php?mes=".$row['mesp']."&yy=".$row['yyp']."&pro=".$row['producto']."&emp=".$row['emp']."'>".$producto."</a></td><td>".$row['mesp']."</td><td>".$row['yyp']."</td><td>".number_format($row['capitalesperado'],2)."</td><td>".number_format($row['capitalpagado'],2)."</td><td>".number_format($row['interesesperado'],2)."</td><td>".number_format($row['interespagado'],2)."</td></td><td>";
             if ($idnivel>=2) {
                 echo "<a href='cobranzaesperada.php?m=".$row['mesp']."&y=".$row['yyp']."&p=".$row['producto']."&e=".$row['emp']."'><img src='img/icons/delete.png' alt=''></a>";
             }
