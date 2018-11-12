@@ -55,10 +55,10 @@ FROM
     sibware.2_dw_images_in A
 INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
 INNER JOIN sibware.personal C ON A.IDEjecutivo = C.ID
-INNER JOIN sibware.2_prestamos D ON A.IDCliente = B.ID
+
 WHERE
     A.FImage = '$hoy'
-AND D.IDMoneda = 1
+
 GROUP BY
     C.ID");
          while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) {
