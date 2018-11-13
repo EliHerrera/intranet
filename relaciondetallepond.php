@@ -1,6 +1,7 @@
 <?php
     require_once 'header.php';
     //////inicio de contenido
+    $idpond=$_GET['idpond'];
     $tipo=$_GET['tipo'];
     $periodo=$_GET['periodo'];
     $yy=$_GET['yy'];
@@ -630,7 +631,7 @@
 ?> 
 <div class="row">
     <div class="col-xs-3">
-        <a href="ponderacion.php" class="button">Regresar</a>
+        <a href="relacionpond.php?idpon=<?PHP echo $idpond; ?>" class="button">Regresar</a>
         <input type="button" name="imprimir" value="Imprimir"  onClick="window.print();" class="button" />
     </div>
 </div>   
