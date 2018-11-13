@@ -83,15 +83,16 @@
             if ($row['IDOrigenRecursos']==2 && $dated2<=$datef ){
                     
                     $tasaotros=$row['TasaOtros'];
-                    $tasatotOtros=$tasaotros+$padicional;
+                    $tasatotOtros=$tasaotros;
                     $interesFND=$capital*($tasatotOtros/100)*$dpond/360;
                     
             }elseif ($row['IDOrigenRecursos']<>2) {
                 $interesFND=0;
+                $tasatotOtros=0;
             }
             
-            $insertquery=$pdo->prepare("INSERT INTO Intranet.relacion_tasa_pond (IDCliente,IDContrato,IDDisposicion,SaldoCap,Interes,InteresFND,Tasa,PAdicional,TasaTot,TipoCartera,IDMoneda,Producto,Empresa,Periodo,yy)
-            VALUES ($row[IDCliente],$row[IDContrato],$row[IDDisposicion],$capital,$interes,$interesFND,$tasa,$padicional,$tasatot,'$row[TipoCartera]',$row[IDMoneda],'CR','CMU',$_POST[periodo],$yy)");
+            $insertquery=$pdo->prepare("INSERT INTO Intranet.relacion_tasa_pond (IDCliente,IDContrato,IDDisposicion,SaldoCap,Interes,InteresFND,Tasa,PAdicional,TasaTot,TasaTotOtros,TipoCartera,IDMoneda,Producto,Empresa,Periodo,yy)
+            VALUES ($row[IDCliente],$row[IDContrato],$row[IDDisposicion],$capital,$interes,$interesFND,$tasa,$padicional,$tasatot,$tasatotOtros,'$row[TipoCartera]',$row[IDMoneda],'CR','CMU',$_POST[periodo],$yy)");
             $insertquery->execute();
            
             

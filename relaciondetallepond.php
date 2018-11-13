@@ -22,7 +22,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -52,7 +53,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -83,7 +85,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -115,7 +118,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -145,7 +149,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -176,7 +181,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -208,7 +214,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -241,7 +248,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -271,7 +279,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -299,7 +308,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -328,7 +338,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -356,7 +367,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -385,7 +397,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
@@ -413,7 +426,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.3_cliente B ON A.IDCliente = B.ID
@@ -443,7 +457,8 @@
             A.PAdicional,
             A.TasaTot,
             A.Interes,
-            A.InteresFND
+            A.InteresFND,
+            A.TasaTotOtros
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
@@ -590,7 +605,8 @@
             C.Deposito,
             D.Saldo AS VR,
             A.iPC,
-            A.TasaTot
+            A.TasaTot,
+            A.TasaTotOtros    
         FROM
             Intranet.relacion_tasa_pond A
         INNER JOIN sibware.3_cliente B ON A.IDCLiente = B.ID
@@ -622,10 +638,10 @@
 <table class="table">
 <?PHP
 if ($tipo<=15) {
-    echo "<tr><th>No.</th><th>Cliente</th><th>Folio</th><th>Disp</th><th>Saldo Capital</th><th>Tasa</th><th>S.T.</th><th>Tasa T.</th><th>Interes</th><th>Interes FND</th></tr>";
+    echo "<tr><th>No.</th><th>Cliente</th><th>Folio</th><th>Disp</th><th>Saldo Capital</th><th>Tasa</th><th>S.T.</th><th>Tasa T.</th><th>Tasa T. FND</th><th>Interes</th><th>Interes FND</th></tr>";
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $fila++;
-        echo "<tr><td>".$fila."</td><td>".$row['Cliente']."</td><td>".$row['Folio']."</td><td>".$row['Renglon']."</td><td>".number_format($row['SaldoCap'],2)."</td><td>".$row['Tasa']."</td><td>".$row['PAdicional']."</td><td>".$row['TasaTot']."</td><td>".number_format($row['Interes'],2)."</td><td>".number_format($row['InteresFND'],2)."</td></tr>";
+        echo "<tr><td>".$fila."</td><td>".$row['Cliente']."</td><td>".$row['Folio']."</td><td>".$row['Renglon']."</td><td>".number_format($row['SaldoCap'],2)."</td><td>".$row['Tasa']."</td><td>".$row['PAdicional']."</td><td>".$row['TasaTot']."</td><td>".$row['TasaTotOtros']."</td><td>".number_format($row['Interes'],2)."</td><td>".number_format($row['InteresFND'],2)."</td></tr>";
     }
 
 }

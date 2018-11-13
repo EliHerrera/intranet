@@ -34,13 +34,29 @@ while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $tasap=(($interes/$capital)*(360/$dpond))*100;
 echo "<tr><td>CR</td><td><a href='relaciondetallepond.php?tipo=2&periodo=".$periodo."&yy=".$yy."'>ACTIVA VIGENTE</a> </td><td>".number_format($capital,2)."</td><td>".number_format($interes,2)."</td><td>".number_format($tasap,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";    
 }
+$queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.Interes) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_contratos_disposicion B ON A.IDDisposicion=B.ID WHERE A.Producto='CR' AND A.IDMoneda=1 AND A.Empresa='CMU' AND B.IDOrigenRecursos=2 AND A.Periodo=$periodo AND A.yy=$yy AND A.InteresFND>0 ");
+
+while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+    $capital=$row['Cap'];
+    $interes=$row['Inte'];
+    $tasap=(($interes/$capital)*(360/$dpond))*100;
+echo "<tr><td>CR</td><td><a href='relaciondetallepond.php?tipo=3&periodo=".$periodo."&yy=".$yy."'>FINANCIAMIENTO RURAL ACTIVA</a></td><td>".number_format($capital,2)."</td><td>".number_format($interes,2)."</td><td>".number_format($tasap,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";    
+}
+$queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.Interes) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_contratos_disposicion B ON A.IDDisposicion=B.ID WHERE A.Producto='CR' AND A.IDMoneda=1 AND A.TipoCartera='G' AND A.Empresa='CMU' AND B.IDOrigenRecursos=2 AND A.Periodo=$periodo AND A.yy=$yy AND A.InteresFND>0 ");
+
+while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+    $capital=$row['Cap'];
+    $interes=$row['Inte'];
+    $tasap=(($interes/$capital)*(360/$dpond))*100;
+echo "<tr><td>CR</td><td><a href='relaciondetallepond.php?tipo=15&periodo=".$periodo."&yy=".$yy."'>FINANCIAMIENTO RURAL VIGENTE ACTIVA</a></td><td>".number_format($capital,2)."</td><td>".number_format($interes,2)."</td><td>".number_format($tasap,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";    
+}
 $queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.InteresFND) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_contratos_disposicion B ON A.IDDisposicion=B.ID WHERE A.Producto='CR' AND A.IDMoneda=1 AND A.Empresa='CMU' AND B.IDOrigenRecursos=2 AND A.Periodo=$periodo AND A.yy=$yy AND A.InteresFND>0 ");
 
 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $capital=$row['Cap'];
     $interes=$row['Inte'];
     $tasap=(($interes/$capital)*(360/$dpond))*100;
-echo "<tr><td>CR</td><td><a href='relaciondetallepond.php?tipo=3&periodo=".$periodo."&yy=".$yy."'>FINANCIAMIENTO RURAL</a></td><td>".number_format($capital,2)."</td><td>".number_format($interes,2)."</td><td>".number_format($tasap,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";    
+echo "<tr><td>CR</td><td><a href='relaciondetallepond.php?tipo=3&periodo=".$periodo."&yy=".$yy."'>FINANCIAMIENTO RURAL PASIVA</a></td><td>".number_format($capital,2)."</td><td>".number_format($interes,2)."</td><td>".number_format($tasap,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";    
 }
 $queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.InteresFND) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_contratos_disposicion B ON A.IDDisposicion=B.ID WHERE A.Producto='CR' AND A.IDMoneda=1 AND A.TipoCartera='G' AND A.Empresa='CMU' AND B.IDOrigenRecursos=2 AND A.Periodo=$periodo AND A.yy=$yy AND A.InteresFND>0 ");
 
@@ -48,7 +64,7 @@ while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $capital=$row['Cap'];
     $interes=$row['Inte'];
     $tasap=(($interes/$capital)*(360/$dpond))*100;
-echo "<tr><td>CR</td><td><a href='relaciondetallepond.php?tipo=15&periodo=".$periodo."&yy=".$yy."'>FINANCIAMIENTO RURAL VIGENTE</a></td><td>".number_format($capital,2)."</td><td>".number_format($interes,2)."</td><td>".number_format($tasap,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";    
+echo "<tr><td>CR</td><td><a href='relaciondetallepond.php?tipo=15&periodo=".$periodo."&yy=".$yy."'>FINANCIAMIENTO RURAL VIGENTE PASIVA</a></td><td>".number_format($capital,2)."</td><td>".number_format($interes,2)."</td><td>".number_format($tasap,2)."</td><td>".$periodo."</td><td>".$yy."</td></tr>";    
 }
 $queryResult=$pdo->query("SELECT SUM(A.SaldoCap) as Cap,SUM(A.Interes) as Inte FROM Intranet.relacion_tasa_pond A INNER JOIN sibware.2_contratos_disposicion B ON A.IDDisposicion=B.ID WHERE A.Producto='CR' AND A.IDMoneda=2 AND A.Empresa='CMU' AND A.Periodo=$periodo AND A.yy=$yy ");
 
