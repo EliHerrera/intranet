@@ -458,7 +458,9 @@
         AND A.InteresFND>0
         AND A.Periodo = $periodo
         AND A.yy = $yy");
+         
             break; 
+           
         case 16:
             $titulo='AP FUTUROS';    
             $queryResult=$pdo->query("SELECT
@@ -619,7 +621,7 @@
 <h3>Relacion Detallada <?PHP echo $titulo." ".date("M-Y", mktime(0, 0, 0, $periodo, 1, $yy)); ?></h3>
 <table class="table">
 <?PHP
-if ($tipo<15) {
+if ($tipo<=15) {
     echo "<tr><th>No.</th><th>Cliente</th><th>Folio</th><th>Disp</th><th>Saldo Capital</th><th>Tasa</th><th>S.T.</th><th>Tasa T.</th><th>Interes</th><th>Interes FND</th></tr>";
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $fila++;
@@ -628,6 +630,7 @@ if ($tipo<15) {
 
 }
 elseif($tipo>15 && $tipo <20) {
+    echo "entro";
     echo "<tr><th>No.</th><th>Cliente</th><th>Folio</th><th>Total Renta</th><th>Rentas Pendientes </th><th>Renta</th><th>Ingresos Por Rentas</th><th>MOI</th><th>Depositos</th><th>VR</th><th>Saldo</th><th>Utilidad</th><th>Tasa Total</th></tr>";
 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $fila++;
