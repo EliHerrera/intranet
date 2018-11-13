@@ -71,7 +71,8 @@
         B.ID as IDCto,   
         C.ID as IDCte,
         F.Nombre as Sucursal,
-        G.tipo as TipoCte      
+        G.tipo as TipoCte,   
+        E.ID as IDMov   
         FROM
         sibware.2_contratos_disposicion A
         INNER JOIN sibware.2_contratos B ON A.IDContrato = B.ID
@@ -109,6 +110,7 @@
             $ejecutivo=$row['Ejecutivo'];
             $sucursal=$row['Sucursal'];
             $tipocte=$row['TipoCte'];
+            $idmov=$row['IDMov'];
             $queryResult2=$pdo->query("SELECT sibware.gTIIE($mes,$yy) as tiim");
             while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
                 $tiiem=$row['tiim']; 
@@ -126,8 +128,7 @@
             INNER JOIN sibware.2_contratos_disposicion_pagos B ON A.IDMov = B.ID
             WHERE
                 A.IDDisposicion = $iddisp
-            AND B.FPago >= '$finicial'
-            AND B.Fpago <= '$ffinal'"); 
+            AND A.IDMov=$idmov"); 
             while ($row=$queryResult3->fetch(PDO::FETCH_ASSOC)) {
                    $pagocapital=$row['PagoCapital']; 
                    $pagointeres=$row['PagoInteres'];
@@ -141,7 +142,20 @@
             $tiie=$tasa+$padicional;
             $saldoprom=(($saldo*$diasp)-$pagocapital)/$diasp;
             $interes=($saldoprom*($tiie/100)/360)*$diasp;
-            
+            $queryResult4=$pdo->query("SELECT
+            sum(A.Capital) AS PagoCapital,
+            sum(A.InteresOrdinario) As PagoInteres
+            FROM
+                sibware.2_contratos_disposicion_pagos_detalle A
+            INNER JOIN sibware.2_contratos_disposicion_pagos B ON A.IDMov = B.ID
+            WHERE
+                A.IDDisposicion = $iddisp
+            AND B.FRegistro>=$fechaini
+            AND B.FRegistro<=$fechafin"); 
+            while ($row=$queryResult4->fetch(PDO::FETCH_ASSOC)) {
+                   $pagocapital=$row['PagoCapital']; 
+                   $pagointeres=$row['PagoInteres'];
+            }
             $queryInsert=$pdo->prepare("INSERT INTO Intranet.cobranzaesperada (IDContrato,IDDisposicion,IDEjecutivo,IDSucursal,Folio,Saldo,SaldoProm,Tasa,diasp,mes,yy,producto,emp,periodo,disposicion,fechapago,capitalesperado,capitalpagado,interesesperado,interespagado,mesp,yyp,cliente,IDCliente,ejecutivo,sucursal,tipocte,IvaCapitalEsperado,IvaCapitalPagado,RentaEsperada,IvaRentaEsperada,RentaPagada,IvaRentaPagada,IvaInteresEsperado,IvaInteresPagado)
                                                                       VALUES($idcto,$iddisp,$idejecutivo,$idsucursal,'$folio',$saldo,$saldoprom,$tiie,$diasp,$mes,$yy,'CR',2,$periodo,$disposicion,'$fechapago',$capital,$pagocapital,$interes,$pagointeres,$mesp,$yyp,'$cliente',$idcte,'$ejecutivo','$sucursal','$tipocte',0,0,0,0,0,0,0,0) ");            
             $queryInsert->execute();           
