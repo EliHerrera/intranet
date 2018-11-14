@@ -30,9 +30,7 @@
             define("metaAP",$metaAP);
             define("metaVP",$metaVP);
             define("pcumpli",$pCumpli);
-        }
-        
-        
+        }        
         $queryResult=$pdo->query("SELECT * FROM Intranet.param_com_extensionistas");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             $idpersonalcom=$row['IDPersonal'];
