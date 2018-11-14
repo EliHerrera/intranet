@@ -33,6 +33,12 @@
         <div class="col-xs-2">
             <br><input type="submit" class="button" value="Buscar">
         </div>
+        <div class="col-xs-2">
+            <br><a href="carterabinvcte.php?date=<?php echo $hoy; ?>" class="button">Detalle</a>
+        </div>
+        <div class="col-xs-2">
+            <br><input type="button" name="imprimir" value="Imprimir"  onClick="window.print();" class="button" />
+        </div>
         
 
     </div>

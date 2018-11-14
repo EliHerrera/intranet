@@ -18,8 +18,8 @@
     
 ?>
 <div class="row">
-  <div class='col-md-6' id="carteraejecmu"></div>
-  <div class='col-md-6' id="carteraejecma"></div>
+  <div id="carteraejecmu"></div>
+  <div id="carteraejecma"></div>
 </div>
 <form action="carterabieje.php" method="post">
     <div class="row">

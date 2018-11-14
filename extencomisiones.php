@@ -41,13 +41,15 @@
             $row_count = $queryResult2->rowCount(); 
             if ($row_count==0) {
                 $queryResult3=$pdo->query("SELECT B.Autorizado,B.PAPertura,B.NAPertura,A.IDPersonal FROM Intranet.asignacion_ctos_ext A INNER JOIN sibware.2_contratos B ON A.IDContrato=B.ID WHERE A.periodo=$periodo AND A.yy=$yy AND Producto='cr'");
-                //var_dump($queryResult3);
+                var_dump($queryResult3);
                 $row_count2 = $queryResult3->rowCount(); 
                 if ($row_count2==0) {
                     $accr=0;
                     $acaccr=0;
                 }else{
-                        while ($row=$queryResult3->fetch(PDO::FETCH_ASSOC)) {
+                    $accr=0;
+                    $acaccr=0;   
+                    while ($row=$queryResult3->fetch(PDO::FETCH_ASSOC)) {
                             $autorizado=$row['Autorizado'];
                             $pAp=$row['PAPertura'];
                             $mAp=$row['NAPertura'];
@@ -64,6 +66,8 @@
                     $acap=0;
                     $acacap=0;
                 }else{
+                    $acap=0;
+                    $acacap=0;
                     while ($row=$queryResult3->fetch(PDO::FETCH_ASSOC)) {
                             $autorizado=$row['Autorizado'];
                             $pAp=$row['PAPertura'];
@@ -83,6 +87,8 @@
                     $acap=0;
                     $acacap=0;
                 }else{
+                        $acap=0;
+                        $acacap=0;
                         while ($row=$queryResult3->fetch(PDO::FETCH_ASSOC)) {
                             $autorizado=$row['Autorizado'];
                             $pAp=$row['PAPertura'];
@@ -99,7 +105,9 @@
                 if ($row_count2==0) {
                     $acvp=0;
                     $acacvp=0;
-                }else{
+                }else{  
+                        $acvp=0;
+                        $acacvp=0;
                         while ($row=$queryResult3->fetch(PDO::FETCH_ASSOC)) {
                             $autorizado=$row['Autorizado'];
                             $pAp=$row['PAPertura'];
@@ -116,7 +124,8 @@
                 }else{
                     $porc=$porcc;
                 }  
-                $comcr=$acaccr*($porc/100);   
+                $comcr=$acaccr*($porc/100);
+                var_dump($acaccr);    
                 $comvp=$acacvp*($porc/100);   
                 $comap=$acacap*($porc/100);   
                 $pColCR;
