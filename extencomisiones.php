@@ -11,12 +11,28 @@
         echo "</div>";
     }
     if (!empty($_POST['calcular'])) {
-        
         $periodo=$_POST['periodo'];
         $yy=$_POST['yy'];
         $pColCR=$_POST['pColCR'];
         $pColAP=$_POST['pColAP'];
         $pColVP=$_POST['pColVP'];
+        $queryResult=$pdo->query("SELECT * FROM Intranet.metas_colocacion WHERE periodo=$periodo AND yy=$yy");
+        //var_dump($queryResult);
+        while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+            $metaCR=$row['metaCR'];
+            $metaAP=$row['metaAP'];
+            $metaVP=$row['metaVP'];
+            $metaIN=$row['metaIN'];
+            $pComi=$row['pComi'];
+            $pCumpli=$row['pCumpli'];
+            define("pComi", $pComi);
+            define("metaCR",$metaCR);
+            define("metaAP",$metaAP);
+            define("metaVP",$metaVP);
+            define("pcumpli",$pCumpli);
+        }
+        
+        
         $queryResult=$pdo->query("SELECT * FROM Intranet.param_com_extensionistas");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             $idpersonalcom=$row['IDPersonal'];
@@ -152,7 +168,7 @@
             define("metaCR",$metaCR);
             define("metaAP",$metaAP);
             define("metaVP",$metaVP);
-            define(pcumpli,$pCumpli);
+            define("pcumpli",$pCumpli);
         }
     }
     
@@ -195,6 +211,7 @@
     AND B. STATUS <> 'C'
     AND B. STATUS <> '-'
     AND (E.ID = 1 OR E.ID = 3)");
+    #var_dump($queryResult);
         $acumcolocado=0;
         $acumPCalcular=0;
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
@@ -223,7 +240,8 @@
     AND '$ffin'
     AND B. STATUS <> 'C'
     AND B. STATUS <> '-'
-    AND (E.ID = 1 OR E.ID = 3)");  
+    AND (E.ID = 1 OR E.ID = 3)"); 
+    ##var_dump($queryResult); 
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         $dispuesto=$row['Disposicion'];
         $acumdispuesto=$acumdispuesto+$dispuesto;
