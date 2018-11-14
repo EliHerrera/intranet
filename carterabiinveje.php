@@ -68,7 +68,7 @@ WHERE
 GROUP BY
     C.ID");
          while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) {
-            echo "<tr><td>".$row['Ejecutivo']."</td><td>".number_format($row['Saldo'],2)."</td></tr>";
+            echo "<tr><td><a href='carterabinvcte.php?ideje=".$row['IDEjecutivo']."'>".$row['Ejecutivo']."</a></td><td>".number_format($row['Saldo'],2)."</td></tr>";
         }  
     ?>
 

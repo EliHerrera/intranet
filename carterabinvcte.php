@@ -1,6 +1,6 @@
 <?php
-    if (!empty($_GET['hoy'])) {
-        $hoy=$_GET['hoy'];
+    if (!empty($_GET['date'])) {
+        $hoy=$_GET['date'];
         
     }else{
         $hoy=date('Y-m-d');
@@ -24,6 +24,81 @@
             <input type="button" name="imprimir" value="Imprimir"  onClick="window.print();" class="button" />
 </div>
 <table class="table">
+<tr><th>Ejecutivo</th><th>Cliente</th><th>Tipo Cte</th><th>Saldo</th><th>Sucursal</th></tr>
+<?php
+    if (empty($_GET['ideje'])) {
+                $queryResultcateje=$pdo->query("SELECT
+            CONCAT(
+                C.Nombre,
+                ' ',
+                C.Apellido1,
+                ' ',
+                C.Apellido2
+            ) AS Ejecutivo,
+            CONCAT(
+                B.Nombre,
+                ' ',
+                B.Apellido1,
+                ' ',
+                B.Apellido2
+            ) AS Cliente,
+            SUM(A.SaldoProm) + SUM(A.SaldoInt) - SUM(A.SaldoRet) AS Saldo,
+            A.IDEjecutivo,
+            A.IDCliente,
+            D.Nombre,
+            E.Tipo
+        FROM
+            sibware.2_dw_images_in A
+        INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+        INNER JOIN sibware.personal C ON A.IDEjecutivo = C.ID
+        INNER JOIN sibware.sucursal D ON B.IDSucursal=D.ID
+        INNER JOIN sibware.2_entorno_tipocliente E ON B.IDTipoCliente=E.ID
+
+        WHERE
+            A.FImage = '$hoy'
+
+        GROUP BY
+            B.ID");
+    }elseif (!empty($_GET['ideje'])) {
+        $queryResultcateje=$pdo->query("SELECT
+            CONCAT(
+                C.Nombre,
+                ' ',
+                C.Apellido1,
+                ' ',
+                C.Apellido2
+            ) AS Ejecutivo,
+            CONCAT(
+                B.Nombre,
+                ' ',
+                B.Apellido1,
+                ' ',
+                B.Apellido2
+            ) AS Cliente,
+            SUM(A.SaldoProm) + SUM(A.SaldoInt) - SUM(A.SaldoRet) AS Saldo,
+            A.IDEjecutivo,
+            A.IDCliente,
+            D.Nombre,
+            E.Tipo
+        FROM
+            sibware.2_dw_images_in A
+        INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+        INNER JOIN sibware.personal C ON A.IDEjecutivo = C.ID
+        INNER JOIN sibware.sucursal D ON B.IDSucursal=D.ID
+        INNER JOIN sibware.2_entorno_tipocliente E ON B.IDTipoCliente=E.ID
+
+        WHERE
+            A.FImage = '$hoy'
+            AND B.IDEjecutivo=$_GET[ideje]
+        GROUP BY
+            B.ID");
+        
+    }
+    
+ while ($row=$queryResultcateje->fetch(PDO::FETCH_ASSOC)) {
+     echo "<tr><td>".$row['Ejecutivo']."</td><td>".$row['Cliente']."</td><td>".$row['Tipo']."</td><td>".number_format($row['Saldo'],2)."</td><td>".$row['Nombre']."</td></tr>";
+ }   
+?>
 </table>
 
 <?php
