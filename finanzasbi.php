@@ -1,7 +1,5 @@
 <?php
     $hoy=date('Y-m-d');
-    $location='S';
-    $grafica='in';  
     $yy=date('Y');
     $periodo=date("n",strtotime($fini."- 1 month"));
     $periodoant=$periodo-1;
@@ -19,8 +17,8 @@
         
 
     }
-    require_once 'cargarbi.php';
-    require_once 'header.php';
+    $location="finanzasbi";
+    require_once 'headerbi.php';
     //////inicio de contenido
     require 'estiloconst.php'; 
     require 'menubi.php';

@@ -78,8 +78,8 @@ if ($location=='dashboard'){
     include_once 'js/graficascarteraeje.php';  
 }elseif ($location=='carteraejeinv') {
     include_once 'js/graficainveje.php';  
-}elseif ($location=='carteraejevp') {
-    include_once 'js/graficavpeje.php';  
+}elseif ($location=='finanzasbi') {
+    include_once 'js/graficasfinanzas.php';  
 }    
 
  ?>       
