@@ -33,6 +33,12 @@
         <div class="col-xs-2">
             <br><input type="submit" class="button" value="Buscar">
         </div>
+        <div class="col-xs-2">
+            <br><a href="carterabivpcte.php?date=<?php echo $hoy; ?>" class="button">Detalle</a>
+        </div>
+        <div class="col-xs-2">
+            <br><input type="button" name="imprimir" value="Imprimir"  onClick="window.print();" class="button" />
+        </div>
         
 
     </div>
@@ -68,7 +74,7 @@ C.ID");
        
 
          while ($row=$queryResultcatejeVP->fetch(PDO::FETCH_ASSOC)) {
-            echo "<tr><td>".$row['Ejecutivo']."</td><td>".number_format($row['Saldo'],2)."</td></tr>";
+            echo "<tr><td><a href='carterabivpcte.php?ideje=".$row['IDEjecutivo']."&date=".$hoy."'>".$row['Ejecutivo']."</a></td><td>".number_format($row['Saldo'],2)."</td></tr>";
         }  
     ?>
 
