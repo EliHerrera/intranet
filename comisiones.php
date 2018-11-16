@@ -61,9 +61,10 @@
                     $bono2=$row['Bono2'];
                     $factorPCv=$row['icv'];
                 }
-                    $ajustei=.15;
-                    $ajustelc=.55;
+                    $ajustei=.20;
+                    $ajustelc=.45;
                     $ajusteap=.37;
+                    
                     $ajustevp=.55;
                     $reserva=0.00;
                     $argumeto='first day of january '.$yy;
