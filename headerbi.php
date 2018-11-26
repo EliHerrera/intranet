@@ -82,6 +82,8 @@ if ($location=='dashboard'){
     include_once 'js/graficasfinanzas.php';  
 }elseif ($location=='carteraejevp') {
     include_once 'js/graficavpeje.php';  
+}elseif ($location=='cierrebi') {
+    include_once 'js/graficacierrebi.php';  
 }     
 
  ?>       
