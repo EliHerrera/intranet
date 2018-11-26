@@ -133,7 +133,8 @@
                    $pagocapital=$row['PagoCapital']; 
                    $pagointeres=$row['PagoInteres'];
                    $pagomoras=$row['PagoMoras'];
-            }  
+            } 
+             
             if (empty($pagocapital)) {
                 $pagocapital=0;
             } 

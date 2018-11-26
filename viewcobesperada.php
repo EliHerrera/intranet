@@ -76,6 +76,7 @@
         $interesesperado=$interesesperado+$ivainteresesperado;
         $interespagado=$interespagado+$ivainterespagado;
         $moraspagadas=$row['moraspagadas'];
+        
         echo "<tr><td>".$row['cliente']."</td><td>".$row['Folio']."</td><td>".$row['disposicion']."</td><td>".$row['tipocte']."</td><td>".$row['ejecutivo']."</td><td>".$row['sucursal']."</td><td>".number_format($capitalesperado,2)."</td><td>".number_format($capitalpagado,2)."</td><td>".number_format($interesesperado,2)."</td><td>".number_format($interespagado,2)."</td><td>".number_format($moraspagadas,2)."</td><td>".$row['fechapago']."</td></tr>";
         }
 ?>
