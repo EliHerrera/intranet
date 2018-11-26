@@ -35,7 +35,7 @@
 ?>    
 <h3>Cobranza Esperada <?php echo "de ".$producto." mes ".$mes." año ".$yy ?></h3><a href="cobranzaesperada.php" class="button">Regresar</a>
 <table class="table">
-<tr><th>Cliente</th><th>Folio</th><th>Disp</th><th>Tipo Cliente</th><th>Ejecutivo</th><th>Sucursal</th><th>Capital/Renta Esperado</th><th>Capital/Renta Recibido</th><th>Interes Esperado</th><th>Interes Pagado</th><th>Fecha Pago</th></tr>
+<tr><th>Cliente</th><th>Folio</th><th>Disp</th><th>Tipo Cliente</th><th>Ejecutivo</th><th>Sucursal</th><th>Capital/Renta Esperado</th><th>Capital/Renta Recibido</th><th>Interes Esperado</th><th>Interes Pagado</th><th>Moras Pagadas</th><th>Fecha Pago</th></tr>
 <?php   
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         if ($row['emp']==2) {
@@ -75,7 +75,8 @@
         $capitalpagado=$capitalpagado+$ivacapitalpagado+$rentapagada;
         $interesesperado=$interesesperado+$ivainteresesperado;
         $interespagado=$interespagado+$ivainterespagado;
-        echo "<tr><td>".$row['cliente']."</td><td>".$row['Folio']."</td><td>".$row['disposicion']."</td><td>".$row['tipocte']."</td><td>".$row['ejecutivo']."</td><td>".$row['sucursal']."</td><td>".number_format($capitalesperado,2)."</td><td>".number_format($capitalpagado,2)."</td><td>".number_format($interesesperado,2)."</td><td>".number_format($interespagado,2)."</td><td>".$row['fechapago']."</td></tr>";
+        $moraspagadas=$row['moraspagadas'];
+        echo "<tr><td>".$row['cliente']."</td><td>".$row['Folio']."</td><td>".$row['disposicion']."</td><td>".$row['tipocte']."</td><td>".$row['ejecutivo']."</td><td>".$row['sucursal']."</td><td>".number_format($capitalesperado,2)."</td><td>".number_format($capitalpagado,2)."</td><td>".number_format($interesesperado,2)."</td><td>".number_format($interespagado,2)."</td><td>".number_format($moraspagadas,2)."</td><td>".$row['fechapago']."</td></tr>";
         }
 ?>
 </table>
