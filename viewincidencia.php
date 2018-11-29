@@ -57,16 +57,11 @@ AND A.ID_Usuario<>$idcontraloria");# code...
 <div class="col-xs-2">
     <input type="button" name="imprimir" value="Imprimir"  onClick="window.print();" class="button" />
 </div>
-<?php 
-      if ($idpersonal==$idcontraloria) 
-      
-      {
-    # code...
-  ?>
+
 <div class="col-xs-2">   
     <a href="incidenciasg.php?b=<?php echo $_GET['b']; ?>&fil=<?php echo $_GET['fil']; ?>" class="button">Gestionar</a>
 </div>
-<?php }?>
+
 <table class="table">
 <tr><th>Folio</th><th>Nombre</th><th>Fecha</th><th>Incidencia</th><th>Estatus</th></tr>
 <?php
