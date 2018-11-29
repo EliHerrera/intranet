@@ -57,9 +57,10 @@ AND A.ID_Usuario<>$idcontraloria");# code...
 <div class="col-xs-2">
     <input type="button" name="imprimir" value="Imprimir"  onClick="window.print();" class="button" />
 </div>
-<?php #if ($idpersonal==$idcontraloria) 
-      if(1==1)  
-{
+<?php 
+      if ($idpersonal==$idcontraloria) 
+      
+      {
     # code...
   ?>
 <div class="col-xs-2">   
