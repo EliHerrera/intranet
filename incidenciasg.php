@@ -117,7 +117,12 @@
                                     $seguimiento=$row['seguimiento'];
                                     
                             }                                                 
-                echo "<td>".$impacto."</td><td>".$seguimiento."</td><td><a href='gestionarin.php?idticket=".$idticket."&b=".$_GET['b']."&fil=".$_GET['fil']."'>Gestionar</a></td></tr>";    
+                echo "<td>".$impacto."</td><td>".$seguimiento."</td><td>";
+                if ($idcontraloria==$idpersonal) {
+                     echo "<a href='gestionarin.php?idticket=".$idticket."&b=".$_GET['b']."&fil=".$_GET['fil']."'>Gestionar</a>";
+                }
+               
+                echo "</td></tr>";    
                 }
     ?>    
 </table>  
