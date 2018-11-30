@@ -33,8 +33,20 @@
         
     }
 ?>    
-<h3>Cobranza Esperada <?php echo "de ".$producto." mes ".$mes." año ".$yy ?></h3><a href="cobranzaesperada.php" class="button">Regresar</a>
-<table class="table">
+
+<h3>Cobranza Esperada <?php echo "de ".$producto." mes ".$mes." año ".$yy ?></h3>
+<form action="ficheroExcel.php" method="post" target="_blank" id="FormularioExportacion">
+<div class="row">    
+    <div class="col-xs-2">
+        <a href="cobranzaesperada.php" class="button">Regresar</a>
+    </div>
+    <div class="col-xs-2">
+        <a href="#"><img src="img/icons/export_to_excel.png" class="botonExcel" alt="expor to excel" /></a>
+        <input type="hidden" id="datos_a_enviar" name="datos_a_enviar" />
+    </div>
+</div>
+</form>
+<table class="table" id="Exportar_a_Excel">
 <tr><th>Cliente</th><th>Folio</th><th>Disp</th><th>Tipo Cliente</th><th>Ejecutivo</th><th>Sucursal</th><th>Capital/Renta Esperado</th><th>Capital/Renta Recibido</th><th>Interes Esperado</th><th>Interes Pagado</th><th>Moras Pagadas</th><th>Fecha Pago</th></tr>
 <?php   
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {

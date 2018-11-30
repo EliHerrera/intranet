@@ -62,6 +62,14 @@
    
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <script language="javascript">
+$(document).ready(function() {
+	$(".botonExcel").click(function(event) {
+		$("#datos_a_enviar").val( $("<div>").append( $("#Exportar_a_Excel").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+});
+});
+</script>
 		<style type="text/css">
 ${demo.css}
         </style>

@@ -15,7 +15,8 @@
     }           
     if (!empty($_POST)) {
     $mesp=$_POST['mes'];
-    $yyp=$_POST['yy'];    
+    $yyp=$_POST['yy']; 
+    //die();   
     $queryResult=$pdo->query("SELECT * FROM Intranet.cobranzaesperada WHERE mesp=$_POST[mes] AND yyp=$_POST[yy]");
     $row_count = $queryResult->rowCount(); 
     if ($row_count>0) {
@@ -620,7 +621,7 @@
 	mesp,
 	yyp
     ORDER BY
-        emp ASC ");
+        producto,yyp,mesp,producto,emp ASC ");
         
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             if ($row['emp']==2) {

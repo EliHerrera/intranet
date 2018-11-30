@@ -30,10 +30,18 @@
         <div class="col-xs-2">
             <br><input type="button" name="imprimir" value="Imprimir"  onClick="window.print();" class="button" />
         </div>
+</form>        
+<form action="ficheroExcel.php" method="post" target="_blank" id="FormularioExportacion">
+        <div class="col-xs-2">
+            <br><a href="#"><img src="img/icons/export_to_excel.png" class="botonExcel" alt="expor to excel" /></a>
+            <input type="hidden" id="datos_a_enviar" name="datos_a_enviar" />
+        </div>
+</form>
+
     </div>
 </form>
 <h3>Relacion de colocacion desde <?php echo $fini ?> a <?php echo $ffin ?></h3>
-<table class="table">
+<table class="table" id="Exportar_a_Excel">
     <tr><th>Producto</th><th>Folio</th><th>Cliente</th><th>Tipo</th><th>Importe</th><th>Fecha</th><th>Ejecutivo</th><th>Sucursal</th><th>Empresa</th></tr>
     <?php   
     $queryResult=$pdo->query("SELECT

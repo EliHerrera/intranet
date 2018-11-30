@@ -54,10 +54,19 @@
     }
 ?> 
 <h3>Relacion de Casos de Riesgo del mes de <?php echo $texto; ?></h3>
-<div class="col-xs-2">   
-    <a href="viewincidencia.php?b=<?php echo $_GET['b']; ?>&fil=<?php echo $_GET['fil']; ?>" class="button">Regresar</a>
+
+<form action="ficheroExcel.php" method="post" target="_blank" id="FormularioExportacion">
+<div class="row">   
+    <div class="col-xs-2">   
+        <a href="viewincidencia.php?b=<?php echo $_GET['b']; ?>&fil=<?php echo $_GET['fil']; ?>" class="button">Regresar</a>
+    </div>    
+    <div class="col-xs-2">
+        <a href="#"><img src="img/icons/export_to_excel.png" class="botonExcel" alt="expor to excel" /></a>
+        <input type="hidden" id="datos_a_enviar" name="datos_a_enviar" />
+    </div>
 </div>
-<table class="table">
+</form>
+<table class="table" id="Exportar_a_Excel">
     <tr><th>Fecha</th><th>Folio</th><th>Proceso</th><th>Acontecimiento</th><th>Area Involucradas</th><th>Cambios o Definicion Final</th><th>Impacto o Modificacion de Politica</th><th>Seguimiento Contralor Normativo</th><th>Acciones</th></tr>
     <?php
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
