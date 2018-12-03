@@ -634,9 +634,15 @@
         <a href="relacionpond.php?idpon=<?PHP echo $idpond; ?>" class="button">Regresar</a>
         <input type="button" name="imprimir" value="Imprimir"  onClick="window.print();" class="button" />
     </div>
+    <form action="ficheroExcel.php" method="post" target="_blank" id="FormularioExportacion">
+    <div class="col-xs-2">
+        <a href="#"><img src="img/icons/export_to_excel.png" class="botonExcel" alt="expor to excel" /></a>
+        <input type="hidden" id="datos_a_enviar" name="datos_a_enviar" />
+    </div>
+    </form>
 </div>   
 <h3>Relacion Detallada <?PHP echo $titulo." ".date("M-Y", mktime(0, 0, 0, $periodo, 1, $yy)); ?></h3>
-<table class="table">
+<table class="table" id="Exportar_a_Excel">
 <?PHP
 if ($tipo<=15) {
     echo "<tr><th>No.</th><th>Cliente</th><th>Folio</th><th>Disp</th><th>Saldo Capital</th><th>Tasa</th><th>S.T.</th><th>Tasa T.</th><th>Tasa T. FND</th><th>Interes</th><th>Interes FND</th></tr>";

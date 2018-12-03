@@ -4,7 +4,7 @@
     $id_ejecutivo=null;
     $periodo=date("n", mktime(0, 0, 0, date('m')-1, date('d'), date('Y'))); //periodo a calcular
     
-    //$periodo=10;
+    #$periodo=10;
     $reserva=0.00;
     $yy=date('Y');
     // $yy="2017";

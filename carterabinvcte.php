@@ -17,13 +17,19 @@
 ###inicio conetnido    
 ?>
 <h3>Relacion de Cartera de Inversionistas a la fecha <?php echo $hoy; ?></h3>
-<div class="col-xs-2">
+<div class="col-xs-1">
             <a href="carterabiinveje.php" class="button">Regresar</a>
 </div>
 <div class="col-xs-2">
             <input type="button" name="imprimir" value="Imprimir"  onClick="window.print();" class="button" />
 </div>
-<table class="table">
+<form action="ficheroExcel.php" method="post" target="_blank" id="FormularioExportacion">
+<div class="col-xs-1">
+<a href="#"><img src="img/icons/export_to_excel.png" class="botonExcel" alt="expor to excel" /></a>
+<input type="hidden" id="datos_a_enviar" name="datos_a_enviar" />
+</div>
+</form>
+<table class="table" id="Exportar_a_Excel">
 <tr><th>Ejecutivo</th><th>Cliente</th><th>Tipo Cte</th><th>Saldo</th><th>Sucursal</th></tr>
 <?php
     if (empty($_GET['ideje'])) {

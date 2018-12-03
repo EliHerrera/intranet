@@ -92,6 +92,8 @@ if ($location=='dashboard'){
     include_once 'js/graficavpeje.php';  
 }elseif ($location=='cierrebi') {
     include_once 'js/graficacierrebi.php';  
+}elseif ($location=='carteraejecr') {
+    include_once 'js/graficacreje.php';  
 }     
 
  ?>       

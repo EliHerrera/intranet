@@ -7,7 +7,7 @@
     }
     $location='carteraeje';    
     require_once 'headerbi.php';
-    //////inicio de contenido
+    //inicio de contenido
     //consulta tipo de cambio
     $queryResult=$pdo->query("SELECT * FROM sibware.indicador_tipocambio WHERE Fecha='$hoy'");
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
@@ -34,20 +34,30 @@
             <br><input type="submit" class="button" value="Buscar">
         </div>
     </div>
+</form>    
     <div class="row">    
         <div class="col-xs-2">
-            <a href="carterabiinveje.php" class="button">Inversiones</a>
+            <br><a href="carterabiinveje.php" class="button">Inversiones</a>
         </div>
         <div class="col-xs-2">
-            <a href="#" class="button">Arrendamiento</a>
+            <br><a href="carterabicreje.php" class="button">Creditos</a>
         </div>
         <div class="col-xs-2">
-            <a href="carterabivpeje.php" class="button">Venta a Plazo</a>
+            <br><a href="#" class="button">Arrendamiento</a>
         </div>
+        <div class="col-xs-2">
+            <br><a href="carterabivpeje.php" class="button">Venta a Plazo</a>
+        </div>
+        <form action="ficheroExcel.php" method="post" target="_blank" id="FormularioExportacion">
+        <div class="col-xs-2">
+        <br><a href="#"><img src="img/icons/export_to_excel.png" class="botonExcel" alt="expor to excel" /></a>
+        <input type="hidden" id="datos_a_enviar" name="datos_a_enviar" />
+        </div>
+        </form>
 
     </div>
-</form>
-<table class="table">
+
+<br><table class="table" id="Exportar_a_Excel">
     <tr><th>Ejecutivo</th><th>Saldo</th><th>Empresa</th></tr>
 <?php
     $queryResult=$pdo->query("SELECT

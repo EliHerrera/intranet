@@ -23,13 +23,20 @@
         <div class="col-xs-3">            
            <label for="hoy">Buscar</label> <input type="date" name="hoy" id="hoy" class="form-control" required="true">
         </div>
-        <div class="col-xs-3">    
+</form>        
+        <div class="col-xs-1">    
             <br><input type="submit" value="Buscar" class="button">
         </div>
+        <form action="ficheroExcel.php" method="post" target="_blank" id="FormularioExportacion">
+        <div class="col-xs-2">
+        <br><a href="#"><img src="img/icons/export_to_excel.png" class="botonExcel" alt="expor to excel" /></a>
+        <input type="hidden" id="datos_a_enviar" name="datos_a_enviar" />
+        </div>
+        </form>
     </div>
-</form>
 
-<table class="table">   
+
+<table class="table" id="Exportar_a_Excel">   
     <tr><th>Producto</th><th>Folio</th><th>Estatus</th><th>Cliente</th><th>Tipo Cte</th><th>Saldo</th><th>Moratorios</th><th>Ejectutivo</th><th>Sucursal</th></tr>
     <?php
         $queryResult=$pdo->query("SELECT

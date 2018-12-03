@@ -30,20 +30,27 @@
             <label for="hoy">Buscar</label>
             <input type="date" name="hoy" id="hoy" class="form-control" required="true">
         </div>
-        <div class="col-xs-2">
+        <div class="col-xs-1">
             <br><input type="submit" class="button" value="Buscar">
         </div>
-        <div class="col-xs-2">
+</form>        
+        <div class="col-xs-1">
             <br><a href="carterabivpcte.php?date=<?php echo $hoy; ?>" class="button">Detalle</a>
         </div>
         <div class="col-xs-2">
             <br><input type="button" name="imprimir" value="Imprimir"  onClick="window.print();" class="button" />
         </div>
+        <form action="ficheroExcel.php" method="post" target="_blank" id="FormularioExportacion">
+        <div class="col-xs-1">
+            <br><a href="#"><img src="img/icons/export_to_excel.png" class="botonExcel" alt="expor to excel" /></a>
+        <input type="hidden" id="datos_a_enviar" name="datos_a_enviar" />
+        </div>
+        </form>
         
 
     </div>
-</form>
-<table class="table">
+
+<table class="table" id="Exportar_a_Excel">
     <tr><th>Ejecutivo</th><th>Saldo</th></tr>
     <?php
 $queryResultcatejeVP=$pdo->query("SELECT

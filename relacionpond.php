@@ -13,9 +13,15 @@
         <a href="ponderacion.php" class="button">Regresar</a>
         <input type="button" name="imprimir" value="Imprimir"  onClick="window.print();" class="button" />
     </div>
+    <form action="ficheroExcel.php" method="post" target="_blank" id="FormularioExportacion">
+    <div class="col-xs-2">
+        <a href="#"><img src="img/icons/export_to_excel.png" class="botonExcel" alt="expor to excel" /></a>
+        <input type="hidden" id="datos_a_enviar" name="datos_a_enviar" />
+    </div>
+    </form>
 </div>  
 <h3>Relacion de Tasas Ponderadas del mes de : <?PHP echo date("M-Y", mktime(0, 0, 0, $periodo, 1, $yy)); ?></h3>
-<table class="table">
+<table class="table" id="Exportar_a_Excel">
 <tr><th colspan='7'>CREDICOR MEXICANO UNION DE CREDITO SA DE CV</th></tr>
 <tr><th>Producto</th><th>Tipo</th><th>Capital</th><th>Intereses</th><th>Tasa Pond.</th><th>Mes</th><th>Ejercicio</th></tr>
 <?PHP
