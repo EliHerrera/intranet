@@ -65,31 +65,16 @@
 	B.Email,
 	gMes (B.FNacimiento) AS Mes,
 	DATE_FORMAT(B.FNacimiento, '%d') AS dia,
-	ROUND(
-		sum(
-			(
-				(
-					(
-						A.Importe * (A.TasaTotal / 100) / 365
-					) * A.Plazo
-				) + A.Importe
-			) - (
-				(
-					A.Importe * ((A.TasaRetencion / 100) / 360)
-				) * A.Plazo
-			)
-		),
-		2
-	) as Importe
+	ROUND(SUM(A.SaldoProm)+SUM(A.SaldoInt)-SUM(A.SaldoRet)) as Importe
 FROM
-	2_prestamos A
+	sibware.2_dw_images_in A 
 INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
 INNER JOIN sibware.personal C ON B.IDejecutivo = C.ID
 LEFT JOIN Intranet.mailingcumpleanios D ON D.IDCliente = B.ID
 WHERE
-	A.`status` = 'V'
-AND MONTH (B.FNacimiento) = $mes
+MONTH (B.FNacimiento) = $mes
 AND ISNULL(D.lEnviado)
+AND A.FImage='$hoy'
 GROUP BY
 	B.ID
 ORDER BY
