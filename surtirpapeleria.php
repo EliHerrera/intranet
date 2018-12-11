@@ -20,7 +20,14 @@
         }
     }        
 ?>    
-
+<div class="row">   
+        <form action="ficheroExcel.php" method="post" target="_blank" id="FormularioExportacion">
+        <div class="col-xs-1">
+        <br><a href="#"><img src="img/icons/export_to_excel.png" class="botonExcel" alt="expor to excel" /></a>
+        <input type="hidden" id="datos_a_enviar" name="datos_a_enviar" />
+        </div>
+        </form>
+</div>
 
 <form action="surtirpapeleria.php" method="POST">
 <div class="row">
@@ -32,7 +39,7 @@
   </div>
 </div>    
 <h3>Articulos Pendientes por Entregar</h3><a href='apppapeleria.php' class="button" >Regresar</a><input type="submit" name="surtir" class="button" value="Entregar"> 
-<table class="table">
+<table class="table" id="Exportar_a_Excel">
 <tr><th>Fecha</th><th>Nombre</th><th>Departamento</th><th>Cantidad</th><th>Articulo</th><th>Clave</th><th>Autorizar</th></tr>
 
 <?php
