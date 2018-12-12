@@ -42,12 +42,14 @@ if($row['status']=='P'){
     $status='Aprobado';
 }elseif ($row['status']=='R') {
     $status='Rechazado';
+}elseif ($row['status']=='L') {
+    $status='Listo';
 }else{
     $status='Sin Gestionar';
 }
     echo "<tr><td>".$row['cliente']."</td><td>".$row['folio']."</td><td>".$emp."</td><td>".$row['ejecutivo']."</td><td>".$row['fecha']."</td><td>".$status."</td><td>";
-    if ($row['status']=='P') {
-        echo "<a href='#'>Gestionar</a>";
+    if ($row['status']=='P'||$row['status']=='PR') {
+        echo "<a href='viewgestionarpres.php?idac=".$row['idac']."&emp=".$row['emp']."'>Gestionar</a>";
     }    
 }   echo "</td></tr>";
 ?>
