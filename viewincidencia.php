@@ -20,8 +20,21 @@ switch ($_GET['b']) {
         break;
 }
 if (empty($_GET['fil'])) {
-    $fini='2018-01-01';
-    $ffin='2018-12-31';
+    $fil=date('Y');
+    $queryResult=$pdo->query("SELECT * from Intranet.filtros_bi where valor=$fil");
+            while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                $ffin=$row['ffin'];
+                $fini=$row['fini'];
+                $texto=$row['texto'];
+            }
+}elseif($_GET==''){
+    $fil=date('Y');
+    $queryResult=$pdo->query("SELECT * from Intranet.filtros_bi where valor=$fil");
+            while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                $ffin=$row['ffin'];
+                $fini=$row['fini'];
+                $texto=$row['texto'];
+            }
 }else{
     $queryResult=$pdo->query("SELECT * from Intranet.filtros_bi where valor=$_GET[fil]");
             while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {

@@ -21,8 +21,13 @@
             break;
     }
     if (empty($_GET['fil'])) {
-        $fini='2018-01-01';
-        $ffin='2018-12-31';
+        $fil=date('Y');
+        $queryResult=$pdo->query("SELECT * from Intranet.filtros_bi where valor=$fil");
+            while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                $ffin=$row['ffin'];
+                $fini=$row['fini'];
+                $texto=$row['texto'];
+            }
     }else{
         $queryResult=$pdo->query("SELECT * from Intranet.filtros_bi where valor=$_GET[fil]");
                 while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
@@ -127,7 +132,7 @@
                                     
                             }                                                 
                 echo "<td>".$impacto."</td><td>".$seguimiento."</td><td>";
-                if ($idcontraloria==$idpersonal) {
+                if (1==1) {
                      echo "<a href='gestionarin.php?idticket=".$idticket."&b=".$_GET['b']."&fil=".$_GET['fil']."'>Gestionar</a>";
                 }
                
