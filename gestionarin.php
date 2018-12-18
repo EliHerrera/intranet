@@ -3,6 +3,7 @@
     require 'menubi.php';
     $hoy=date('Y-m-d');
     if (!empty($_POST['guardar'])) {
+        $fil=$_POST['fil'];
         $queryInsert=$pdo->prepare("INSERT INTO Intranet.gestion_riesgos (ID_Ticket,fecha,impacto,seguimiento) VALUES($_POST[idticket],'$hoy','$_POST[impacto]','$_POST[seguimiento]')");
         $queryInsert->execute();
         echo "<div class='alert alert-success'>";
@@ -10,6 +11,7 @@
         echo "</div>";
     }
     if (!empty($_POST['actualizar'])) {
+        $fil=$_POST['fil'];
         $queryUpdate=$pdo->prepare("UPDATE Intranet.gestion_riesgos SET impacto='$_POST[impacto]', seguimiento='$_POST[seguimiento]', fecha='$hoy' WHERE ID_Ticket=$_POST[idticket] ");
         $queryUpdate->execute();
         echo "<div class='alert alert-success'>";
@@ -18,8 +20,10 @@
     }
     if (!empty($_GET)) {
         $id_ticket=$_GET['idticket'];
+        $fil=$_GET['fil'];
     }elseif(!empty($_POST)){
         $id_ticket=$_POST['idticket'];
+        $fil=$_POST['fil'];
 
     }
         $queryResult=$pdo->query("SELECT
@@ -96,6 +100,7 @@
 </div>
 <form action="gestionarin.php" method="post">
     <div class="row">
+        <input type="text" name="fil" id="fil" required="true" hidden="true" value="<?php echo $fil ?>">                        
         <input type="text" name="idticket" id="idticket" value="<?php echo $idticket ?>" required="true" hidden="true">
         <div class="col-xs-6">
             <label for="impacto">Impacto</label><textarea name="impacto" id="impacto" cols="30" rows="5" placeholder="Ingresar informacion aqui" class="form-control" required="true"></textarea>
@@ -126,7 +131,7 @@
     
     ?>
         <div class="col-xs-2">   
-            <a href="incidenciasg.php?b=<?php echo $_GET['b']; ?>&fil=<?php echo $_GET['fil']; ?>" class="button">Regresar</a>
+            <a href="incidenciasg.php?b=<?php echo $_GET['b']; ?>&fil=<?php echo $fil; ?>" class="button">Regresar</a>
         </div>
     </div>
 </form>
