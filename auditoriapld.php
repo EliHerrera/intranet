@@ -54,7 +54,7 @@
     </div>
 
 <table class="table" id="Exportar_a_Excel">
-<tr><th>No. Socio</th><th>Socio</th><th>Municipo</th><th>Estado</th><th>Edad/Tiempo Costitucion</th><th>Grado</th><th>Inversion</th><th>Credito</th><th>AP</th><th>EF</th><th>CH</th><th>TR</th><th>Nacionalidad</th><th>Rel.</th><th>Inu.</th><th>Inv</th><th>CR</th><th>AP</th><th>PEPS</th><th>Actividad o Giro</th></tr>
+<tr><th>No. Socio</th><th>Socio</th><th>Municipio</th><th>Estado</th><th>Edad/Tiempo Constitucion</th><th>Grado</th><th>Inversion</th><th>Credito</th><th>AP</th><th>EF</th><th>CH</th><th>TR</th><th>Nacionalidad</th><th>Rel.</th><th>Inu.</th><th>Inv</th><th>CR</th><th>AP</th><th>PEPS</th><th>Actividad o Giro</th></tr>
 <?php
     $queryResult=$pdo->query("SELECT
     B.ID as IDCte,
