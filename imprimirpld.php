@@ -56,14 +56,16 @@
 $id_personal=$_GET['idemp'];
 $periodo=$_GET['periodo'];
 $correctas=0;
-$queryResult=$pdo->query("SELECT CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Empleado, C.fecha_ap,  A.IDRespuesta,A.IDQst,A.codigo FROM Intranet.PLD_Resultados A INNER JOIN sibware.personal B ON A.IDPersonal=B.ID INNER JOIN Intranet.RelQst C ON A.IDPersonal=C.IDPersonal WHERE A.IDpersonal=$id_personal and A.periodo=$periodo");
-//var_dump($queryResult);
+$queryResult=$pdo->query("SELECT CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Empleado, C.fecha_ap,  A.IDRespuesta,A.IDQst,A.codigo FROM Intranet.PLD_Resultados A INNER JOIN sibware.personal B ON A.IDPersonal=B.ID INNER JOIN Intranet.RelQst C ON (A.IDPersonal = C.IDPersonal and A.IDQst=C.IDQst) WHERE A.IDpersonal=$id_personal and A.periodo=$periodo");
+#var_dump($queryResult);
 while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
     $emp=$row['Empleado'];
     $fecha=$row['fecha_ap'];
     $idqst=$row['IDQst'];
     $codigo=$row['codigo'];
     $queryResult2=$pdo->query("SELECT * FROM Intranet.PLD_Answer WHERE ID=$row[IDRespuesta] ");
+    #var_dump($queryResult2);
+    #echo "<br>";
     while($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
         if($row['lAcertivo']=='S'){
             $correctas++;
