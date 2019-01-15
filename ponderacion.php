@@ -1,6 +1,6 @@
 <?php
     require_once 'header.php';
-    $yy=date('Y');
+    #$yy=date('Y');
     if (!empty($_GET)) {
             $p=$_GET['p'];
             $y=$_GET['y'];
@@ -15,6 +15,7 @@
             echo "</div>";
     }
     if (!empty($_POST['periodo'])) {
+        $yy=$_POST['yy'];
         $queryResult=$pdo->query("SELECT
         *
     FROM
@@ -327,6 +328,18 @@
             <option value="11">Noviembre</option>
             <option value="12">Diciembre</option>
         </select>
+    </div>
+    <div class="col-xs-3">
+        <label for="yy">Año</label>
+        <select name="yy" id="yy" class="form-control" required="true">
+            <option value="">Seleciones año...</option>
+            <?php
+                $queryResult=$pdo->query("SELECT * FROM Intranet.yys");                
+                while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                    echo "<option value='".$row['yy']."'>".$row['yy']."</option>";
+                }
+            ?>
+        </select> 
     </div>
     <div class="col-xs-3">
         <br><input type="submit" value="Procesar" class="button">
