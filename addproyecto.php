@@ -48,7 +48,7 @@
             <label for="desc">Descripcion del Proyecto</label><textarea name="desc" id="desc" cols="30" rows="10" class="form-control" required="true" placeholder="Describa el proyecto aqui"></textarea>
         </div>
         <div class="col-xs-3">
-            <br><input type="submit" value="Guardar" class="button" id="guardar" name="guardar">
+            <br><input type="submit" value="Guardar" class="button" id="guardar" name="guardar"><a href="proyectos.php" class="button">Regresar</a>
         </div>
     </div>
 </form>
