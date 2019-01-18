@@ -186,17 +186,17 @@
          <label for="emp">Empresa</label><select name="emp" id="emp" class="form-control" required="true" onchange="this.form.submit();return false;">
              <option value="">...</option>
              <?PHP
-                if ($_POST['emp']==2) {
-                    echo "<option selected='selected' value='2'>CMU</option>";
-                    echo "<option value='3'>CMA</option>";
-                }elseif ($_POST['emp']==3) {
-                    echo "<option selected='selected' value='3'>CMA</option>";
-                    echo "<option value='2'>CMU</option>";
-                }else{
-                    echo "<option value='2'>CMU</option>";
-                    echo "<option value='3'>CMA</option>";
+                $queryResult=$pdo->query("SELECT * FROM sibware.empresas WHERE status='S'");
+                while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                    if ($_POST['emp']==$row['ID']) {
+                        echo "<option selected='selected' value='".$row['ID']."'>".$row['Nombre']."</option>";
+                        
+                    }else{
+                        echo "<option value='".$row['ID']."'>".$row['Nombre']."</option>";
+                        
+                    }
                 }
-             ?>
+            ?>
              
              
          </select>
