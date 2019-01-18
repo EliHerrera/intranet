@@ -76,7 +76,7 @@
             $areaimpacto=$row['Nombre'];
             $dias1=$interval1->format('%d');
             $dias2=$interval2->format('%d');
-            if($dias1==0){
+            if($dias1<=0){
                 $diasp=0;
             }else{
                 $diasp=($dias2/$dias1)*100;
@@ -93,10 +93,11 @@
             if ($idstatus==5) {
                 $idalert=1;
             }
-            if ($idstatus==3) {
+            if ($idstatus==3 || $dias2<=0) {
                 $idalert=3;
             }elseif($idstatus==5){
                 $idalert=4;
+               
             }    
             $queryResult1=$pdo->query("SELECT CONCAT(
                 B.Nombre,
@@ -113,7 +114,14 @@
             while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
                 $class_alert=$row['alertas'];
             } 
-            echo "<tr class='".$class_alert."'><td>".$descpt."</td><td>".$asignacion."</td><td>".$tester."</td><td>".$ffinalpt."</td><td><a href='updatetask.php?idtask=".$idtask."'>".$statust."</a></td><td>".$interval2->format('%R%a días')."</td></tr>";
+            echo "<tr class='".$class_alert."'><td>".$descpt."</td><td>".$asignacion."</td><td>".$tester."</td><td>".$ffinalpt."</td><td><a href='updatetask.php?idtask=".$idtask."'>".$statust."</a></td>";
+            if($idstatus==5){
+               echo "<td>0 dias</td>";
+            }else{
+                echo "<td>".$interval2->format('%R%a días')."</td>"; 
+            }
+            
+            echo "</tr>";
         }
         
     ?>
