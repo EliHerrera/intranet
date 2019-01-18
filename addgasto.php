@@ -47,9 +47,9 @@
             $destino=$_POST['destino'];
         }
         $queryResult = $pdo->query("INSERT INTO Intranet.GastosDetalle (Num,concepto,IDCliente,TipoEmp,motivo,subtotal,IVA,total,folio,IDPersonal,fecha,comensales,origen,destino) VALUES ('$_POST[folioinv]', $_POST[concepto], $_POST[idcte],$_POST[emp],' $_POST[motivo]',$subtot,$iva,$total,'$_SESSION[folio]',$idpersonal,'$_POST[fecha]',$comensales,'$origen','$destino')");    
-        #var_dump($queryResult);
-        // $gtotal=$gtotal+$total;
-        // $_SESSION['gtotal']=$gtotal;
+        var_dump($queryResult);
+        $gtotal=$gtotal+$total;
+        $_SESSION['gtotal']=$gtotal;
         echo "<div class='alert alert-info'>";
         echo "    <strong>Exito!</strong> Concepto Agregado con Exito!";
         echo "</div>";
@@ -119,7 +119,7 @@
      <div class="col-xs-4">
          <label for="idcte">Socio/Prospecto</label><select name="idcte" id="idcte" class="form-control" required="true" onchange="this.form.submit();return false;" >
              <option value="">Seleccione uno...</option>
-             <option value="0">Otro</option>
+             
              <?PHP 
              if ($_POST['emp']==2) {
                 $queryResult = $pdo->query("SELECT A.IDCte,CONCAT(B.Nombre,' ',B.Apellido1,' ',B.Apellido2) as Nombre FROM sibware.pipeline_prospec A INNER JOIN sibware.2_cliente B ON A.IDCte=B.ID  WHERE A.IDEjecutivo=$idpersonal and A.Emp=2 GROUP BY A.IDCte ORDER BY A.Nombre ASC ") ;
@@ -143,6 +143,12 @@
                     
                 }
              }
+             if ($_POST['idcte']==0) {
+                echo "<option selected='selected' value='0'>Otro</option>";
+             }else{
+                echo "<option  value='0'>Otro</option>"; 
+             }
+             
              ?>
          </select>
      </div>
@@ -216,7 +222,13 @@
                 $fila++;
                 echo "<tr><td>".$fila."</td><td>".$row['Num']."</td><td>".$row['concepto']."</td><td>".$row['Cte']."</td><td>".$row['TipoEmp']."</td><td>".$row['Motivo']."</td><td>".$row['Total']."</td><td><a href='addgasto.php?idconc=".$row['ID']."'><img src='img/icons/delete.png'</a></td></tr>";
                 $gtotal=$gtotal+$row['Total'];
-            }    
+            } 
+            $queryResult = $pdo->query("SELECT A.ID, A.Num, C.concepto, 'Otro' as Cte, IF(A.TipoEmp=2,'CMU',IF(A.TipoEmp=3,'CMA','OTRA')) as TipoEmp, A.Motivo, A.Total  FROM Intranet.GastosDetalle A INNER JOIN Intranet.concepto_gasto C ON A.concepto=C.ID WHERE A.folio=$_SESSION[folio] AND A.IDPersonal=$idpersonal AND A.IDCliente=0");
+            while($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                $fila++;
+                echo "<tr><td>".$fila."</td><td>".$row['Num']."</td><td>".$row['concepto']."</td><td>".$row['Cte']."</td><td>".$row['TipoEmp']."</td><td>".$row['Motivo']."</td><td>".$row['Total']."</td><td><a href='addgasto.php?idconc=".$row['ID']."'><img src='img/icons/delete.png'</a></td></tr>";
+                $gtotal=$gtotal+$row['Total'];
+            }   
         ?>
  </table>
  <form action="addgasto.php" method="post">
