@@ -7,7 +7,7 @@
     #$periodo=10;
     $reserva=0.00;
     $yy=date('Y');
-    // $yy="2017";
+    $yy="2018";
     $hoy=date('Y-m-d h:m');
     if (!empty($_POST['usc'])) {
         $id_ejecutivo=$_POST['usc'];# code...
@@ -43,7 +43,7 @@
         echo "<div class='alert alert-success'>";
         echo "    <strong>Exito!</strong> Solicitud Fue enviada a compras con Exito!";
         echo "</div>";
-        header('Location: relcomisiones.php');
+        #header('Location: relcomisiones.php');
     }
     if (!empty($id_ejecutivo)) {
                 
