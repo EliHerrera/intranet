@@ -188,7 +188,7 @@
             <label for="col">Periodo</label><select name="col" id="col" class="form-control"  onchange="this.form.submit();return false;">
                 <option value="">Selecione periodo...</option>
                 <?php
-                    $queryResult=$pdo->query("SELECT * FROM Intranet.filtros_bi WHERE yy=$yy and periodo>0");
+                    $queryResult=$pdo->query("SELECT * FROM Intranet.filtros_bi WHERE yy<=$yy and periodo>0");
                     
                     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
                         echo "<option value='".$row['valor']."'>".$row['texto']."</option>";
