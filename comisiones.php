@@ -526,7 +526,7 @@
                     }		
                   
                 }
-                if ($periodo==12) {
+                if ($periodo==11) {
                     $queryResult2 = $pdo->query("SELECT SaldoIni  FROM sibware.comisiones where Periodo=7 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='CR'");
                     $result = $conn->query($sql);
                     if ($result->num_rows > 0) {
