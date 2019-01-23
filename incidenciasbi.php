@@ -56,7 +56,7 @@
                 WHERE
                     A.lActivo = 'S' AND
                     A.periodo>0 AND
-                    A.yy=$yy");
+                    A.yy<=$yy");
                     var_dump($queryResultfil);
                     while ($row=$queryResultfil->fetch(PDO::FETCH_ASSOC)) {
                         echo "<option value='".$row['valor']."'>".$row['texto']."</option>";

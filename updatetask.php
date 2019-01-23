@@ -12,6 +12,8 @@
         $porcentaje=($row_count_terminados/$row_count_totales)*100;
         $queryUpdate=$pdo->prepare("UPDATE Intranet.scr_project SET porcentaje=$porcentaje WHERE ID=$_POST[idpj]");
         $queryUpdate->execute();
+        $queryUpdate=$pdo->prepare("INSERT INTO Intranet.scr_score(ID_project,ID_task,ID_asignacion,ID_tester,ID_status,fecha) VALUES ($_POST[idpj],$_POST[idtask],$_POST[asignacion],$_POST[tester],$_POST[status],'$hoy')");
+        $queryUpdate->execute();
         if(($_POST['status']<>6 && $_POST['status']<>5) || $porcentaje==100){
             $queryUpdate=$pdo->prepare("UPDATE Intranet.scr_project SET status=$_POST[status] WHERE ID=$_POST[idpj]");
             $queryUpdate->execute();
