@@ -2,17 +2,40 @@
     require_once 'header.php';
     //////inicio de contenido
     $id_ejecutivo=null;
-    $periodo=date("n", mktime(0, 0, 0, date('m')-1, date('d'), date('Y'))); //periodo a calcular
-    
-    #$periodo=10;
-    $reserva=0.00;
+    $mes_actual=date('n' , mktime(0, 0, 0, date("m"), date("d"),   date("Y")));
+    $periodo=date("n", mktime(0, 0, 0, date('m')-1, date('d'), date('Y'))); //periodo a calcular$reserva=0.00;
     $yy=date('Y');
-    $yy="2018";
+    
     $hoy=date('Y-m-d h:m');
+    if($periodo==12 && $mes_actual==1){
+        $yy=date("Y", mktime(0, 0, 0, date('m'), date('d'), date('Y')-1));
+    }
+    $yy="2019"; //editar esta linea para forzar a un año//
+    $periodo=1;//editar esta linea paraforzar leer un periodo//
+    $queryResult=$pdo->query("SELECT * FROM Intranet.comisiones_parametros WHERE yy=$yy and mes=$periodo");
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $bono1=$row['bono1'];
+        $bono2=$row['bono2'];
+        $bono3=$row['bono4'];
+        $pbasecre=$row['p1'];
+        $pbasevp=$row['p2'];
+        $pbaseap=$row['p3'];
+        $pbasecte1=$row['bctep1'];
+        $pbasecte2=$row['bctep2'];
+        $pbasecte3=$row['bctep3'];
+        $pbasecte4=$row['bctep4'];
+        $pi28d=$row['pi28d'];
+        $pi91d=$row['pi91d'];
+        $pi180d=$row['pi180d'];
+        $pi360d=$row['pi360d'];
+        $metacr=$row['meta1'];
+        $metaap=$row['meta2'];
+        $metavp=$row['meta3'];
+        $imor=$row['imor'];
+    }
     if (!empty($_POST['usc'])) {
         $id_ejecutivo=$_POST['usc'];# code...
     }elseif (!empty($_GET['idcomi'])) {
-        
         $queryResult = $pdo->query("SELECT * from Intranet.comisiones WHERE id_comision=$_GET[idcomi]");
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             $id_ejecutivo=$row['id_ejecutivo'];
@@ -43,24 +66,24 @@
         echo "<div class='alert alert-success'>";
         echo "    <strong>Exito!</strong> Solicitud Fue enviada a compras con Exito!";
         echo "</div>";
-        #header('Location: relcomisiones.php');
+        header('Location: relcomisiones.php');
     }
     if (!empty($id_ejecutivo)) {
                 
-                $queryResult = $pdo->query("select * from sibware.personal_comisionesne A where A.IDPersonal='$id_ejecutivo'");
-                while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-                    $meta_lc=$row['MetaLC'];
-                    $plc=$row['PMetaLC'];
-                    $meta_ap=$row['MetaAP'];
-                    $pap=$row['PMetaAP'];
-                    $meta_vp=$row['MetaVP'];
-                    $pvp=$row['PMetaVP'];
-                    $meta_in=$row['MetaIN'];
-                    $pin=$row['PMetaIN'];
-                    $bono1=$row['Bono1'];		
-                    $bono2=$row['Bono2'];
-                    $factorPCv=$row['icv'];
-                }
+                // $queryResult = $pdo->query("select * from sibware.personal_comisionesne A where A.IDPersonal='$id_ejecutivo'");
+                // while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                //     $meta_lc=$row['MetaLC'];
+                //     $plc=$row['PMetaLC'];
+                //     $meta_ap=$row['MetaAP'];
+                //     $pap=$row['PMetaAP'];
+                //     $meta_vp=$row['MetaVP'];
+                //     $pvp=$row['PMetaVP'];
+                //     $meta_in=$row['MetaIN'];
+                //     $pin=$row['PMetaIN'];
+                //     $bono1=$row['Bono1'];		
+                //     $bono2=$row['Bono2'];
+                //     $factorPCv=$row['icv'];
+                // }
                     $ajustei=.15;
                     $ajustelc=.45;
                     $ajusteap=.37;                    
@@ -83,11 +106,11 @@
                     $queryResult = $pdo->query("SELECT
                         A.SaldoIni,
                         A.SaldoFin,
-                        SUM(A.SaldoFin - A.SaldoIni) AS Diferencia,
-                        B.MetaLC
+                        SUM(A.SaldoFin - A.SaldoIni) AS Diferencia
+                        
                     FROM
                         sibware.comisiones A
-                    INNER JOIN sibware.personal_comisionesne B ON A.IDEjecutivo = B.IDPersonal
+                    
                     WHERE
                         A.Periodo = $periodo
                     AND A.IDEjecutivo = $id_ejecutivo
@@ -100,28 +123,21 @@
                                             $saldoiniLC=$row['SaldoIni'];
                                             $SaldoFinLC=$row['SaldoFin'];
                                             $diferenciaLC=$row['Diferencia'];
-                                            $metaLC=$row['MetaLC'];
+                                            
 
                                         }
                         
-                    if ($diferenciaLC>=$metaLC) {
-                            $ptoLC=3;
-                            $plc=$plc;
-                        }elseif (($diferenciaLC<$metaLC) AND($diferenciaLC>0)) {
-                            $ptoLC=2;
-                            $plc=$plc-$ajustelc;
-                        }elseif ($diferenciaLC<=0) {
-                            $ptoLC=0;
-                            $plc=0;
-                        }     
+                    if ($diferenciaLC>=$metacr) {
+                            $bonocr=$bono1;
+                        }   
                         $queryResult = $pdo->query("SELECT
                         A.SaldoIni,
                         A.SaldoFin,
-                        SUM(A.SaldoFin - A.SaldoIni) AS Diferencia,
-                        B.MetaVP
+                        SUM(A.SaldoFin - A.SaldoIni) AS Diferencia
+                        
                     FROM
                         sibware.comisiones A
-                    INNER JOIN sibware.personal_comisionesne B ON A.IDEjecutivo = B.IDPersonal
+                    
                     WHERE
                         A.Periodo = $periodo
                     AND A.IDEjecutivo = $id_ejecutivo
@@ -134,28 +150,21 @@
                                             $saldoiniVP=$row['SaldoIni'];
                                             $SaldoFinVP=$row['SaldoFin'];
                                             $diferenciaVP=$row['Diferencia'];
-                                            $metaVP=$row['MetaVP'];
+                                            
 
                                         }
                         
-                    if ($diferenciaVP>=$metaVP) {
-                            $ptoVP=3;
-                            $pvp=$pvp;
-                        }elseif (($diferenciaVP<$metaVP) AND($diferenciaVP>0)) {
-                            $ptoVP=2;
-                            $pvp=$pvp-$ajustevp;
-                        }elseif ($diferenciaVP<=0) {
-                            $ptoVP=0;
-                            $pvp=0;
-                        }      
+                    if ($diferenciaVP>=$metavp) {
+                            $bonovp=$bono1;
+                        }
                         $queryResult = $pdo->query("SELECT
                         SUM(A.SaldoIni) as SaldoIni,
-                        SUM(A.SaldoFin) as SaldoFin,
-                        B.MetaAP
+                        SUM(A.SaldoFin) as SaldoFin
+                        
                         
                     FROM
                         sibware.comisiones A
-                    INNER JOIN sibware.personal_comisionesne B ON A.IDEjecutivo = B.IDPersonal
+                    
                     WHERE
                         A.Periodo = $periodo
                     AND A.IDEjecutivo = $id_ejecutivo
@@ -168,19 +177,12 @@
                                             $saldoiniAP=$row['SaldoIni'];
                                             $SaldoFinAP=$row['SaldoFin'];
                                             $diferenciaAP=$row['SaldoFin']-$row['SaldoIni'];
-                                            $metaAP=$row['MetaAP'];
+                                            
 
                                         }
                         
                     if ($diferenciaAP>=$metaAP) {
-                            $ptoAP=3;
-                            $pap=$pap;
-                        }elseif (($diferenciaAP<$metaAP) AND($diferenciaAP>0)) {
-                            $ptoAP=2;
-                            $pap=$pap-$ajusteap;
-                        }elseif ($diferenciaAP<=0) {
-                            $ptoAP=0;
-                            $pap=0;
+                            $bonoap=$bono1;
                         }
                         $queryResult = $pdo->query("SELECT
                         SUM(A.SaldoIni) as SaldoIni,
@@ -210,83 +212,14 @@
                     if ($diferenciaIN>=$metaIN) {
                             $ptoIN=3;
                             $pin=$pin;
-                        }elseif (($diferenciaIN<$metaIN) AND($diferenciaIN>0)) {
-                            $ptoIN=2;
-                            $pin=$pin-$ajustei;
-                        }elseif ($diferenciaIN<=0) {
-                            $ptoIN=0;
-                            $pin=0;
-                        } 
-                              
-                    if (($ptoLC==3 AND $ptoAP==3 AND $ptoVP==3)OR($ptoLC==2 AND $ptoAP==3 AND $ptoVP==3)) {
-                            $porc=0.80;
-                        } 
-                    elseif (($ptoLC==2 AND $ptoAP==3 AND $ptoVP==2)OR($ptoLC==3 AND $ptoAP==2 AND $ptoVP==3)OR($ptoLC==3 AND $ptoAP==2 AND $ptoVP==2)) {
-                            $porc=0.70;
-                        }          
-                    elseif (($ptoLC==2 AND $ptoAP==2 AND $ptoVP==2)OR($ptoLC==0 AND $ptoAP==3 AND $ptoVP==3)OR($ptoLC==0 AND $ptoAP==3 AND $ptoVP==2)) {
-                            $porc=0.60;
-                        }
-                    elseif (($ptoLC==0 AND $ptoAP==2 AND $ptoVP==3)OR($ptoLC==3 AND $ptoAP==2 AND $ptoVP==0)OR($ptoLC==3 AND $ptoAP==0 AND $ptoVP==2) OR ($ptoLC==2 AND $ptoAP==3 AND $ptoVP==0) OR ($ptoLC==2 AND $ptoAP==2 AND $ptoVP==0)) {
-                            $porc=0.50;
-                        }   
-                    elseif (($ptoLC==0 AND $ptoAP==0 AND $ptoVP==3)OR($ptoLC==0 AND $ptoAP==2 AND $ptoVP==2)) {
-                            $porc=0.40;
-                        }  
-                    elseif (($ptoLC==0 AND $ptoAP==3 AND $ptoVP==0)OR($ptoLC==0 AND $ptoAP==2 AND $ptoVP==0)) {
-                            $porc=0.30;
-                        }   
-                    elseif ($ptoLC==0 AND $ptoAP==0 AND $ptoVP==2) {
-                            $porc=0.20;
-                        }  
-                    elseif ($ptoLC==2 AND $ptoAP==0 AND $ptoVP==0) {
-                            $porc=0.10;
-                        }  
-                    elseif ($ptoLC==0 AND $ptoAP==0 AND $ptoVP==0) {
-                            $porc=0;
-                        } 
-                    elseif ($ptoLC==3 AND $ptoAP==0 AND $ptoVP==0) {
-                            $porc=.40;
-                        }else{
-                            echo "<div class='alert alert-warning'>";
-                            echo "    <strong>Aviso! </strong> El escenario de % de comision de este ejecutivo no esta configurado o no existe!";
-                            echo "</div>";
-                        }	 
-                    if ($ptoIN==3) {
-                            $porcIN=.80;
-                        }elseif ($ptoIN==2) {
-                            $porcIN=.40;
-                        }     
-                    if ($porc==0) {
-                                                # code...
-                        $porcomi=0;
-                    }    
-                    else{                                                   
-                    $porcomi=($porc/100);
-                    }
-                    if ($porcIN==0) {
-                                                # code...
-                        $porcomIN=0;
-                    }    
-                    else{                                                   
-                    $porcomIN=($porcIN/100);
-                    $queryResult = $pdo->query("SELECT
-                        A.lPatrimonial
-                    FROM
-                        sibware.personal A
-                    WHERE
-                        A.ID = $id_ejecutivo");
-                        
-                        
-                    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-     				 	$patrimonial=$row['lPatrimonial'];
-     				 }
+                        }    
+                    
      	
     }
 
             #### fin de calculos y dias
         
-    }
+    
     
     if (!empty($_POST['aprobar'])) {
         $_POST['bon']= str_replace(',','',$_POST['bon']);
@@ -387,272 +320,78 @@
     </div>
 </div>
 
-
+<h4>Relacion de bonos por Saldos de Cartera</h4>
 <table class="table">
-    <tr><th>Saldo Inicial</th><th>Saldos Final</th><th>Diferencia</th><th>Prod.</th><th>Meta</th><th>%</th><td>Comision</th></tr>
-    <tr><td><?php echo number_format($saldoiniLC,2) ;?></td><td><?php echo  number_format($SaldoFinLC,2) ;?></td><td><?php echo number_format($diferenciaLC,2); ?></td><td>CR</td><td><?php echo number_format($metaLC,2) ?></td><td><?php echo $plc ?></td><td><?php $comisionLC=($plc/100)*$diferenciaLC; if ($comisionLC<0) {$comisionLC=0;} echo number_format($comisionLC,2) ?></td></tr>	
-	<tr><td><?php echo number_format($saldoiniAP,2) ?></td><td><?php echo  number_format($SaldoFinAP,2) ?></td><td><?php echo number_format($diferenciaAP,2) ?></td><td>AP</td><td><?php echo number_format($metaAP,2) ?></td><td><?php echo $pap ?></td><td><?php $comisionAP=($pap/100)*$diferenciaAP; if ($comisionAP<0) {$comisionAP=0;} echo number_format($comisionAP,2) ?></td></tr>
-	<tr><td><?php echo number_format($saldoiniVP,2) ?></td><td><?php echo  number_format($SaldoFinVP,2) ?></td><td><?php echo number_format($diferenciaVP,2) ?></td><td>VP</td><td><?php echo number_format($metaVP,2) ?></td><td><?php echo $pvp ?></td><td><?php $comisionVP=($pvp/100)*$diferenciaVP; if ($comisionVP<0) {$comisionVP=0;} echo number_format($comisionVP,2) ?></td></tr>
-	<tr><td><?php echo number_format($saldoiniIN,2) ?></td><td><?php echo  number_format($SaldoFinIN,2) ?></td><td><?php echo number_format($diferenciaIN,2) ?></td><td>IN</td><td><?php echo number_format($metaIN,2) ?></td><td><?php echo $pin ?></td><td><?php $comisionIN=($pin/100)*$diferenciaIN; if ($comisionIN<0) {$comisionIN=0;} echo number_format($comisionIN,2) ?></td></tr>
-	<?php $totaldecomisiones=$comisionAP+$comisionIN+$comisionLC+$comisionVP; ?>
-	<tr><th colspan="6">Total de Comisiones</th><th><?php echo number_format($totaldecomisiones,2); ?></th></tr>	
-    <?php
-        if(!empty($_POST['usc'])){
-          $bonosemnopatfnd=0;
-          $bonosempat=0;
-          $totalbonoinv=0;
-          $bonosemnopat=0; 
-            if($patrimonial=='S'){
-                $queryResult = $pdo->query("SELECT CONCAT(
-                                B.Nombre,
-                                ' ',
-                                B.Apellido1,
-                                ' ',
-                                B.Apellido2
-                            ) AS Socio,
-                            SUM(A.Importe) AS Importe,
-                            A.Plazo
+    <tr><th>Saldo Inicial</th><th>Saldos Final</th><th>Diferencia</th><th>Prod.</th><th>Meta</th><th>Bono Cartera</th><th>Bono IMOR</th><th>Bono Seguros</th></tr>
+    <tr><td><?php echo number_format($saldoiniLC,2) ;?></td><td><?php echo  number_format($SaldoFinLC,2) ;?></td><td><?php echo number_format($diferenciaLC,2); ?></td><td>CR</td><td><?php echo number_format($metacr,2) ?></td><td><?php  echo number_format($bonocr,2)?></td><td>0</td><td>0</td></tr>	
+	<tr><td><?php echo number_format($saldoiniAP,2) ?></td><td><?php echo  number_format($SaldoFinAP,2) ?></td><td><?php echo number_format($diferenciaAP,2) ?></td><td>AP</td><td><?php echo number_format($metaap,2) ?></td><td><?php  echo number_format($bonoap,2)?></td><td>0</td><td>0</td></tr>
+	<tr><td><?php echo number_format($saldoiniVP,2) ?></td><td><?php echo  number_format($SaldoFinVP,2) ?></td><td><?php echo number_format($diferenciaVP,2) ?></td><td>VP</td><td><?php echo number_format($metavp,2) ?></td><td><?php  echo number_format($bonovp,2)?></td><td>0</td><td>0</td></tr>
+	
+	<?php $totaldecomisiones=$bonocr+$bonoap+$bonovp; ?>
+	
+
+</table> 
+<h4>Relacion de Colocacion por Producto</h4>
+<table class="table">
+<tr><th>Cliente</th><th>Monto</th><th>Producto</th><th>% Cte</th><th>Comision</th></tr>
+            <?php
+                if (!empty($id_ejecutivo)) {
+                    $queryResult=$pdo->query("SELECT
+                    CONCAT(
+                        B.Nombre,
+                        ' ',
+                        B.Apellido1,
+                        ' ',
+                        B.Apellido2
+                    ) AS Cliente,
+                    A.Autorizado,
+                    A.FInicio,
+                    B.ID as IDCte,
+                    C.tipo
                         FROM
-                            2_prestamos A
-                        INNER JOIN 2_cliente B ON A.IDCliente = B.ID
+                            sibware.2_contratos A
+                        INNER JOIN sibware.2_cliente B ON A.IDCliente = B.ID
+                        INNER JOIN sibware.2_entorno_tipocredito C ON A.IDTipoCredito=C.ID
                         WHERE
-                            (
-                                A.Finicio BETWEEN '$fecha_inist'
-                                AND '$fecha_finst'
-                            )
-                        AND (
-                            A.TipoInstruccion = 'D'
-                            OR A.TipoInstruccion = 'I'
-                        )
-                        AND (
-                            B.FCliente BETWEEN '$fecha_inist'
-                            AND '$fecha_finst'
-                        )
-                        
+                            A.IDTipoCredito<>5
                         AND B.IDEjecutivo = $id_ejecutivo
-                        And A.plazo=91
-                        GROUP BY
-                            A.IDCliente");
+                        AND FInicio BETWEEN '$fecha_inist'
+                        AND '$fecha_finst'");  
+                    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+                        $idcte=$row['IDCte'];
+                        $cte=$row['Cliente'];
+                        $autorizado=$row['Autorizado']; 
+                        $finicio=$row['FInicio'];
+                        $tipopro=$row['tipo'];
+                        $seismesesago = strtotime ( '-6 month' , strtotime ( $finicio ) ) ;
+                        $seismesesago = date ( 'Y-m-d' , $seismesesago );
+                        $queryResult2=$pdo->query("SELECT * FROM sibware.2_cliente A WHERE A.ID=$idcte AND A.FCliente BETWEEN '$fecha_inist' AND '$fecha_finst'");
+                        $row_count = $queryResult2->rowCount();
+                        $queryResult2=$pdo->query("SELECT * FROM sibware.2_contratos WHERE IDCliente=$idcte AND FInicio>='$seismesesago'");
+                        $row_count2 = $queryResult2->rowCount();
+                        $queryResult2=$pdo->query("SELECT * FROM sibware.2_ap_contrato WHERE IDCliente=$idcte AND status='A'");
+                        $row_count3 = $queryResult2->rowCount();
                         
-                        ###cclaculo de bonos semestrales    
-                        if ($periodo==2) {
-                            $queryResult2 = $pdo->query("SELECT SaldoIni  FROM sibware.comisiones where Periodo=1 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='IN'");
+                        if ($row_count>=1) {
+                            $pcte=$pbasecte1*100;
                             
-                           
-                            while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-                                    $saldoiniINBonoSem=$row['SaldoIni'];
-                                	
-                            }
-                            $queryResult2 = $pdo->query("SELECT SaldoFin  FROM sibware.comisiones where Periodo=6 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='IN'");
-                            
-                            
-                            while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-                                    $saldoFinINBonoSem=$row['SaldoFin'];
-                                	
-                            }
-                        }
-                        if ($periodo==12) {
-                            $queryResult2 = $pdo->query("SELECT SaldoIni  FROM sibware.comisiones where Periodo=7 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='IN'");
-                            
-                            
-                            while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-                        
-                                    $saldoiniINBonoSem=$row['SaldoIni'];
-                                	
-                            }
-                            $queryResult2 = $pdo->query("SELECT SaldoFin  FROM sibware.comisiones where Periodo=12 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='IN'");
-                            
-                            
-                            while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-                                    $saldoFinINBonoSem=$row['SaldoFin'];
-                                	
-                            }
-                        }
-                        $contbonosem=0;
-                        $diferenciaINBonoSem=$saldoFinINBonoSem-$saldoiniINBonoSem;
-                        $metaIN=$metaIN*18;
-                        if ($metaIN<$diferenciaLCBonoSem) {
-                            $contbonosem=$contbonosem+1;
-                        }
-                        if ($contbonosem==1) {
-                            $bonosempat=$bono2;
-                        }  
-                        ###fin bonos semesrales          
-                //fin patrimonial        
-             }elseif($patrimonial=='N'){
-                if ($periodo==6) {
-                    $queryResult2 = $pdo->query("SELECT SaldoIni  FROM sibware.comisiones where Periodo=1 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='CR'");
-                    
-                    $result = $conn->query($sql);
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            $saldoiniLCBonoSem=$row['SaldoIni'];
-                        }	
+                        }elseif ($row_count2==0) {
+                            $pcte=$pbasecte2*100;
+                        }elseif ($row_count3>=1) {
+                            $pcte=$pbasecte3*100;
+                        }else{
+                            $pcte=$pbasecte4*100;
+                        } 
+                        $comisioncr=((($pcte*$pbasecre)/100)/100)*$autorizado;
+                        $tcomisioncr=$tcomisioncr+$comisioncr;
+                        echo "<tr><td>".$cte."</td><td>$".number_format($autorizado,2)."</td><td>".$tipopro."</td><td>".$pcte."</td><td>$".number_format($comisioncr,2)."</td></tr>";   
                     }
-                    $queryResult2 = $pdo->query("SELECT SaldoFin  FROM sibware.comisiones where Periodo=6 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='CR'");
-                    $result = $conn->query($sql);
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            $saldoFinLCBonoSem=$row['SaldoFin'];
-                        }	
-                    }
-                    $queryResult2 = $pdo->query("SELECT SaldoIni  FROM sibware.comisiones where Periodo=1 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='VP'");
-                    $result = $conn->query($sql);
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            $saldoiniVPBonoSem=$row['SaldoIni'];
-                        }	
-                    }
-                    $queryResult2 = $pdo->query("SELECT SaldoFin  FROM sibware.comisiones where Periodo=6 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='VP'");
-                    $result = $conn->query($sql);
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            $saldoFinVPBonoSem=$row['SaldoFin'];
-                        }	
-                    }
-                    $queryResult2 = $pdo->query("SELECT SUM(SaldoIni) as SaldoIni  FROM sibware.comisiones where Periodo=1 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='AP'");
-                    $result = $conn->query($sql);
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            $saldoiniAPBonoSem=$row['SaldoIni'];
-                        }	
-                    }
-                    $queryResult2 = $pdo->query("SELECT SUM(SaldoFin) as SaldoFin  FROM sibware.comisiones where Periodo=6 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='AP'");
-                    $result = $conn->query($sql);
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            $saldoFinAPBonoSem=$row['SaldoFin'];
-                        }	
-                    }		
-                  
+
                 }
-                if ($periodo==11) {
-                    $queryResult2 = $pdo->query("SELECT SaldoIni  FROM sibware.comisiones where Periodo=7 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='CR'");
-                    $result = $conn->query($sql);
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            $saldoiniLCBonoSem=$row['SaldoIni'];
-                        }	
-                    }
-                    $queryResult2 = $pdo->query("SELECT SaldoFin  FROM sibware.comisiones where Periodo=12 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='CR'");
-                    $result = $conn->query($sql);
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            $saldoFinLCBonoSem=$row['SaldoFin'];
-                        }	
-                    }
-                    $queryResult2 = $pdo->query("SELECT SaldoIni  FROM sibware.comisiones where Periodo=7 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='VP'");
-                    $result = $conn->query($sql);
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            $saldoiniVPBonoSem=$row['SaldoIni'];
-                        }	
-                    }
-                    $queryResult2 = $pdo->query("SELECT SaldoFin  FROM sibware.comisiones where Periodo=12 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='VP'");
-                    $result = $conn->query($sql);
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            $saldoFinVPBonoSem=$row['SaldoFin'];
-                        }	
-                    }
-                    $queryResult2 = $pdo->query("SELECT SUM(SaldoIni) as SaldoIni  FROM sibware.comisiones where Periodo=7 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='AP'");
-                    $result = $conn->query($sql);
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            $saldoiniAPBonoSem=$row['SaldoIni'];
-                        }	
-                    }
-                    $queryResult2 = $pdo->query("SELECT SUM(SaldoFin) as SaldoFin  FROM sibware.comisiones where Periodo=12 and YY='$yy' and IDEjecutivo=$id_ejecutivo and Producto='AP'");
-                    $result = $conn->query($sql);
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            $saldoFinAPBonoSem=$row['SaldoFin'];
-                        }	
-                    }
-            
-                  
-                }
-                $contbonosem=0;
-                $diferenciaLCBonoSem=$saldoFinLCBonoSem-$saldoiniLCBonoSem;
-                $metaLC=$metaLC*6;
-                if ($metaLC<$diferenciaLCBonoSem) {
-                    $contbonosem=$contbonosem+1;
-                }
-                $diferenciaVPBonoSem=$saldoFinVPBonoSem-$saldoiniVPBonoSem;
-                $metaVP=$metaVP*6;
-                if ($metaVP<$diferenciaVPBonoSem) {
-                    $contbonosem=$contbonosem+1;
-                }
-                $diferenciaAPBonoSem=$saldoFinAPBonoSem-$saldoiniAPBonoSem;
-                $metaAP=$metaAP*6;
-                if ($metaAP<$diferenciaAPBonoSem) {
-                    $contbonosem=$contbonosem+1;
-                }
-                if ($contbonosem==3) {
-                    $bonosemnopat=$bono1;
-                }
-                if ($periodo==2) {		
-                    $fechacadi=$year.'-01-01';
-                    $fechacadf=$year.'-06-30';
-                    }
-                    if ($periodo==12) {		
-                    $fechacadi=$year.'-07-01';
-                    $fechacadf=$year.'-12-31';
-                    }
-                    $sql="SELECT
-                *
-            FROM
-                2_contratos A
-            WHERE
-                A.IDOrigenRecursos = 2
-            AND A.IDEjecutivo = $id_ejecutivo
-            AND A.FInicio BETWEEN '$fechacadi' AND '$fechacadf'";
-            $queryResult3 = $pdo->query($sql);
-            $numcontfnd=$queryResult3->num_rows;
-            
-            $sql="SELECT
-                *
-            FROM
-                2_contratos A
-            WHERE
-            A.IDEjecutivo = $id_ejecutivo
-            AND A.FInicio BETWEEN '$fechacadi' AND '$fechacadf'";
-            $queryResult3 = $pdo->query($sql);
-            $numcontnofnd=$queryResult3->num_rows;
-            if ($numcontfnd==0) {
-                $bonosemnopatfnd=0;
-            }elseif ($numcontfnd==$numcontnofnd) {
-                $bonosemnopatfnd=$bono2;
-            }
-             } //fin no patrimonial
-        }
-        
-	?>    
-     
-<?PHP $totalbonos=$bonosemnopatfnd+$bonosempat+$totalbonoinv+$bonosemnopat; 
-        $grantotal=$totaldecomisiones+$totalbonos;  ?>
-</table>
-<div class="row">
-    <div class="col-xs-2">
-    <label for="inv">Comision Inv</label><input type="text" name="inv" id="inv" value="<?PHP echo number_format($comisionIN,2) ?>" class="form-control" readonly="true">
-    </div>
-    <div class="col-xs-2">
-    <label for="ap">Comision AP</label><input type="text" name="ap" id="ap" value="<?PHP echo number_format($comisionAP,2)  ?>" class="form-control" readonly="true">
-    </div>
-    <div class="col-xs-2">
-    <label for="vp">Comision VP</label><input type="text" name="vp" id="vp" value="<?PHP echo number_format($comisionVP,2) ?>" class="form-control" readonly="true">
-    </div>
-    <div class="col-xs-2">
-    <label for="cr">Comision CR</label><input type="text" name="cr" id="cr" value="<?PHP echo number_format($comisionLC,2)  ?>" class="form-control" readonly="true">
-    </div>
-    <div class="col-xs-2">
-    <label for="bon">Comision bonos</label><input type="text" name="bon" id="bon" value="<?PHP echo number_format($totalbonos,2)  ?>" class="form-control" readonly="true">
-    </div>
-    <div class="col-xs-2">
-    <label for="total">Comision total</label><input type="text" name="total" id="total" value="<?PHP echo number_format($grantotal,2) ?>" class="form-control" readonly="true">
-    </div>
-    
-</div>    
+            ?>
+
+
+</table>                          
 </form> 
 
 <?php
