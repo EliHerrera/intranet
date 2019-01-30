@@ -32,7 +32,7 @@ WHERE
     if (!empty($_POST)) {
         $fini=$_POST['fini'];
         $ffin=$_POST['ffin'];
-        if ($_SESSION['Nivel']>=2) {
+        if ($_SESSION['Nivel']>=2 || $_SESSION['IDDepartamento']==9) {
             $queryResult = $pdo->query("SELECT
         A.id_comision,
         CONCAT(
@@ -164,7 +164,14 @@ while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
         }
     }elseif ($row['status']==1 ) {
         ?>
+        <?php
+            if ($_SESSION['IDDepartamento']==9) {
+             
+        ?>
          <a href="relcomisiones.php?idcomi=<?php echo $row[id_comision]; ?>&&baja=N"><img src="img/icons/aprove.png"></a>
+         <?php
+            }
+         ?>
         <a href="relcomisiones.php?idcomi=<?php echo $row[id_comision]; ?>&&baja=B"><img src="img/icons/delete.png"></a>
         <?php
         

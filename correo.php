@@ -38,7 +38,7 @@ $mail->SMTPAuth   = true;
 //Definimos la cuenta que vamos a usar. Dirección completa de la misma
 $mail->Username   = "intranet@credicor.com.mx";
 //Introducimos nuestra contraseña de gmail
-$mail->Password   = "Intr4n3tCM!2018";
+$mail->Password   = "2Uq8iy3!";
 $mail->From = $from;  // Mail de origen
 $mail->FromName = $name; // Nombre del que envia
 //Definimos el remitente (dirección y, opcionalmente, nombre)
