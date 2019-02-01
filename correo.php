@@ -28,7 +28,7 @@ $mail->IsSMTP();
 // 2 = client and server messages
 $mail->SMTPDebug  = 0;
 //Ahora definimos gmail como servidor que aloja nuestro SMTP
-$mail->Host       = 'mail.credicor.com.mx';
+$mail->Host       = '206.189.230.102';
 //El puerto será el 587 ya que usamos encriptación TLS
 $mail->Port       = 25;
 //Definmos la seguridad como TLS

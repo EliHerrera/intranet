@@ -76,9 +76,9 @@
         FImage = '$hoy'
     AND B. STATUS <> 'C'
     AND B. STATUS <> '-'
-    AND B. STATUS <> 'P'
     GROUP BY
-        A.IDContrato");
+        A.IDContrato
+    HAVING Saldo>0 ");
         
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             if ($row['IDMoneda']==2) {
@@ -126,9 +126,9 @@
         FImage = '$hoy'
     AND B. STATUS <> 'C'
     AND B. STATUS <> '-'
-    AND B. STATUS <> 'P'
     GROUP BY
-        A.IDContrato");
+        A.IDContrato
+    HAVING Saldo>0 ");
         
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             if ($row['IDMoneda']==2) {
@@ -176,9 +176,9 @@
         FImage = '$hoy'
     AND B. STATUS <> 'C'
     AND B. STATUS <> '-'
-    AND B. STATUS <> 'P'
     GROUP BY
-        A.IDContrato");
+        A.IDContrato
+    HAVING Saldo>0");
         
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             if ($row['IDMoneda']==2) {
@@ -226,9 +226,9 @@
         FImage = '$hoy'
     AND B. STATUS <> 'C'
     AND B. STATUS <> '-'
-    AND B. STATUS <> 'P'
     GROUP BY
-        A.IDContrato");
+        A.IDContrato
+    HAVING Saldo>0    ");
         
         while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
             if ($row['IDMoneda']==2) {
