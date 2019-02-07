@@ -3,14 +3,29 @@
     //////inicio de contenido
     $periodo=date("n", mktime(0, 0, 0, date('m')-1, date('d'), date('Y')));
     $yy=date('Y');
+    $mes_anterior  = mktime(0, 0, 0, date("m")-1, date("d"),   date("Y"));
+    $mes_actual=mktime(0, 0, 0, date("m"), date("d"),   date("Y"));
+    $númeroDeDias = date("t",$mes_anterior);
+    $mes_anteriormes=date("m",$mes_anterior);
+    $mes_anterior= date("Y-m", $mes_anterior);
+    $annio_ant=date("Y", $mes_anterior);
+    $mes_actual=date("Y-m",$mes_actual);
+    $fecha_inist=$mes_anterior."-01";
+    $fecha_finst=$mes_anterior."-".$númeroDeDias;
+    
     $queryResult = $pdo->prepare("SELECT * FROM Intranet.procesacomisiones A WHERE A.periodo=$periodo AND A.lActivo='S'");
     $queryResult->execute();
     $result = $queryResult->fetch(PDO::FETCH_ASSOC);
     
 if(empty($result)){  
+    $queryResult=$pdo->query("SELECT * FROM sibware.indicador_tipocambio WHERE Fecha='$hoy'");
+    #var_dump($queryResult);
+    while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
+        $tc=$row['Paridad'];
+    }
     $queryResult = $pdo->query("INSERT INTO Intranet.procesacomisiones (fecha,periodo,lActivo,yy) VALUES('$hoy',$periodo,'S',$yy)");
     $queryResult = $pdo->query("SELECT 
-    A.ID,
+    A.ID as IDEje,
     A.IDSucursal,
     A.IDPuesto
 FROM
@@ -19,11 +34,135 @@ FROM
 WHERE
     A.IDDepartamento = 1 AND A.status = 'S'");
     while ($row=$queryResult->fetch(PDO::FETCH_ASSOC)) {
-        $queryResult2 = $pdo->query("INSERT INTO sibware.comisiones (IDEjecutivo,IDSucursal,Producto,lAprobado,Periodo,YY) VALUES($row[ID],$row[IDSucursal],'IN','',$periodo,'$yy')");
-        $queryResult2 = $pdo->query("INSERT INTO sibware.comisiones (IDEjecutivo,IDSucursal,Producto,lAprobado,Periodo,YY) VALUES($row[ID],$row[IDSucursal],'AP','',$periodo,'$yy')");
-        $queryResult2 = $pdo->query("INSERT INTO sibware.comisiones (IDEjecutivo,IDSucursal,Producto,lAprobado,Periodo,YY) VALUES($row[ID],$row[IDSucursal],'APU','',$periodo,'$yy')");
-        $queryResult2 = $pdo->query("INSERT INTO sibware.comisiones (IDEjecutivo,IDSucursal,Producto,lAprobado,Periodo,YY) VALUES($row[ID],$row[IDSucursal],'VP','',$periodo,'$yy')");
-        $queryResult2 = $pdo->query("INSERT INTO sibware.comisiones (IDEjecutivo,IDSucursal,Producto,lAprobado,Periodo,YY) VALUES($row[ID],$row[IDSucursal],'CR','',$periodo,'$yy')");
+        $ideje=$row['IDEje'];
+        $idsucursal=$row['IDSucursal'];
+        $queryResult2=$pdo->query("SELECT A.SaldoCap, B.IDMoneda FROM 2_dw_images_contratos A INNER JOIN 2_contratos B ON A.IDContrato=B.ID where A.FImage='$fecha_inist' and A.IDEjecutivo=$ideje");
+        while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+            $saldoCapCR=$row['SaldoCap'];
+            $moneda=$row['IDMoneda'];
+            
+            
+            if($moneda==2){
+                $saldoCapCR=$saldoCapCR*$tc;
+            }
+            $SaldoCapCRIni=$SaldoCapCRIni+$saldoCapCR;
+        }
+        $queryResult2=$pdo->query("SELECT A.SaldoCap,A.SaldoInt,A.CapitalVenc,A.InteresVenc, IDMoneda FROM 2_dw_images_contratos A INNER JOIN 2_contratos B ON A.IDContrato=B.ID where A.FImage='$fecha_finst' and A.IDEjecutivo=$ideje");
+        while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+            $saldoCapCR=$row['SaldoCap'];
+            $saldoIntCR=$row['SaldoInt'];
+            $saldoCapVencCR=$row['CapitalVenc'];
+            $saldoIntVencCR=$row['InteresVenc'];
+            $moneda=$row['IDMoneda'];
+            if($moneda==2){
+                $saldoCapCR=$saldoCapCR*$tc;
+                $saldoIntCR=$saldoIntCR*$tc;
+                $saldoCapVencCR=$saldoCapVencCR*$tc;
+                $saldoIntVencCR=$saldoIntVencCR*$tc;
+            }
+            $SaldoVigenteCR=$SaldoVigenteCR+$saldoCapCR+$saldoIntCR;
+            $SaldoVencCR=$SaldoVencCR+$saldoCapVencCR+$saldoIntVencCR;
+            $imor=$SaldoVencCR/$SaldoVigenteCR;
+            $SaldoCapCRFin=$SaldoCapCRFin+$saldoCapCR;
+        }
+        $queryResult2=$pdo->query("SELECT A.SaldoRenta, A.SaldoIvaRenta B.IDMoneda FROM 2_dw_images_ap A INNER JOIN 2_ap_contrato B ON A.IDContrato=B.ID where A.FImage='$fecha_inist' and A.IDEjecutivo=$ideje");
+        while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+            $saldoRentaAPU=$row['SaldoRenta'];
+            $saldoivaRentaApU=$row['SaldoIvaRenta'];
+            $saldoRentaAPU=$saldoRentaAPU+$saldoivaRentaApU;
+            $moneda=$row['IDMoneda'];
+            
+            
+            if($moneda==2){
+                $saldoRentaAPU=$saldoRentaAPU*$tc;
+            }
+            $SaldoRentaAPUIni=$SaldoRentaAPUIni+$saldoRentaAPU;
+        }
+        $queryResult2=$pdo->query("SELECT A.SaldoRenta, A.SaldoIvaRenta,A.RentaVenc, A.IDMoneda FROM 2_dw_images_ap A INNER JOIN 2_ap_contrato B ON A.IDContrato=B.ID where A.FImage='$fecha_finst' and A.IDEjecutivo=$ideje");
+        while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+            $saldoRentaAPU=$row['SaldoRenta'];
+            $saldoivaRentaApU=$row['SaldoIvaRenta'];
+            $saldoRentaAPU=$saldoRentaAPU+$saldoivaRentaApU;
+            $saldoRentaVencAPU=$row['RentaVenc'];
+            $moneda=$row['IDMoneda'];
+            if($moneda==2){
+                $saldoRentaAPU=$saldoRentaAPU*$tc;
+                $saldoRentaVencAPU=$saldoRentaVencAPU*$tc;
+                
+            }
+            $SaldoVigenteAPU=$SaldoVigenteAPU+$saldoRentaAPU;
+            $SaldoVencAPU=$SaldoVencAPU+$saldoRentaVencAPU;
+            $imorAPU=$SaldoVencAPU/$SaldoVigenteAPU;
+            $SaldoRentaAPUFin=$SaldoRentaAPUFin+$saldoRentaAPU;
+        }
+        $queryResult2=$pdo->query("SELECT A.SaldoRenta, A.SaldoIvaRenta B.IDMoneda FROM 3_dw_images_ap A INNER JOIN 3_ap_contrato B ON A.IDContrato=B.ID where A.FImage='$fecha_inist' and A.IDEjecutivo=$ideje");
+        while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+            $saldoRentaAP=$row['SaldoRenta'];
+            $saldoivaRentaAp=$row['SaldoIvaRenta'];
+            $saldoRentaAP=$saldoRentaAP+$saldoivaRentaAp;
+            $moneda=$row['IDMoneda'];
+            
+            
+            if($moneda==2){
+                $saldoRentaAP=$saldoRentaAP*$tc;
+            }
+            $SaldoRentaAPIni=$SaldoRentaAPIni+$saldoRentaAP;
+        }
+        $queryResult2=$pdo->query("SELECT A.SaldoRenta, A.SaldoIvaRenta,A.RentaVenc, A.IDMoneda FROM 3_dw_images_ap A INNER JOIN 3_ap_contrato B ON A.IDContrato=B.ID where A.FImage='$fecha_finst' and A.IDEjecutivo=$ideje");
+        while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+            $saldoRentaAP=$row['SaldoRenta'];
+            $saldoivaRentaAp=$row['SaldoIvaRenta'];
+            $saldoRentaAP=$saldoRentaAP+$saldoivaRentaAp;
+            $saldoRentaVencAP=$row['RentaVenc'];
+            $moneda=$row['IDMoneda'];
+            if($moneda==2){
+                $saldoRentaAP=$saldoRentaAP*$tc;
+                $saldoRentaVencAP=$saldoRentaVencAP*$tc;
+                
+            }
+            $SaldoVigenteAP=$SaldoVigenteAP+$saldoRentaAP;
+            $SaldoVencAP=$SaldoVencAP+$saldoRentaVencAP;
+            $imorAP=$SaldoVencAP/$SaldoVigenteAP;
+            $SaldoRentaAPFin=$SaldoRentaAPFin+$saldoRentaAP;
+        }
+        #### calculos VP
+        $queryResult2=$pdo->query("SELECT A.SaldoRenta, A.SaldoIvaRenta B.IDMoneda FROM 3_dw_images_vp A INNER JOIN 3_vp_contrato B ON A.IDContrato=B.ID where A.FImage='$fecha_inist' and A.IDEjecutivo=$ideje");
+        while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+            $saldoCapVP=$row['SaldoCap'];
+            $saldoIntVP=$row['SaldoInt'];
+            $saldoIvaIntVP=$row[''];
+            $saldoRentaAP=$saldoRentaAP+$saldoivaRentaAp;
+            $moneda=$row['IDMoneda'];
+            
+            
+            if($moneda==2){
+                $saldoRentaAP=$saldoRentaAP*$tc;
+            }
+            $SaldoRentaAPIni=$SaldoRentaAPIni+$saldoRentaAP;
+        }
+        $queryResult2=$pdo->query("SELECT A.SaldoRenta, A.SaldoIvaRenta,A.RentaVenc, A.IDMoneda FROM 3_dw_images_vp A INNER JOIN 3_vp_contrato B ON A.IDContrato=B.ID where A.FImage='$fecha_finst' and A.IDEjecutivo=$ideje");
+        while ($row=$queryResult2->fetch(PDO::FETCH_ASSOC)) {
+            $saldoRentaAP=$row['SaldoRenta'];
+            $saldoivaRentaAp=$row['SaldoIvaRenta'];
+            $saldoRentaAP=$saldoRentaAP+$saldoivaRentaAp;
+            $saldoRentaVencAP=$row['RentaVenc'];
+            $moneda=$row['IDMoneda'];
+            if($moneda==2){
+                $saldoRentaAP=$saldoRentaAP*$tc;
+                $saldoRentaVencAP=$saldoRentaVencAP*$tc;
+                
+            }
+            $SaldoVigenteAP=$SaldoVigenteAP+$saldoRentaAP;
+            $SaldoVencAP=$SaldoVencAP+$saldoRentaVencAP;
+            $imorAP=$SaldoVencAP/$SaldoVigenteAP;
+            $SaldoRentaAPFin=$SaldoRentaAPFin+$saldoRentaAP;
+        }
+        #### calculos VP
+        $queryResult2 = $pdo->query("INSERT INTO sibware.comisiones (IDEjecutivo,IDSucursal,Producto,lAprobado,Periodo,YY) VALUES($ideje,$idsucursal,'IN','',$periodo,'$yy')");
+        $queryResult2 = $pdo->query("INSERT INTO sibware.comisiones (IDEjecutivo,IDSucursal,Producto,SaldoIni,SaldoFin,lAprobado,PCv,Periodo,YY) VALUES($ideje,$idsucursal,'AP',$SaldoRentaAPIni,$SaldoRentaAPFin,'',$imorAP,$periodo,'$yy')");
+        $queryResult2 = $pdo->query("INSERT INTO sibware.comisiones (IDEjecutivo,IDSucursal,Producto,SaldoIni,SaldoFin,lAprobado,PCv,Periodo,YY) VALUES($ideje,$idsucursal,'APU',$SaldoRentaAPUIni,$SaldoRentaAPUFin,'',$imorAPU,$periodo,'$yy')");
+        $queryResult2 = $pdo->query("INSERT INTO sibware.comisiones (IDEjecutivo,IDSucursal,Producto,lAprobado,Periodo,YY) VALUES($ideje,$idsucursal,'VP','',$periodo,'$yy')");
+        $queryResult2 = $pdo->query("INSERT INTO sibware.comisiones (IDEjecutivo,IDSucursal,Producto,SaldoIni,SaldoFin,lAprobado,PCv,Periodo,YY) VALUES($ideje,$idsucursal,'CR',$SaldoCapCRIni,$SaldoCapCRFin,'',$imor,$periodo,'$yy')");
     }
     echo "<div class='alert alert-success'>";
     echo "    <strong>Exito!</strong>Las comisiones han sido procesadas con Exito!";
