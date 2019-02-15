@@ -26,6 +26,6 @@
 </table>
 
 <?php
-    /////fin de contenido
+    /////fin de contenido   
     require_once 'footer.php';
 ?>
